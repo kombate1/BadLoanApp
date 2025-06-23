@@ -12,13 +12,13 @@ namespace BadLoan.Models
         
         [ForeignKey("LoanApplicationId")]
         public int LoanApplicationId { get; set; }
-        public LoanApplication? LoanApplication { get; set; }
+        public LoanApplication LoanApplication { get; set; }
 
         [Required]
-        public string? FileType { get; set; }  // e.g., "Ghana card", "proof of payment", "employment offer letter", etc.
+        public string FileType { get; set; }  // e.g., "Ghana card", "proof of payment", "employment offer letter", etc.
 
         [Required]
-        public string? FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
+        public string FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
 
         
     }

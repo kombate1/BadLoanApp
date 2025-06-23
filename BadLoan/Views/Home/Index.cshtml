@@ -1,8 +1,54 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Loan Application";
 }
+<section class="hero-section text-white d-flex align-items-center" style="height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3);">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold mb-4">Get Your Loan <br />Approved Today</h1>
+        <p class="lead mb-5">Fast, secure, and transparent loan approval process.<br />Check your eligibility in minutes and get approved within 24 hours.</p>
+        <a asp-controller="LoanApplication" asp-action="Create" class="btn btn-light btn-lg px-4 py-2 shadow-sm rounded-pill">
+            Apply Now &nbsp; →
+        </a>
+    </div>
+</section>
+<section></section>
+<section>
+    <div class="container mt-5">
+        <div class="card shadow-lg rounded-4 p-4">
+            <h2 class="mb-4 text-primary text-center">Loan Application Form</h2>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+            <form asp-controller="LoanApplication" asp-action="Submit" method="post">
+                <div class="mb-3">
+                    <label for="LoanTypeId" class="form-label">Loan Type</label>
+                    <select id="LoanTypeId" name="LoanTypeId" class="form-select" required>
+                        <option value="">-- Select Loan Type --</option>
+                        <option value="1">Personal Loan</option>
+                        <option value="2">Business Loan</option>
+                        <option value="3">Education Loan</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="RequestedAmount" class="form-label">Requested Amount (GHS)</label>
+                    <input type="number" step="0.01" class="form-control" id="RequestedAmount" name="RequestedAmount" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="LoanTermYears" class="form-label">Loan Term (Years)</label>
+                    <input type="number" class="form-control" id="LoanTermYears" name="LoanTermYears" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="Documents" class="form-label">Upload Documents</label>
+                    <input type="file" class="form-control" id="Documents" name="Documents" multiple />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+                    <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>                                                                                                                 let each section cover its width
+

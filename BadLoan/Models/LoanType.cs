@@ -9,7 +9,6 @@ namespace BadLoan.Models
         public int LoanTypeId { get; set; }
 
         [Required]
-        public string LoanName { get; set; }
 
         public string? Description { get; set; }
 
@@ -19,10 +18,8 @@ namespace BadLoan.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal InterestRate { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
         public decimal MaxAmount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
         public decimal MinAmount { get; set; }
 
         public ICollection<LoanApplication> LoanApplications { get; set; }

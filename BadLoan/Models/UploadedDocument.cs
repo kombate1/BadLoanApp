@@ -13,8 +13,6 @@ namespace BadLoan.Models
         public LoanApplication LoanApplication { get; set; }
 
         [Required]
-
-        [Required]
         public string FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
 
         

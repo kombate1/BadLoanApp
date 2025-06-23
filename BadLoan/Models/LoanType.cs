@@ -22,6 +22,6 @@ namespace BadLoan.Models
 
         public decimal MinAmount { get; set; }
 
-        public ICollection<LoanApplication> LoanApplications { get; set; }
+        public ICollection<LoanApplication> LoanApplication { get; set; }
     }
 }

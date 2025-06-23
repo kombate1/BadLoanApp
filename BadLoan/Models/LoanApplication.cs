@@ -38,7 +38,7 @@ namespace BadLoan.Models
         [Required]
         public DateTime LastUpdated { get; set; }
 
-        public virtual ICollection<ApprovalLog>? ApprovalLogs { get; set; }
-        public virtual ICollection<UploadedDocument>? Documents { get; set; }
+        public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
+        public virtual ICollection<UploadedDocument> Documents { get; set; }
     }
 }

@@ -1,0 +1,113 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+
+    .login_form {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+
+
+
+    .custom-border-2 {
+        width: 400px;
+        height: 600px;
+        border: 2px solid;
+        border-color: black;
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        background-color: whitesmoke;
+    }
+
+        .custom-border-2:hover {
+            width: 400px;
+            height: 600px;
+            border: 2px solid;
+            border-color: blue;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+        }
+
+    input {
+        border: 1px solid;
+        border-color: black;
+        border-radius: 6px;
+        width: 300px;
+    }
+
+    .border {
+        border: 0px;
+        border-color: white;
+    }
+
+</style>
+
+<div class="login_form">
+    <form class="custom-border-2" method="post" asp-action="Login">
+
+        <section>
+            <h1>@ViewData["Title"]</h1>
+            <fieldset class="borde">
+                <section class="flex-column justify-content-center">
+                    <div>
+                        <strong><label for="Name">First Name:</label><br /></strong>
+                        <input type="email" id="email" name="Email" placeholder="Enter your First Name" required /><br />
+                    </div>
+                    <div>
+                        <strong><label for="Name">Surname Name:</label><br /></strong>
+                        <input type="email" id="email" name="Email" placeholder="Enter your  Surname" required /><br />
+                    </div>
+                    <div>
+                        <strong><label for="date">Birthday:</label><br /></strong>
+                        <input type="date" name="DateOfBirth" placeholder="yyyy/mm/dd" />
+                    </div>
+                    <div>
+                        <strong><label for="date">Occupation:</label><br /></strong>
+                        <input type="text" name="DateOfBi" placeholder="Lawyer/doctor etc..." />
+                    </div>
+                    <div>
+                        <strong><label for="Employer Name">Employer Name:</label><br /></strong>
+                        <input type="text" placeholder="Enter your employer's name"/>
+                    </div>
+                    <div>
+                        <strong><label for="date">Birthday:</label><br /></strong>
+                        <input type="date" name="DateOfBirth" placeholder="yyyy/mm/dd" />
+                    </div>
+                    <div>
+                        <strong><label for="contact">Employer Email:</label><br /></strong>
+                        <input type="email"  placeholder="Enter your employer's email" />
+                    </div>
+                    <div>
+                        <strong><label for="amount">Yearly Income:</label><br /></strong>
+                        <input type="text" name="DateOfBirth" placeholder="eg. $5000" />
+                    </div>
+                    <div>
+                        <strong><label for="LOcation">Home Address:</label><br /></strong>
+                        <input type="text" name="DateOfBirth" placeholder="eg. Adenta" />
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+                    </div>
+
+
+                </section>
+
+            </fieldset>
+        </section>
+
+    </form>
+</div>

@@ -7,9 +7,15 @@ namespace BadLoan.Models
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("LoanApplication")]
-        public string Status { get; set; }
-        public string Comment { get; set; }
-        public DateTime Timestamp { get; set; }= DateTime.UtcNow;
+
+        public string? Status { get; set; }
+        public string? Comment { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+
+        public int LoanApplicationId { get; set; }
+        public virtual LoanApplication LoanApplication { get; set; }
+
     }
+
+
 }

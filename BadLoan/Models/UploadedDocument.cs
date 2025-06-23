@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BadLoan.Models
 {
@@ -8,13 +9,14 @@ namespace BadLoan.Models
         [Key]
         public int DocumentId { get; set; }
 
-        [Required]
         public int LoanApplicationId { get; set; }
+        public LoanApplication LoanApplication { get; set; }
 
         [Required]
-        public string FileType { get; set; }  // e.g., "PDF", "JPG"
 
         [Required]
         public string FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
+
+        
     }
 }

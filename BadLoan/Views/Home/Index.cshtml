@@ -1,22 +1,226 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Loan Application";
 }
-<section class="hero-section text-white d-flex align-items-center" style="height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3);">
-    <div class="container text-center">
-        <h1 class="display-3 fw-bold mb-4">Get Your Loan <br />Approved Today</h1>
-        <p class="lead mb-5">Fast, secure, and transparent loan approval process.<br />Check your eligibility in minutes and get approved within 24 hours.</p>
-        <a asp-controller="LoanApplication" asp-action="Create" class="btn btn-light btn-lg px-4 py-2 shadow-sm rounded-pill">
-            Apply Now &nbsp; →
-        </a>
+
+<style>
+    body {
+        background-color: #FFF1E2;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .btn-login {
+        background-color: #F4C085;
+        font-weight: bold;
+        color: #000;
+        border: none;
+    }
+
+        .btn-login:hover {
+            background-color: #e3aa6b;
+            color: #000;
+        }
+
+    .hero-section {
+        background-color: #FFF1E2;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        max-width: 1000px;
+        width: 100%;
+    }
+
+    .hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-text {
+        background-color: #FAE2C1;
+        padding: 50px 30px;
+        text-align: center;
+    }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3a2d2d;
+        }
+
+    .btn-apply {
+        background-color: #e0e0e0;
+        color: #000;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 10px 30px;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-apply:hover {
+            background-color: #d2d2d2;
+        }
+
+    .loan-form-section {
+        background-color: #fff;
+        padding: 60px 20px;
+    }
+
+    .eligibility-section {
+        background-color: #FFF1E2;
+        padding: 60px 20px;
+    }
+
+    .eligibility-container {
+        background-color: #FAE2C1;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .eligibility-form {
+        background-color: #f4f4f4;
+        padding: 40px;
+        flex: 1;
+    }
+
+        .eligibility-form input {
+            background-color: #ddd !important;
+        }
+
+    .eligibility-text {
+        padding: 40px;
+        background-color: #FAE2C1;
+        flex: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .eligibility-text h4 {
+            font-weight: 700;
+        }
+
+    .btn-check {
+        background-color: #F4C085;
+        border: none;
+        color: black;
+        font-weight: bold;
+        padding: 10px 30px;
+    }
+
+        .btn-check:hover {
+            background-color: #e3aa6b;
+        }
+
+    footer {
+        color: #888;
+        font-size: 0.9rem;
+        padding: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+        .hero-text h1
+
+    {
+        font-size: 1.8rem;
+    }
+
+    .hero-text, .eligibility-form, .eligibility-text {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .eligibility-container {
+        flex-direction: column !important;
+    }
+
+    }
+</style>
+
+<!-- HEADER / NAV -->
+<header class="d-flex justify-content-between align-items-center p-4">
+    <div class="ms-3">
+        <h2 class="fw-bold" style="font-family: 'Arial Black', sans-serif; color: #222;">
+            YEBESI <br /> SAVINGS & LOANS
+        </h2>
+        <p style="margin-top: -10px; font-size: 0.9rem; color: #666;">We dey for you</p>
+    </div>
+    <div class="me-3">
+        <a href="#" class="btn btn-login px-4 py-2 rounded">Login / Sign Up</a>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-section d-flex justify-content-center align-items-center">
+    <div class="d-flex flex-wrap justify-content-center align-items-center shadow rounded-4 overflow-hidden hero-card">
+        <!-- Left Image -->
+        <div class="bg-white p-0" style="flex: 1; min-width: 300px;">
+            <img src="~/image/woman laptop.webp" alt="Smiling woman with laptop" class="img-fluid hero-img" />
+        </div>
+
+        <!-- Right Text -->
+        <div class="hero-text" style="flex: 1; min-width: 300px;">
+            <h1>Get your Instant</h1>
+            <h1>Loans in just 4 steps!</h1>
+            <a asp-controller="LoanApplication" asp-action="Create" class="btn btn-apply mt-4">
+                Apply Now
+            </a>
+        </div>
     </div>
 </section>
-<section></section>
-<section>
-    <div class="container mt-5">
-        <div class="card shadow-lg rounded-4 p-4">
-            <h2 class="mb-4 text-primary text-center">Loan Application Form</h2>
 
-            <form asp-controller="LoanApplication" asp-action="Submit" method="post">
+<!-- LOAN ELIGIBILITY CALCULATOR -->
+<section class="eligibility-section">
+    <div class="container">
+        <div class="d-flex flex-wrap eligibility-container">
+            <!-- Left Form -->
+            <div class="eligibility-form">
+                <h3 style="font-family: 'Courier New', cursive;">Loan Eligibility Calculator</h3>
+                <form>
+                    <div class="mb-3">
+                        <label>Annual Income (GH¢)</label>
+                        <input type="number" class="form-control" placeholder="Enter your income" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Loan amount (GH¢)</label>
+                        <input type="number" class="form-control" placeholder="Enter desired loan" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Type of Loan</label>
+                        <input type="text" class="form-control" placeholder="e.g. Personal, Business" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Duration for loan repayment</label>
+                        <input type="text" class="form-control" placeholder="e.g. 12 months" />
+                    </div>
+                    <button type="button" class="btn btn-check mt-2">Check Eligibility</button>
+                </form>
+            </div>
+
+            <!-- Right Description -->
+            <div class="eligibility-text">
+                <h4>Check your loan Eligibility</h4>
+                <p>Use our advanced calculator to instantly check if you qualify for a loan and see your potential terms.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOAN FORM SECTION -->
+<section class="loan-form-section">
+    <div class="container">
+        <div class="card shadow rounded-4 p-4 mx-auto" style="max-width: 700px;">
+            <h2 class="mb-4 text-center text-primary">Loan Application Form</h2>
+
+            <form asp-controller="LoanApplication" asp-action="Submit" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="LoanTypeId" class="form-label">Loan Type</label>
                     <select id="LoanTypeId" name="LoanTypeId" class="form-select" required>
@@ -38,7 +242,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="Documents" class="form-label">Upload Documents</label>
+                    <label for="Documents" class="form-label">Upload Supporting Documents</label>
                     <input type="file" class="form-control" id="Documents" name="Documents" multiple />
                 </div>
 
@@ -49,6 +253,9 @@
             </form>
         </div>
     </div>
-    <div>GG</div>
-</section>                                                                                                                 let each section cover its width
+</section>
 
+<!-- FOOTER -->
+<footer class="text-center footer">
+    &copy; 2025 Yebesi Savings & Loans. All rights reserved.
+</footer>

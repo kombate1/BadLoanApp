@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using BadLoan.Data;
 using BadLoan.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BadLoan.Controllers
@@ -9,10 +10,12 @@ namespace BadLoan.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        private readonly UserManager<IdentityUser> _userManager;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _db = db;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -34,6 +37,7 @@ namespace BadLoan.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.userid = _userManager.GetUserId(HttpContext.User);
             return View();
         }
 
@@ -41,6 +45,8 @@ namespace BadLoan.Controllers
 
         [HttpPost]
         public IActionResult Create( Customer obj) {
+
+            obj.UserId = _userManager.GetUserId(HttpContext.User);
             _db.Customers.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");

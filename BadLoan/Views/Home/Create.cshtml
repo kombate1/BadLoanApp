@@ -15,7 +15,7 @@
 
     .custom-border-2 {
         width: 400px;
-        height: 600px;
+        height: 800px;
         border: 2px solid;
         border-color: black;
         border-radius: 10px;
@@ -29,7 +29,7 @@
 
         .custom-border-2:hover {
             width: 400px;
-            height: 600px;
+            height: 800px;
             border: 2px solid;
             border-color: blue;
             border-radius: 10px;
@@ -82,8 +82,15 @@
                         <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
                     </div>
                     <div>
-                        <strong><label asp-for="Gender">Gender:</label><br /></strong>
-                        <input type="checkbox" asp-for="Gender" placeholder="yyyy/mm/dd" />
+                        <strong><label asp-for="Gender">Select Gender: </label><br /></strong>
+                        <div>
+                            <input type="radio" asp-for="Gender" value="Male" /> 
+                            <label>Male</label>
+                            <input type="radio" asp-for="Gender" value="Female" /> 
+                            <label>Female</label>
+                            <input type="radio" asp-for="Gender" value="Other" />
+                            <label>Other</label>
+                        </div>
                     </div>
                     <div>
                         <strong><label asp-for="EmployerContact">Employer Email:</label><br /></strong>
@@ -104,6 +111,9 @@
                     <div class="pt-4">
                         <button type="submit" class="btn btn-secondary">Submit</button>
                     </div>
+                    <p>
+                        @ViewBag.userid
+                    </p>
 
 
                 </section>
@@ -114,30 +124,3 @@
     </form>
 </div>
 
-
-                      [Key]
-        public int CustomerId { get; set; }
-
-        [ForeignKey("Id")]
-        public int UserId { get; set; }
-        public virtual User User { get; set; }
-
-        [Required]
-        public DateOnly DateOfBirth { get; set; }
-        [Required]
-        public string? Gender { get; set; }
-        [Required]
-        public string? Occupation { get; set; }
-        [Required]
-        public string? EmployerName { get; set; }
-        [Required]
-        public string? EmployerContact { get; set; }
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal YearlyIncome { get; set; }
-        [Required]
-        public string? HomeAddress { get; set; }
-        [Required]
-        public string? PlaceOfWork { get; set; }
-
-        public ICollection<LoanApplication>? LoanApplications { get; set; }

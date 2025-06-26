@@ -6,87 +6,134 @@
 }
 
 <style>
-
-    .login_form{
-
-        display:flex;
-        justify-content:center;
-        align-content:center;
-        
-       }
-
-    
-
-    .custom-border-2{
-        width:400px;
-        height:500px;
-        border: 2px solid ;
-        border-color: black;
-        border-radius:10px;
-        padding: 10px;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        align-content:center;
-        background-color: #F4C085;
-        
+    body {
+        background-color: #fceddd;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .custom-border-2:hover {
-        width: 400px;
-        height: 500px;
-        border: 2px solid;
-        border-color: blue;
-        border-radius: 10px;
-        padding: 10px;
+    .login-container {
+        min-height: 100vh;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        box-shadow:5px 5px 5px rgba(0,0,0,0.5);
     }
 
-    input {
-        border: 1px solid;
-        border-color: black;
-        border-radius: 6px;
-        width: 300px;
+    .login-form {
+        width: 100%;
+        max-width: 420px;
+        background: none;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .border{
-    border:0px;
-    border-color:white;
+        .login-form h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-form p {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #222;
+            font-size: 1.1rem;
+        }
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 1.5rem;
     }
 
-    
+    .login-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        color: #222;
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: 10px;
+        border: none;
+        background: #d9d9d9;
+        font-size: 1.1rem;
+        margin-top: 0.3rem;
+        margin-bottom: 0.2rem;
+        outline: none;
+    }
+
+        .login-input:focus {
+            background: #ececec;
+        }
+
+    .login-btn {
+        width: 100%;
+        background: #c49553;
+        color: #222;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        padding: 18px 0;
+        margin-top: 1.5rem;
+        transition: background 0.2s;
+    }
+
+        .login-btn:hover {
+            background: #b07e2d;
+            color: #fff;
+        }
+
+    .login-links {
+        margin-top: 1.5rem;
+        text-align: center;
+        width: 100%;
+    }
+
+        .login-links a {
+            color: #c49553;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+            .login-links a:hover {
+                text-decoration: underline;
+            }
 </style>
 
-<div class="login_form">
-<form class="custom-border-2" method="post" asp-action="Login">
-    
-    <section>
-    <h1>@ViewData["Title"]</h1>
-    <fieldset class="borde">
-        <section class="flex-column justify-content-center">
-            <div>
-                        <strong><label for="email">Email:</label><br /></strong>
-                <input type="email" id="email" name="Email" placeholder="Enter your email" required /><br />
-            </div>
-            <div>
-                        <strong><label for="password">Password:</label><br /></strong>
-                <input type="password" name="name" placeholder="Password..." />
-            </div>
-            <div class="pt-4">
-                <button type="submit" class="btn btn-secondary">Submit</button>
-            </div>
-            <div>
-                <a asp-controller="Home" asp-action="Login"> No account? SignIn</a><br />
-                        <a asp-controller="Home" asp-action="Login">forgot password</a>
-            </div>
-
-        </section>
-
-    </fieldset>
-    </section>
-    
-</form>
+<div class="login-container">
+    <form class="login-form" method="post" asp-action="Login">
+        <h1>Get Started</h1>
+        <p>Create your account</p>
+        <div class="form-group">
+            <label class="login-label" for="email">Email Address</label>
+            <input type="email" class="login-input" id="email" name="Email" placeholder="Enter your email address" required />
+        </div>
+        <div class="form-group">
+            <label class="login-label" for="username">Username</label>
+            <input type="text" class="login-input" id="username" name="Username" placeholder="Create a username" required />
+        </div>
+        <div class="form-group">
+            <label class="login-label" for="password">Password (8 or more characters)</label>
+            <input type="password" class="login-input" id="password" name="Password" placeholder="Create password" minlength="8" required />
+        </div>
+        <div class="form-group">
+            <label class="login-label" for="confirmPassword">Confirm Password</label>
+            <input type="password" class="login-input" id="confirmPassword" name="ConfirmPassword" placeholder="Confirm password" required />
+        </div>
+        <button type="submit" class="login-btn">Sign Up</button>
+        <div class="login-links">
+            <a asp-controller="Home" asp-action="Login">Already have an account? Sign In</a><br />
+            <a asp-controller="Home" asp-action="ForgotPassword">Forgot password?</a>
+        </div>
+    </form>
 </div>

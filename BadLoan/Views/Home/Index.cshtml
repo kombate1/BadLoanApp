@@ -1,8 +1,383 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Loan Application";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    body {
+        background-color: #FFF1E2;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .btn-login {
+        background-color: #F4C085;
+        font-weight: bold;
+        color: #000;
+        border: none;
+    }
+
+        .btn-login:hover {
+            background-color: #e3aa6b;
+            color: #000;
+        }
+
+    .hero-section {
+        background-color: #FFF1E2;
+        padding: 60px 0;
+    }
+
+    .hero-card {
+        max-width: 1000px;
+        width: 100%;
+    }
+
+    .hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-text {
+        background-color: #FAE2C1;
+        padding: 50px 30px;
+        text-align: center;
+    }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3a2d2d;
+        }
+
+    .btn-apply {
+        background-color: #e0e0e0;
+        color: #000;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 10px 30px;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-apply:hover {
+            background-color: #d2d2d2;
+        }
+
+    .loan-form-section {
+        background-color: #fff;
+        padding: 60px 20px;
+    }
+
+    .eligibility-section {
+        background-color: #FFF1E2;
+        padding: 60px 20px;
+    }
+
+    .eligibility-container {
+        background-color: #FAE2C1;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .eligibility-form {
+        background-color: #f4f4f4;
+        padding: 40px;
+        flex: 1;
+    }
+
+        .eligibility-form input {
+            background-color: #ddd !important;
+        }
+
+    .eligibility-text {
+        padding: 40px;
+        background-color: #FAE2C1;
+        flex: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .eligibility-text h4 {
+            font-weight: 700;
+        }
+
+    .btn-check {
+        background-color: #F4C085;
+        border: none;
+        color: black;
+        font-weight: bold;
+        padding: 10px 30px;
+    }
+
+        .btn-check:hover {
+            background-color: #e3aa6b;
+        }
+
+    footer {
+        color: #888;
+        font-size: 0.9rem;
+        padding: 30px 0;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-text h1
+
+    {
+        font-size: 1.8rem;
+    }
+
+    .hero-text, .eligibility-form, .eligibility-text {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .eligibility-container {
+        flex-direction: column !important;
+    }
+
+    }
+</style>
+
+<!-- HEADER / NAV -->
+<header class="d-flex justify-content-between align-items-center p-4">
+    <div class="ms-3">
+        <h2 class="fw-bold" style="font-family: 'Arial Black', sans-serif; color: #222;">
+            YEBESI <br /> SAVINGS & LOANS
+        </h2>
+        <p style="margin-top: -10px; font-size: 0.9rem; color: #666;">We dey for you</p>
+    </div>
+    <div class="me-3">
+        <a href="#" class="btn btn-login px-4 py-2 rounded">Login / Sign Up</a>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-section d-flex justify-content-center align-items-center">
+    <div class="d-flex flex-wrap justify-content-center align-items-center shadow rounded-4 overflow-hidden hero-card">
+        <!-- Left Image -->
+        <div class="bg-white p-0" style="flex: 1; min-width: 300px;">
+            <img src="~/image/woman laptop.webp" alt="Smiling woman with laptop" class="img-fluid hero-img" />
+        </div>
+
+        <!-- Right Text -->
+        <div class="hero-text" style="flex: 1; min-width: 300px;">
+            <h1>Get your Instant</h1>
+            <h1>Loans in just 4 steps!</h1>
+            <a asp-controller="LoanApplication" asp-action="Create" class="btn btn-apply mt-4">
+                Apply Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- LOAN ELIGIBILITY CALCULATOR -->
+<section class="eligibility-section">
+    <div class="container">
+        <div class="d-flex flex-wrap eligibility-container">
+            <!-- Left Form -->
+            <div class="eligibility-form">
+                <h3 style="font-family: 'Courier New', cursive;">Loan Eligibility Calculator</h3>
+                <form>
+                    <div class="mb-3">
+                        <label>Annual Income (GH¢)</label>
+                        <input type="number" class="form-control" placeholder="Enter your income" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Loan amount (GH¢)</label>
+                        <input type="number" class="form-control" placeholder="Enter desired loan" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Type of Loan</label>
+                        <input type="text" class="form-control" placeholder="e.g. Personal, Business" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Duration for loan repayment</label>
+                        <input type="text" class="form-control" placeholder="e.g. 12 months" />
+                    </div>
+                    <button type="button" class="btn btn-check mt-2">Check Eligibility</button>
+                </form>
+            </div>
+            <!-- Right Description -->
+            <div class="eligibility-text">
+                <h4>Check your loan Eligibility</h4>
+                <p>Use our advanced calculator to instantly check if you qualify for a loan and see your potential terms.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY CHOOSE YSL SECTION -->
+<section class="why-choose-ysl-section">
+    <div class="container text-center">
+        <h2 class="why-title">Why Choose YSL ?</h2>
+        <p class="why-subtitle">
+            We're committed to providing the best loan experience with cutting-edge technology and personalized service.
+        </p>
+        <div class="why-cards">
+            <div class="why-card">
+                <div class="why-icon"><img src="~/image/instant approval.webp" alt="Instant Approval" class="why-img-icon" /></div>
+                <h3>Instant Approval</h3>
+                <p>Get pre-approved in minutes with our advanced AI-powered assessment system.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><img src="~/image/expert advisors.jpg" alt="Expert Advisors" class="why-img-icon" /></div>
+                <h3>Expert Advisors</h3>
+                <p>Work with experienced loan specialists to find the perfect solution for you.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><img src="~/image/transparency.webp" alt="Transparency" class="why-img-icon" /></div>
+                <h3>Transparency</h3>
+                <p>Track your loan status and view key details at every stage.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GET STARTED SECTION -->
+<section class="get-started-section">
+    <div class="container text-center">
+        <h2 class="get-started-title">Ready to Get Started?</h2>
+        <p class="get-started-subtitle">
+            Join thousands of satisfied customers who have successfully secured their loans through Yebesi Savings & Loans (YSL).
+        </p>
+        <div class="get-started-buttons">
+            <a href="#" class="btn btn-get-started">Start Application</a>
+            <a href="#" class="btn btn-get-started">Manager Login</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+
+
+<style>
+    // ... existing code ...
+    .why-choose-ysl-section {
+        background: #fceddd;
+        padding: 60px 0 20px 0;
+        margin-bottom: 30px; /* Added space below YSL section */
+    }
+
+   
+
+    .why-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+    }
+
+    .why-cards {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .why-card {
+        background: #fde7c6;
+        border-radius: 25px;
+        padding: 30px 20px 20px 20px;
+        width: 300px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top:30px;
+    }
+
+        .why-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            transition: 0.3s ease;
+        }
+
+
+    .why-icon {
+        background: #fff;
+        border-radius: 50%;
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .why-img-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .why-card h3 {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .why-card p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .get-started-section {
+        background: #c49553;
+        padding: 50px 0 40px 0;
+        margin-top:20px;
+    }
+
+    .get-started-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .get-started-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    .get-started-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .btn-get-started {
+        background: #f7e3c2;
+        color: #222;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border: 1px solid #222;
+        border-radius: 8px;
+        padding: 15px 40px;
+        transition: background 0.2s;
+        text-decoration: none;
+    }
+
+        .btn-get-started:hover {
+            background: #fff;
+            color: #000;
+            border-color: #000;
+        }
+
+    @@media (max-width: 900px) {
+        .why-cards
+
+    {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .get-started-buttons {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    }
+</style>

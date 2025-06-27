@@ -9,9 +9,9 @@ namespace BadLoan.Models
         [Key]
         public int CustomerId { get; set; }
 
-        [ForeignKey("Id")]
-        public int UserId { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("UserId")]
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         [Required]
         public string FirstName { get; set; }

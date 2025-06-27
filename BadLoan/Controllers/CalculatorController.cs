@@ -11,8 +11,12 @@ namespace BadLoan.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.MessageHtml = null;
             return View();
         }
+
+
+        
 
         [HttpPost]
         public IActionResult Index(Calculator c)

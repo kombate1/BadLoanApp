@@ -4,6 +4,7 @@ using BadLoan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BadLoan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250624114935_AddDateRegistered")]
+    partial class AddDateRegistered
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,19 +71,11 @@ namespace BadLoan.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HomeAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -92,16 +87,10 @@ namespace BadLoan.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("YearlyIncome")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Customers");
                 });
@@ -440,6 +429,9 @@ namespace BadLoan.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<DateTime>("DateRegistered")
+                        .HasColumnType("datetime2");
+
                     b.HasDiscriminator().HasValue("User");
                 });
 
@@ -452,17 +444,6 @@ namespace BadLoan.Migrations
                         .IsRequired();
 
                     b.Navigation("LoanApplication");
-                });
-
-            modelBuilder.Entity("BadLoan.Models.Customer", b =>
-                {
-                    b.HasOne("BadLoan.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BadLoan.Models.LoanApplication", b =>

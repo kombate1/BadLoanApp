@@ -19,6 +19,7 @@ namespace BadLoan.Data
         public DbSet<UploadedDocument> UploadedDocuments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<User> Users { get; set; }
         //protected override void OnModelCreating(ModelBuilder builder)
         //{
         //    base.OnModelCreating(builder);

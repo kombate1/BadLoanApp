@@ -167,39 +167,7 @@
     </div>
 </section>
 
-<!-- LOAN ELIGIBILITY CALCULATOR -->
-<section class="eligibility-section">
-    <div class="container">
-        <div class="d-flex flex-wrap eligibility-container">
-            <div class="eligibility-form">
-                <h3 style="font-family: 'Courier New', cursive;">Loan Eligibility Calculator</h3>
-                <form>
-                    <div class="mb-3">
-                        <label>Annual Income (GH¢)</label>
-                        <input type="number" class="form-control" placeholder="Enter your income" />
-                    </div>
-                    <div class="mb-3">
-                        <label>Loan amount (GH¢)</label>
-                        <input type="number" class="form-control" placeholder="Enter desired loan" />
-                    </div>
-                    <div class="mb-3">
-                        <label>Type of Loan</label>
-                        <input type="text" class="form-control" placeholder="e.g. Personal, Business" />
-                    </div>
-                    <div class="mb-3">
-                        <label>Duration for loan repayment</label>
-                        <input type="text" class="form-control" placeholder="e.g. 12 months" />
-                    </div>
-                    <button type="button" class="btn btn-check mt-2">Check Eligibility</button>
-                </form>
-            </div>
-            <div class="eligibility-text">
-                <h4>Check your loan Eligibility</h4>
-                <p>Use our advanced calculator to instantly check if you qualify for a loan and see your potential terms.</p>
-            </div>
-        </div>
-    </div>
-</section>
+<partial name="_LoanEligibilityCalculator" model="Model" />
 
 <!-- WHY CHOOSE YSL -->
 <section class="why-choose-ysl-section">

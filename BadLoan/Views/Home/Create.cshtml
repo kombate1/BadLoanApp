@@ -1,6 +1,6 @@
 ﻿@model Customer
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = ""; // Removed the "Login" title
 }
 
 <style>
@@ -9,209 +9,145 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    header {
-        background-color: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .btn-login {
-        background-color: #F4C085;
-        font-weight: bold;
-        color: #000;
-        border: none;
-    }
-
-        .btn-login:hover {
-            background-color: #e3aa6b;
-            color: #000;
-        }
-
-    .hero-section {
-        background-color: #FFF1E2;
-        padding: 60px 0;
-    }
-
-    .hero-card {
+    .login_form {
+        background-color: white;
+        padding: 40px;
         max-width: 1000px;
-        width: 100%;
+        margin: 50px auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
-    .hero-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .hero-text {
-        background-color: #FAE2C1;
-        padding: 50px 30px;
-        text-align: center;
-    }
-
-        .hero-text h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #3a2d2d;
-        }
-
-    .btn-apply {
-        background-color: #e0e0e0;
-        color: #000;
-        font-weight: 600;
-        border-radius: 30px;
-        padding: 10px 30px;
-        border: 1px solid #ccc;
-        transition: background-color 0.3s ease;
-    }
-
-        .btn-apply:hover {
-            background-color: #d2d2d2;
-        }
-
-    .loan-form-section {
-        background-color: #fff;
-        padding: 60px 20px;
-    }
-
-    .eligibility-section {
-        background-color: #FFF1E2;
-        padding: 60px 20px;
-    }
-
-    .eligibility-container {
-        background-color: #FAE2C1;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    .eligibility-form {
-        background-color: #f4f4f4;
-        padding: 40px;
-        flex: 1;
-    }
-
-        .eligibility-form input {
-            background-color: #ddd !important;
-        }
-
-    .eligibility-text {
-        padding: 40px;
-        background-color: #FAE2C1;
-        flex: 1;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-        .eligibility-text h4 {
-            font-weight: 700;
-        }
-
-    .btn-check {
-        background-color: #F4C085;
+    fieldset {
         border: none;
-        color: black;
-        font-weight: bold;
-        padding: 10px 30px;
+        padding: 0;
     }
 
-        .btn-check:hover {
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #ddd;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .form-col {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+    .btn-submit {
+        background-color: #F4C085;
+        color: black;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+        .btn-submit:hover {
             background-color: #e3aa6b;
         }
 
-    footer {
-        color: #888;
-        font-size: 0.9rem;
-        padding: 30px 0;
+    .btn-cancel {
+        background-color: white;
+        color: black;
+        border: 1px solid #ccc;
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-weight: bold;
     }
 
     @@media (max-width: 768px) {
-        .hero-text h1 {
-            font-size: 1.8rem;
-        }
-
-        .hero-text, .eligibility-form, .eligibility-text {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .eligibility-container {
-            flex-direction: column !important;
+        .form-row {
+            flex-direction: column;
         }
     }
 </style>
 
-
 <div class="login_form">
-    <form class="custom-border-2" method="post">
-
+    <form method="post">
         <section>
-            <h1>@ViewData["Title"]</h1>
-            <fieldset class="borde">
-                <section class="flex-column justify-content-center">
-                    <div>
-                        <strong><label asp-for="FirstName">First Name:</label><br /></strong>
-                        <input type="email" asp-for="FirstName" placeholder="Enter your First Name" required /><br />
+            <fieldset>
+                <section class="form-row">
+                    <div class="form-col">
+                        <label asp-for="FirstName">First Name:</label>
+                        <input type="email" asp-for="FirstName" placeholder="Enter your First Name" required />
                     </div>
-                    <div>
-                        <strong><label asp-for="LastName">Last Name:</label><br /></strong>
-                        <input type="email" asp-for="LastName" placeholder="Enter your  Surname" required /><br />
+                    <div class="form-col">
+                        <label asp-for="LastName">Last Name:</label>
+                        <input type="email" asp-for="LastName" placeholder="Enter your Surname" required />
                     </div>
-                    <div>
-                        <strong><label asp-for="DateOfBirth">Birthday:</label><br /></strong>
+
+                    <div class="form-col">
+                        <label asp-for="DateOfBirth">Birthday:</label>
                         <input type="date" asp-for="DateOfBirth" placeholder="yyyy/mm/dd" />
                     </div>
-                    <div>
-                        <strong><label asp-for="Occupation">Occupation:</label><br /></strong>
+                    <div class="form-col">
+                        <label asp-for="Occupation">Occupation:</label>
                         <input type="text" asp-for="Occupation" placeholder="Lawyer/doctor etc..." />
                     </div>
-                    <div>
-                        <strong><label asp-for="EmployerName">Employer Name:</label><br /></strong>
+
+                    <div class="form-col">
+                        <label asp-for="EmployerName">Employer Name:</label>
                         <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
                     </div>
-                    <div>
-                        <strong><label asp-for="Gender">Select Gender: </label><br /></strong>
-                        <div>
-                            <input type="radio" asp-for="Gender" value="Male" /> 
-                            <label>Male</label>
-                            <input type="radio" asp-for="Gender" value="Female" /> 
-                            <label>Female</label>
-                            <input type="radio" asp-for="Gender" value="Other" />
-                            <label>Other</label>
+                    <div class="form-col">
+                        <label asp-for="Gender">Select Gender:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
+                            <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
+                            <label><input type="radio" asp-for="Gender" value="Other" /> Other</label>
                         </div>
                     </div>
-                    <div>
-                        <strong><label asp-for="EmployerContact">Employer Email:</label><br /></strong>
-                        <input type="email"  asp-for="EmployerContact" placeholder="Enter your employer's email" />
+
+                    <div class="form-col">
+                        <label asp-for="EmployerContact">Employer Email:</label>
+                        <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
                     </div>
-                    <div>
-                        <strong><label asp-for="YearlyIncome">Yearly Income:</label><br /></strong>
+                    <div class="form-col">
+                        <label asp-for="YearlyIncome">Yearly Income:</label>
                         <input type="text" asp-for="YearlyIncome" placeholder="eg. $5000" />
                     </div>
-                    <div>
-                        <strong><label asp-for="HomeAddress">Home Address:</label><br /></strong>
+
+                    <div class="form-col">
+                        <label asp-for="HomeAddress">Home Address:</label>
                         <input type="text" asp-for="HomeAddress" placeholder="eg. Adenta" />
                     </div>
-                    <div>
-                        <strong><label asp-for="PlaceOfWork">Home Address:</label><br /></strong>
-                        <input type="text" asp-for="PlaceOfWork" placeholder="eg. Adenta" />
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
-                    </div>
-                   
-
-
                 </section>
 
+                <div class="pt-4">
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-submit">Submit</button>
+                </div>
             </fieldset>
         </section>
-
     </form>
 </div>
-
-
-
-

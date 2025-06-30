@@ -4,12 +4,30 @@
 @inject UserManager<IdentityUser> UserManager
 
 
+<style>
+    .custom-auth-btn {
+        background-color: #f4b375;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+
+    }
+
+        .custom-auth-btn:hover {
+            background-color: #e5a966;
+            color: black;
+        }
+</style>
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <a id="manage" class="nav-link text-dark custom-auth-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -19,11 +37,12 @@
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <li class="nav-item p-lg-1">
+            <a class="nav-link text-dark custom-auth-btn" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <br />
+    <li class="nav-item p-1">
+            <a class="nav-link text-dark custom-auth-btn" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
 </ul>

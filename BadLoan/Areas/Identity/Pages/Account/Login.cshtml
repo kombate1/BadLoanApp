@@ -115,7 +115,8 @@
 
 
 <div class="login-container">
-    <form class="login-form" method="post" asp-page="/Login">
+    <form class="login-form" method="post">
+        @*asp-page="/Login" *@
         <p>Create your account</p>
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                <div class="form-group">

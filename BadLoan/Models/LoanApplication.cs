@@ -1,6 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace BadLoan.Models
 {
@@ -30,13 +31,16 @@ namespace BadLoan.Models
         public decimal TotalRepayable { get; set; }
 
         [Required]
-        public string? Status { get; set; }
+        public string? Status { get; set; } = "Pending";
 
         [Required]
         public DateTime SubmittedDate { get; set; }
 
         [Required]
         public DateTime LastUpdated { get; set; }
+
+        [Required]
+
 
         public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
         public virtual ICollection<UploadedDocument> Documents { get; set; }

@@ -13,6 +13,8 @@ namespace BadLoan.Controllers
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
 
+
+
         public LoanApplicationController(
             ApplicationDbContext db,
             UserManager<IdentityUser> userManager
@@ -22,6 +24,8 @@ namespace BadLoan.Controllers
             _userManager = userManager;
         }
 
+      
+
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -30,11 +34,18 @@ namespace BadLoan.Controllers
 
             LoanAttachmentViewModel viewModel = new LoanAttachmentViewModel()
             {
-                LoanApplicationDetails = new LoanApplication(), 
-                CustomerDetails = customer
+                LoanApplicationDetails = new LoanApplication(),
+                CustomerDetails = customer,
+                UploadedDocuments = new List<UploadedDocument>()
             };
+
+           
+            
 
             return View(viewModel);
         }
+
+
+
     }
 }

@@ -1,0 +1,166 @@
+﻿@* @model LoanApplication *@
+@model BadLoan.Models.ViewModels.LoanAttachmentViewModel
+
+<style>
+	body {
+		background-color: #FFF1E2;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
+
+	.form-container {
+		background-color: white;
+		padding: 40px;
+		max-width: 1000px;
+		margin: 50px auto;
+		border-radius: 12px;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	}
+
+	h2, h3 {
+		font-weight: 700;
+		margin-bottom: 25px;
+		color: #000;
+	}
+
+	h3 {
+		margin-top: 40px;
+	}
+
+	.form-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+
+	.form-col {
+		flex: 1;
+		min-width: 300px;
+	}
+
+	label {
+		font-weight: 600;
+		display: block;
+		margin-bottom: 6px;
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="number"],
+	input[type="date"],
+	input[type="file"] {
+		width: 100%;
+		padding: 10px;
+		background-color: #ddd;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	}
+
+	.radio-group {
+		display: flex;
+		gap: 15px;
+		align-items: center;
+		margin-top: 5px;
+		margin-bottom: 15px;
+	}
+
+		.radio-group input[type="radio"] {
+			margin-right: 5px;
+		}
+
+	.file-note {
+		font-size: 0.85rem;
+		color: #aa1b1b;
+		font-style: italic;
+	}
+
+	.btn-section {
+		margin-top: 30px;
+		display: flex;
+		gap: 15px;
+	}
+
+	.btn-submit {
+		background-color: #F4C085;
+		color: black;
+		border: none;
+		padding: 10px 25px;
+		border-radius: 5px;
+		font-weight: bold;
+	}
+
+		.btn-submit:hover {
+			background-color: #e3aa6b;
+		}
+
+	.btn-cancel {
+		background-color: white;
+		color: black;
+		border: 1px solid #ccc;
+		padding: 10px 25px;
+		border-radius: 5px;
+		font-weight: bold;
+	}
+
+	@@media (max-width: 768px) {
+		.form-row {
+			flex-direction: column;
+		}
+	}
+</style>
+
+<div>
+	<form enctype="multipart/form-data">
+		<h3>Employment Details</h3>
+		<div class="form-row">
+			<div class="form-col">
+				<label asp-for="LoanApplicationDetails.RequestedAmount">Requested Amount</label>
+				<input type="text" asp-for="LoanApplicationDetails.RequestedAmount" required />
+			</div>
+			<div class="form-col">
+				<label asp-for="CustomerDetails.Occupation">Occupation *</label>
+				<input type="text" asp-for="CustomerDetails.Occupation" required />
+			</div>
+
+			@* <div class="form-col">
+				<label asp-for="ProofOfEmployment">Proof of Employment *</label>
+				<input type="file" asp-for="ProofOfEmployment" />
+				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
+			</div>
+			<div class="form-col">
+				<label asp-for="EmployerDetails">Employer Details *</label>
+				<input type="text" asp-for="EmployerDetails" required />
+			</div> *@
+			<div class="form-col">
+				<label>Proof of Employment *</label>
+				<input type="file" name="employmentAttachments[]" multiple />
+				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
+			</div>
+
+		</div>
+
+		<h3>₵ Financial Information</h3>
+		<div class="form-row">
+			<div class="form-col">
+				<label asp-for="CustomerDetails.YearlyIncome">Annual Income (GH₵) *</label>
+				<input type="number" asp-for="CustomerDetails.YearlyIncome" required />
+			</div>
+			@* <div class="form-col">
+				<label asp-for="LoanAmountRequesting">Loan Amount Requesting (GH₵) *</label>
+				<input type="number" asp-for="LoanAmountRequesting" required />
+			</div>
+ *@
+			<div class="form-col">
+				<label>Proof of Income( Statement)</label>
+				<input type="file" name="attachments[]" multiple />
+			</div>
+		</div>
+
+		<input name="upload" type="file" multiple />
+
+		<div class="btn-section">
+			<button type="button" class="btn-cancel">Cancel</button>
+			<button type="submit" class="btn-submit">Submit</button>
+		</div>
+	</form>
+</div>

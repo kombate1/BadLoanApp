@@ -114,11 +114,11 @@
 		<h3>Employment Details</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="LoanApplicationDetails.RequestedAmount">Requested Amount<span class="text-danger">*</span></label>
+				<label asp-for="LoanApplicationDetails.RequestedAmount">Requested Amount</label>
 				<input type="text" asp-for="LoanApplicationDetails.RequestedAmount" required />
 			</div>
 			<div class="form-col">
-				<label asp-for="CustomerDetails.Occupation">Occupation <span class="text-danger">*</span></label>
+				<label asp-for="CustomerDetails.Occupation">Occupation *</label>
 				<input type="text" asp-for="CustomerDetails.Occupation" required />
 			</div>
 
@@ -132,17 +132,17 @@
 				<input type="text" asp-for="EmployerDetails" required />
 			</div> *@
 			<div class="form-col">
-				<label>Proof of Employment <span class="text-danger">*</span></label>
-				<input type="file" name="employmentAttachments[]" multiple required/>
+				<label>Proof of Employment *</label>
+				<input type="file" name="employmentAttachments[]" multiple />
 				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
 			</div>
-			
+
 		</div>
 
 		<h3>₵ Financial Information</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="CustomerDetails.YearlyIncome">Annual Income (GH₵) <span class="text-danger">*</span></label>
+				<label asp-for="CustomerDetails.YearlyIncome">Annual Income (GH₵) *</label>
 				<input type="number" asp-for="CustomerDetails.YearlyIncome" required />
 			</div>
 			@* <div class="form-col">
@@ -151,12 +151,12 @@
 			</div>
  *@
 			<div class="form-col">
-				<label>Proof of Income( Statement) <span class="text-danger">*</span></label>
-				<input type="file" name="attachments[]" multiple required/>
+				<label>Proof of Income( Statement)</label>
+				<input type="file" name="attachments[]" multiple />
 			</div>
 		</div>
 
-		@* <input name="upload" type="file" multiple /> *@
+		<input name="upload" type="file" multiple />
 
 		<div class="btn-section">
 			<button type="button" class="btn-cancel">Cancel</button>

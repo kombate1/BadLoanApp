@@ -110,7 +110,7 @@
 </style>
 
 <div>
-	<form enctype="multipart/form-data">
+	<form enctype="multipart/form-data" method="post">
 		<h3>Employment Details</h3>
 		<div class="form-row">
 			<div class="form-col">
@@ -118,22 +118,14 @@
 				<input type="text" asp-for="LoanApplicationDetails.RequestedAmount" required />
 			</div>
 			<div class="form-col">
-				<label asp-for="CustomerDetails.Occupation">Occupation *</label>
-				<input type="text" asp-for="CustomerDetails.Occupation" required />
+				<label asp-for="Occupation">Occupation *</label>
+				<input type="text" asp-for="Occupation" required />
 			</div>
 
-			@* <div class="form-col">
-				<label asp-for="ProofOfEmployment">Proof of Employment *</label>
-				<input type="file" asp-for="ProofOfEmployment" />
-				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
-			</div>
-			<div class="form-col">
-				<label asp-for="EmployerDetails">Employer Details *</label>
-				<input type="text" asp-for="EmployerDetails" required />
-			</div> *@
+			
 			<div class="form-col">
 				<label>Proof of Employment *</label>
-				<input type="file" name="employmentAttachments[]" multiple />
+				<input type="file" name="employmentAttachments" multiple />
 				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
 			</div>
 
@@ -142,17 +134,13 @@
 		<h3>₵ Financial Information</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="CustomerDetails.YearlyIncome">Annual Income (GH₵) *</label>
-				<input type="number" asp-for="CustomerDetails.YearlyIncome" required />
+				<label asp-for="YearlyIncome">Annual Income (GH₵) *</label>
+				<input type="number" asp-for="YearlyIncome" required />
 			</div>
-			@* <div class="form-col">
-				<label asp-for="LoanAmountRequesting">Loan Amount Requesting (GH₵) *</label>
-				<input type="number" asp-for="LoanAmountRequesting" required />
-			</div>
- *@
+		
 			<div class="form-col">
 				<label>Proof of Income( Statement)</label>
-				<input type="file" name="attachments[]" multiple />
+				<input type="file" name="proofOfIncome" multiple />
 			</div>
 		</div>
 

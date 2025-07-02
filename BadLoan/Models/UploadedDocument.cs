@@ -10,13 +10,13 @@ namespace BadLoan.Models
         public int DocumentId { get; set; }
 
         public int LoanApplicationId { get; set; }
-        public LoanApplication LoanApplication { get; set; }
+        //public LoanApplication LoanApplication { get; set; }
 
         [Required]
-        public string FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
+        public string? FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
 
-        [Required]
-        public byte[] Content { get; set; }   // e.g., "id-proof.pdf"
+        //[Required]
+        //public byte[] Content { get; set; }   // e.g., "id-proof.pdf"
 
        
 

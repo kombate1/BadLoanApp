@@ -10,26 +10,6 @@ namespace BadLoan.Models
         //public int id { get; set; }
 
 
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

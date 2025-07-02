@@ -4,6 +4,7 @@ using BadLoan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BadLoan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702211042_FileUploadChanges")]
+    partial class FileUploadChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,10 +120,10 @@ namespace BadLoan.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DocumentId")
+                    b.Property<int>("DocumentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastUpdated")
+                    b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("LoanTermYears")
@@ -139,7 +142,7 @@ namespace BadLoan.Migrations
                     b.Property<DateTime>("SubmittedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("TotalRepayable")
+                    b.Property<decimal>("TotalRepayable")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -160,22 +163,19 @@ namespace BadLoan.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LoanTypeId"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("InterestRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("LoanTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("MaxAmount")
+                    b.Property<decimal>("InterestRate")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("MaxTermMonths")
+                    b.Property<decimal>("MaxAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MaxTermMonths")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("MinAmount")
+                    b.Property<decimal>("MinAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("LoanTypeId");

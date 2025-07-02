@@ -93,60 +93,65 @@
 </style>
 
 <div class="login_form">
-    <form method="post">
-        <section>
-            <fieldset>
-                <section class="form-row">
-                    <div class="form-col">
-                        <label asp-for="FirstName">First Name:</label>
-                        <input type="text" asp-for="FirstName" placeholder="Enter your First Name" required />
-                    </div>
-                    <div class="form-col">
-                        <label asp-for="LastName">Last Name:</label>
-                        <input type="text" asp-for="LastName" placeholder="Enter your Surname" required />
-                    </div>
+            <form method="post">
+                <section>
+                    <fieldset>
+                        <section class="form-row">
+                            <div class="form-col">
+                                <label asp-for="FirstName">First Name:</label>
+                                <input type="text" asp-for="FirstName" placeholder="Enter your First Name" required />
+                            </div>
+                            <div class="form-col">
+                                <label asp-for="LastName">Last Name:</label>
+                                <input type="text" asp-for="LastName" placeholder="Enter your Surname" required />
+                            </div>
 
-                    <div class="form-col">
-                        <label asp-for="DateOfBirth">Birthday:</label>
-                        <input type="date" asp-for="DateOfBirth" placeholder="yyyy/mm/dd" />
-                    </div>
-                    <div class="form-col">
-                        <label asp-for="Occupation">Occupation:</label>
-                        <input type="text" asp-for="Occupation" placeholder="Lawyer/doctor etc..." />
-                    </div>
+                            <div class="form-col">
+                                <label asp-for="DateOfBirth">Birthday:</label>
+                                <input type="date" asp-for="DateOfBirth" placeholder="yyyy/mm/dd" />
+                            </div>
+                            <div class="form-col">
+                                <label asp-for="Occupation">Occupation:</label>
+                                <input type="text" asp-for="Occupation" placeholder="Lawyer/doctor etc..." />
+                            </div>
 
-                    <div class="form-col">
-                        <label asp-for="EmployerName">Employer Name:</label>
-                        <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
-                    </div>
-                    <div class="form-col">
-                        <label asp-for="Gender">Select Gender:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
-                            <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
-                            <label><input type="radio" asp-for="Gender" value="Other" /> Other</label>
+                            <div class="form-col">
+                                <label asp-for="PlaceOfWork">Place Of Work:</label>
+                                <input type="text" asp-for="PlaceOfWork" placeholder="CBG/ etc..." />
+                            </div>
+
+                            <div class="form-col">
+                                <label asp-for="EmployerName">Employer Name:</label>
+                                <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
+                            </div>
+                            <div class="form-col">
+                                <label asp-for="Gender">Select Gender:</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
+                                    <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
+                                    <label><input type="radio" asp-for="Gender" value="Other" /> Other</label>
+                                </div>
+                            </div>
+
+                            <div class="form-col">
+                                <label asp-for="EmployerContact">Employer Email:</label>
+                                <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
+                            </div>
+                            <div class="form-col">
+                                <label asp-for="YearlyIncome">Yearly Income:</label>
+                                <input type="text" asp-for="YearlyIncome" placeholder="eg. $5000" />
+                            </div>
+
+                            <div class="form-col">
+                                <label asp-for="HomeAddress">Home Address:</label>
+                                <input type="text" asp-for="HomeAddress" placeholder="eg. Adenta" />
+                            </div>
+                        </section>
+
+                        <div class="pt-4">
+                            <button type="submit" class="btn-submit">Submit</button>
                         </div>
-                    </div>
-
-                    <div class="form-col">
-                        <label asp-for="EmployerContact">Employer Email:</label>
-                        <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
-                    </div>
-                    <div class="form-col">
-                        <label asp-for="YearlyIncome">Yearly Income:</label>
-                        <input type="text" asp-for="YearlyIncome" placeholder="eg. $5000" />
-                    </div>
-
-                    <div class="form-col">
-                        <label asp-for="HomeAddress">Home Address:</label>
-                        <input type="text" asp-for="HomeAddress" placeholder="eg. Adenta" />
-                    </div>
+                    </fieldset>
                 </section>
-
-                <div class="pt-4">
-                    <button type="submit" class="btn-submit">Submit</button>
-                </div>
-            </fieldset>
-        </section>
     </form>
 </div>

@@ -43,6 +43,6 @@ namespace BadLoan.Models
 
 
         //public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
-        public virtual ICollection<UploadedDocument> Documents { get; set; }
+        //public virtual ICollection<UploadedDocument> Documents { get; set; }
     }
 }

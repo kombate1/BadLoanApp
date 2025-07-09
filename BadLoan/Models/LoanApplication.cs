@@ -18,9 +18,6 @@ namespace BadLoan.Models
         public int LoanTypeId { get; set; }
         public virtual LoanType? LoanType { get; set; }
 
-        
-        public int? DocumentId { get; set; }
-
         [Required]
         public decimal RequestedAmount { get; set; }
 
@@ -39,10 +36,14 @@ namespace BadLoan.Models
         
         public DateTime? LastUpdated { get; set; }
 
-     
+        public decimal AnnualIncome { get; set; }
+        public int Duration { get; set; }
+        public decimal LoanAmount { get; set; }
+
+
 
 
         //public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
-        //public virtual ICollection<UploadedDocument> Documents { get; set; }
+        public virtual ICollection<UploadedDocument> Documents { get; set; }
     }
 }

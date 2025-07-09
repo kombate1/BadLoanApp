@@ -13,33 +13,53 @@ namespace BadLoan.Controllers
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly EligibilityService _eligibilityService;
+            
 
 
         public LoanApplicationController(
             ApplicationDbContext db,
             UserManager<IdentityUser> userManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            EligibilityService eligibilityService
             )
         {
             _db = db;
             _userManager = userManager;
             _configuration = configuration;
+            _eligibilityService = eligibilityService;
+
         }
+
+        
 
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated || string.IsNullOrEmpty(User.Identity.Name))
+            {
+                TempData["ErrorMessage"] = "Please login to access Loan Application Or SignUp if you don't have an account";
+                return RedirectToPage("/Account/Login", new { area = "Identity" , returnUrl = Url.Action("Index", "LoanApplication")}); // Redirect to login page and return back to this page after login
+            }
             var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
+
+            if (customer == null || customer.CustomerId == 0 )
+            {
+                TempData["ErrorMessage"] = "Customer record not found because Customer details have not been filled. PLease fill in the details below.";
+                return RedirectToAction("Create", "Home", new { returnUrl = Url.Action("Index", "LoanApplication") });
+            }
+
+            
 
             LoanAttachmentViewModel viewModel = new LoanAttachmentViewModel()
             {
                 LoanApplicationDetails = new LoanApplication(),
                 CustomerId = customer!.CustomerId,
                 Occupation = customer!.Occupation,
-                YearlyIncome = customer!.YearlyIncome,
+                AnnualIncome = customer!.AnnualIncome,
                 UploadedDocuments = new List<UploadedDocument>()
             };
 
@@ -54,31 +74,69 @@ namespace BadLoan.Controllers
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
 
+            //obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
+
 
             var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
             if (validLoanType == null)
             {
                 // Optional: create a dummy loan type if your table is empty (for test only)
-                validLoanType = new LoanType { LoanTypeName = "Test Loan" };
+                validLoanType = new LoanType { LoanTypeName = "Personal" };
                 _db.LoanTypes.Add(validLoanType);
                 await _db.SaveChangesAsync();
 
             }
 
+
+
+            obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
+            string loantype = validLoanType.LoanTypeName;
+            int duration = obj.LoanApplicationDetails.Duration;
+            obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
+
+            decimal annualIncome = obj.LoanApplicationDetails.AnnualIncome;
+            decimal loanAmount = obj.LoanApplicationDetails.LoanAmount;
+
+
+            var results = _eligibilityService.LoanEligibility(annualIncome, duration, loantype, loanAmount);
+
+            ViewBag.MessageHtml = results.Message;
+
+
+            //var loanTypeId = Convert.ToInt32(obj.LoanType);
+            //var findLoanType = _db.LoanTypes.Where(c => c.LoanTypeId == loanTypeId).FirstOrDefault().LoanTypeName;
+            //obj.Calculation!.LoanType = findLoanType;
+
+
+
+            bool isEligible = results.IsEligible;
+
+            if (obj?.LoanApplicationDetails == null)
+            {
+                ViewBag.MessageHtml = "Loan application details are missing.";
+                return View(obj);
+            }
+
+
             obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
             obj.LoanApplicationDetails.CustomerId = customer.CustomerId;
-            if (obj.LoanApplicationDetails != null)
+            if (obj.LoanApplicationDetails != null && isEligible )
             {
                 _db.LoanApplications.Add(obj!.LoanApplicationDetails!);
                 await _db.SaveChangesAsync();
             }
+            else
+            {
+                ViewBag.MessageHtml = results.Message;
+                return View(obj);
+            }
 
-            var proofOfIncomeAttachment = await HandleFileAttachments(myFiles, "proofOfIncome");
+                var proofOfIncomeAttachment = await HandleFileAttachments(myFiles, "proofOfIncome");
             var employmentAttachment = await HandleFileAttachments(myFiles, "employmentAttachments");
 
 
 
-            if (proofOfIncomeAttachment != null)
+            if (proofOfIncomeAttachment != null && isEligible)
             {
                 UploadedDocument uploadedDocument = new UploadedDocument
                 {
@@ -93,7 +151,7 @@ namespace BadLoan.Controllers
 
 
 
-            if (employmentAttachment != null)
+            if (employmentAttachment != null && isEligible)
             {
                 UploadedDocument uploadedDoc = new UploadedDocument
                 {
@@ -104,14 +162,17 @@ namespace BadLoan.Controllers
                 _db.UploadedDocuments.Add(uploadedDoc);
             }
 
+
             await _db.SaveChangesAsync();
 
-            return View(obj);
+            TempData["SuccessMessage"] = "Loan application submitted successfully!";
+            return RedirectToAction("Index"); // or redirect to a success page
+
 
         }
 
-           
-        
+
+
 
         private async Task<string> HandleFileAttachments(IFormCollection collectedFiles, string fileKey)
         {

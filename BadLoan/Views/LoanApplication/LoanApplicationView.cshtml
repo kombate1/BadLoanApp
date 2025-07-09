@@ -110,13 +110,50 @@
 </style>
 
 <div>
-	<form enctype="multipart/form-data">
+
+	<div class="form-col">
+		<label asp-for="LoanApplicationDetails.AnnualIncome">Annual Income (GH₵)</label>
+		<input type="number" asp-for="LoanApplicationDetails.AnnualIncome" class="form-control" required />
+		@Html.ValidationMessageFor(m => m.AnnualIncome, "", new { @class = "text-danger" })
+	</div>
+
+	<div class="form-col">
+		<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
+		<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" required />
+		@Html.ValidationMessageFor(m => m.LoanAmount, "", new { @class = "text-danger" })
+	</div>
+
+	
+	<form enctype="multipart/form-data" method="post" >
 		<h3>Employment Details</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="LoanApplicationDetails.RequestedAmount">Requested Amount<span class="text-danger">*</span></label>
-				<input type="text" asp-for="LoanApplicationDetails.RequestedAmount" required />
+				<label asp-for="AnnualIncome">Annual Income (GH₵)</label>
+				<input type="number" asp-for="AnnualIncome" class="form-control" required />
+				@Html.ValidationMessageFor(m => m.AnnualIncome, "", new { @class = "text-danger" })
 			</div>
+
+			<div class="form-col">
+				<label asp-for="LoanAmount">Loan Amount (GH₵)</label>
+				<input type="number" asp-for="LoanAmount" class="form-control" required />
+				@Html.ValidationMessageFor(m => m.LoanAmount, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="form-col">
+				<label asp-for="LoanType">Type of Loan</label>
+				<select asp-for="LoanType" class="form-control" required>
+					<option value="">Select Loan Type</option>
+					<option value="Personal">Personal Loan</option>
+					<option value="Auto">Auto Loan</option>
+					<option value="Mortgage">Mortgage Loan</option>
+				</select>
+			</div>
+
+			<div class="form-col">
+				<label asp-for="Duration">Duration for Loan Repayment (in years)</label>
+				<input type="number" asp-for="Duration" class="form-control" required />
+			</div>
+			
 			<div class="form-col">
 				<label asp-for="Occupation">Occupation <span class="text-danger">*</span></label>
 				<input type="text" asp-for="Occupation" required />
@@ -142,8 +179,8 @@
 		<h3>₵ Financial Information</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="YearlyIncome">Annual Income (GH₵) <span class="text-danger">*</span></label>
-				<input type="number" asp-for="YearlyIncome" required />
+				<label asp-for="AnnualIncome">Annual Income (GH₵) <span class="text-danger">*</span></label>
+				<input type="number" asp-for="AnnualIncome" required />
 			</div>
 			@* <div class="form-col">
 				<label asp-for="LoanAmountRequesting">Loan Amount Requesting (GH₵) *</label>
@@ -156,6 +193,10 @@
 			</div>
 		</div>
 
+		<div>
+			@Html.Raw(ViewBag.MessageHtml)
+		</div>
+
 		@* <input name="upload" type="file" multiple /> *@
 
 		<div class="btn-section">
@@ -163,4 +204,5 @@
 			<button type="submit" class="btn-submit">Submit</button>
 		</div>
 	</form>
+</div>
 </div>

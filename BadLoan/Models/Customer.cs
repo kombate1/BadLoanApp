@@ -31,7 +31,7 @@ namespace BadLoan.Models
         public string EmployerContact { get; set; }
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal YearlyIncome { get; set; }
+        public decimal AnnualIncome { get; set; }
         [Required]
         public string? HomeAddress { get; set; }
         [Required]

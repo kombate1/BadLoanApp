@@ -196,7 +196,8 @@ namespace BadLoan.Controllers
             //    throw new InvalidOperationException(validationResult.ErrorMessage);
             //}
 
-            var uploadFolder = Path.Combine(drivePath, "Uploaded Documents");
+            //var uploadFolder = Path.Combine(drivePath, "Uploaded Documents");
+            var uploadFolder = Path.Combine( "Uploaded Documents");
             Directory.CreateDirectory(uploadFolder); // Ensure path exists
 
             var fileUrls = new List<string>();
@@ -219,11 +220,116 @@ namespace BadLoan.Controllers
                 // Relative URL for later usage
                 var relativeUrl = Path.Combine("Document Uploads", uniqueFileName)
                                   .Replace("\\", "/");
-                fileUrls.Add($"##{relativeUrl}");
+                fileUrls.Add($"{relativeUrl}");
             }
 
             return string.Join("", fileUrls);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details()
+        {
+
+            var applications = await _db.LoanApplications.
+                Include(l => l.LoanType).
+                Include(l => l.Customer).
+                Include(l => l.UploadedDocuments).
+                ToListAsync();
+
+
+            return View(applications);
+        }
+
+        public async Task<IActionResult> DownloadFile(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    return NotFound("File path not provided");
+                }
+
+                filePath = filePath.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString());
+                var prefix = "Document Uploads" + Path.DirectorySeparatorChar;
+                if (filePath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    filePath = filePath.Substring(prefix.Length);
+                }
+
+
+                // Get the drive path from configuration
+                // var drivePath = _configuration["NEWCONFIG:drivePath"];
+                var drivePath = _configuration["PathDetails:DrivePath"];
+                if (string.IsNullOrEmpty(drivePath))
+                {
+                    return StatusCode(500, "Drive path configuration is missing");
+                }
+
+                // Handle both formats of file paths
+                string fullPath;
+                if (filePath.StartsWith("Uploaded Documents"))
+                {
+                    // Handle relative path format
+                    fullPath = Path.Combine( drivePath, filePath);
+                }
+                else
+                {
+                //C:\\YebesiSavingsLoans / Document Uploads / internet_speed_78abd740 - a0b7 - 44f5 - bf4b - b8080f19542a.pdf
+                //"C:\YebesiSavingsLoans\Uploaded Documents\internet_speed_78abd740-a0b7-44f5-bf4b-b8080f19542a.pdf"
+                
+        // Handle full path format
+        //fullPath = Path.Combine(Directory.GetCurrentDirectory(), drivePath, "uploads", "receipts", filePath);
+        fullPath = Path.Combine(drivePath, "Uploaded Documents", filePath);
+                    
+                }
+
+                if (!System.IO.File.Exists(fullPath))
+                {
+                    return NotFound("File not found");
+                }
+
+                // Get the file name from the path
+                var fileName = Path.GetFileName(fullPath);
+
+                // Read the file
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(fullPath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+
+                Response.Headers["Content-Disposition"] = $"inline; filename={fileName}";
+
+                // Return the file
+                return File(memory, GetContentType(fullPath), fileName);
+            }
+            catch (Exception ex)
+            {
+               
+                return StatusCode(500, "Error downloading file");
+            }
+
+            
+        }
+
+        private string GetContentType(string path)
+        {
+            var extension = Path.GetExtension(path).ToLowerInvariant();
+            return extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                _ => "application/octet-stream"
+            };
+        }
+
 
     }
 }

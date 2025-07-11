@@ -66,12 +66,12 @@
             <div class="eligibility-form">
                 <h3 style="font-family: 'Courier New', cursive;">Loan Eligibility Calculator</h3>
 
-                @using (Html.BeginForm("Index", "Calculator", FormMethod.Post))
+                @using (Html.BeginForm("Index", "Calculator", FormMethod.Post, new { id = "eligibilityForm" }))
                 {
                     <div class="form-group">
-                        <label asp-for="MonthlyIncome">Annual Income (GH₵)</label>
-                        <input type="number" asp-for="MonthlyIncome" class="form-control" required />
-                        @Html.ValidationMessageFor(m => m.MonthlyIncome, "", new { @class = "text-danger" })
+                        <label asp-for="AnnualIncome">Annual Income (GH₵)</label>
+                        <input type="number" asp-for="AnnualIncome" class="form-control" required />
+                        @Html.ValidationMessageFor(m => m.AnnualIncome, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="form-group">
@@ -98,8 +98,9 @@
                     </div>
 
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Calculate</button>
-                        <a asp-action="Index" asp-controller="Calculator" class="btn btn-secondary">Clear</a>
+                        <button type="submit" class="btn btn-primary" id="calculateBtn">Calculate</button>
+                        <button type="button" class="btn btn-secondary" id="clearBtn">Clear</button>
+                        
                     </div>
 
                     @if (!string.IsNullOrEmpty(ViewBag.Message as string))
@@ -108,6 +109,8 @@
                     }
 
                     @Html.Raw(ViewBag.MessageHtml)
+
+                    <div id="resultMessage"></div>
                 }
             </div>
 
@@ -122,6 +125,37 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // AJAX form submission
+        document.getElementById('eligibilityForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var form = this;
+            var formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Optionally, parse and display only the result message
+                document.getElementById('resultMessage').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('resultMessage').innerHTML = '<div class="alert alert-danger mt-3">An error occurred.</div>';
+            });
+        });
+
+        // Clear form fields
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            var form = document.getElementById('eligibilityForm');
+            form.reset();
+            document.getElementById('resultMessage').innerHTML = '';
+        });
+    </script>
 }
 
 

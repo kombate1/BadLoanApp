@@ -93,7 +93,15 @@
 </style>
 
 <div class="login_form">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+        
+    }
             <form method="post">
+        
                 <section>
                     <fieldset>
                         <section class="form-row">
@@ -138,8 +146,8 @@
                                 <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
                             </div>
                             <div class="form-col">
-                                <label asp-for="YearlyIncome">Yearly Income:</label>
-                                <input type="text" asp-for="YearlyIncome" placeholder="eg. $5000" />
+                                <label asp-for="AnnualIncome">Yearly Income:</label>
+                                <input type="text" asp-for="AnnualIncome" placeholder="eg. $5000" />
                             </div>
 
                             <div class="form-col">
@@ -155,3 +163,8 @@
                 </section>
     </form>
 </div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

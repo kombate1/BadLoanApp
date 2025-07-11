@@ -19,30 +19,31 @@ namespace BadLoan.Models
         public virtual LoanType? LoanType { get; set; }
 
         [Required]
-        public int DocumentId { get; set; }
-
-        [Required]
         public decimal RequestedAmount { get; set; }
 
         [Required]
         public int LoanTermYears { get; set; }
 
-        [Required]
-        public decimal TotalRepayable { get; set; }
+        
+        public decimal? TotalRepayable { get; set; }
 
         [Required]
         public string? Status { get; set; } = "Pending";
 
         [Required]
-        public DateTime SubmittedDate { get; set; }
+        public DateTime SubmittedDate { get; set; } = DateTime.Now;
 
-        [Required]
-        public DateTime LastUpdated { get; set; }
+        
+        public DateTime? LastUpdated { get; set; }
 
-        [Required]
+        public decimal AnnualIncome { get; set; }
+        public int Duration { get; set; }
+        public decimal LoanAmount { get; set; }
 
 
-        public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
-        public virtual ICollection<UploadedDocument> Documents { get; set; }
+
+
+        //public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
+        public virtual ICollection<UploadedDocument> UploadedDocuments { get; set; } = new List<UploadedDocument>();
     }
 }

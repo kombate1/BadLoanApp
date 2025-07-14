@@ -38,7 +38,7 @@ public class EligibilityService
 
             if (duration < min || duration > max)
             {
-            return (false,"", 0);
+            return (false,$"Duration for {loanType} must be between {min} and {max}", 0);
                 //ModelState.AddModelError("Duration", $"Duration for {c.LoanType} must be between {min} and {max} years.");
             }
 
@@ -66,11 +66,11 @@ public class EligibilityService
 
             if (debtServiceRatio > 40)
             {
-                return (false, $"You are not eligible for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio);
+                return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio);
             }
             else
             {
-                return (true, "Congratulations! You are eligible for this loan.", debtServiceRatio);
+                return (true, "Congratulations! You are <strong> eligible </strong>for this loan.", debtServiceRatio);
             }
         }
 

@@ -166,7 +166,7 @@ namespace BadLoan.Controllers
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Loan application submitted successfully!";
-            return RedirectToAction("Index"); // or redirect to a success page
+            return RedirectToAction("Details", "LoanApplication"); // or redirect to a success page
 
 
         }

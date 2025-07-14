@@ -1,4 +1,5 @@
-﻿@model IEnumerable<BadLoan.Models.LoanApplication>
+﻿@using System.Globalization
+@model IEnumerable<BadLoan.Models.LoanApplication>
 
 @{
     ViewData["Title"] = "Loan Applications for Approval";
@@ -19,7 +20,9 @@ else
                 <th>Loan Type</th>
                 <th>Amount</th>
                 <th>Duration</th>
+                <th>Occupation</th>
                 <th>Annual Income</th>
+                
                 <th>Status</th>
                 <th>Documents</th>
                 <th>Action</th>
@@ -31,9 +34,10 @@ else
                 <tr>
                     <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
                     <td>@app.LoanType?.LoanTypeName</td>
-                    <td>@app.LoanAmount.ToString("C")</td>
-                    <td>@app.Duration months</td>
-                    <td>@app.AnnualIncome.ToString("C")</td>
+                    <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
+                    <td>@app.Duration Year(s)</td>
+                    <td>@app.Customer.Occupation</td>
+                    <td>@app.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</td>
                     <td>@app.Status</td>
                     <td>
                         @foreach (var doc in app.UploadedDocuments)

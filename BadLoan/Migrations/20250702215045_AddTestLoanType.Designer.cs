@@ -4,6 +4,7 @@ using BadLoan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BadLoan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702215045_AddTestLoanType")]
+    partial class AddTestLoanType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,6 @@ namespace BadLoan.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
-                    b.Property<decimal>("AnnualIncome")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
@@ -99,6 +99,9 @@ namespace BadLoan.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<decimal>("YearlyIncome")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("CustomerId");
 
                     b.HasIndex("UserId");
@@ -114,20 +117,14 @@ namespace BadLoan.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AnnualIncome")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Duration")
+                    b.Property<int>("DocumentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastUpdated")
+                    b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
-
-                    b.Property<decimal>("LoanAmount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("LoanTermYears")
                         .HasColumnType("int");
@@ -145,7 +142,7 @@ namespace BadLoan.Migrations
                     b.Property<DateTime>("SubmittedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("TotalRepayable")
+                    b.Property<decimal>("TotalRepayable")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -166,22 +163,23 @@ namespace BadLoan.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LoanTypeId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("InterestRate")
+                    b.Property<decimal>("InterestRate")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("LoanTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("MaxAmount")
+                    b.Property<decimal>("MaxAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("MaxTermMonths")
+                    b.Property<int>("MaxTermMonths")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("MinAmount")
+                    b.Property<decimal>("MinAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("LoanTypeId");
@@ -228,8 +226,6 @@ namespace BadLoan.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("DocumentId");
-
-                    b.HasIndex("LoanApplicationId");
 
                     b.ToTable("UploadedDocuments");
                 });
@@ -493,15 +489,6 @@ namespace BadLoan.Migrations
                     b.Navigation("LoanType");
                 });
 
-            modelBuilder.Entity("BadLoan.Models.UploadedDocument", b =>
-                {
-                    b.HasOne("BadLoan.Models.LoanApplication", null)
-                        .WithMany("Documents")
-                        .HasForeignKey("LoanApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -556,11 +543,6 @@ namespace BadLoan.Migrations
             modelBuilder.Entity("BadLoan.Models.Customer", b =>
                 {
                     b.Navigation("LoanApplications");
-                });
-
-            modelBuilder.Entity("BadLoan.Models.LoanApplication", b =>
-                {
-                    b.Navigation("Documents");
                 });
 
             modelBuilder.Entity("BadLoan.Models.LoanType", b =>

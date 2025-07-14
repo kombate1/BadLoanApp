@@ -110,53 +110,65 @@
 </style>
 
 <div>
-	<form enctype="multipart/form-data">
+	
+
+	<form enctype="multipart/form-data" method="post">
 		<h3>Employment Details</h3>
 		<div class="form-row">
 			<div class="form-col">
-				<label asp-for="LoanApplicationDetails.RequestedAmount">Requested Amount</label>
-				<input type="text" asp-for="LoanApplicationDetails.RequestedAmount" required />
-			</div>
+				<div class="form-col">
+					<label asp-for="AnnualIncome">Annual Income (GH₵)</label>
+					<input type="number" asp-for="AnnualIncome" class="form-control" required />
+					@Html.ValidationMessageFor(m => m.LoanApplicationDetails.AnnualIncome, "", new { @class = "text-danger" })
+				</div>
+
+				<div class="form-col">
+					<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
+					<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" required />
+					@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })
+				</div>
+
+				<div class="form-col">
+					<label asp-for="LoanApplicationDetails.LoanType">Type of Loan</label>
+					<select asp-for="LoanApplicationDetails.LoanType" class="form-control" required>
+						<option value="">Select Loan Type</option>
+						<option value="Personal">Personal Loan</option>
+						<option value="Auto">Auto Loan</option>
+						<option value="Mortgage">Mortgage Loan</option>
+					</select>
+				</div>
+
+				<div class="form-col">
+					<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in years)</label>
+					<input type="number" asp-for="LoanApplicationDetails.Duration" class="form-control" required />
+				</div>
+
 			<div class="form-col">
-				<label asp-for="CustomerDetails.Occupation">Occupation *</label>
-				<input type="text" asp-for="CustomerDetails.Occupation" required />
+				<label asp-for="Occupation">Occupation *</label>
+				<input type="text" asp-for="Occupation" required />
 			</div>
 
-			@* <div class="form-col">
-				<label asp-for="ProofOfEmployment">Proof of Employment *</label>
-				<input type="file" asp-for="ProofOfEmployment" />
-				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
-			</div>
-			<div class="form-col">
-				<label asp-for="EmployerDetails">Employer Details *</label>
-				<input type="text" asp-for="EmployerDetails" required />
-			</div> *@
+			
 			<div class="form-col">
 				<label>Proof of Employment *</label>
-				<input type="file" name="employmentAttachments[]" multiple />
+				<input type="file" name="employmentAttachments" multiple />
 				<span class="file-note">*Click here to add document / image of up to 200MB*</span>
 			</div>
 
 		</div>
 
 		<h3>₵ Financial Information</h3>
-		<div class="form-row">
-			<div class="form-col">
-				<label asp-for="CustomerDetails.YearlyIncome">Annual Income (GH₵) *</label>
-				<input type="number" asp-for="CustomerDetails.YearlyIncome" required />
-			</div>
-			@* <div class="form-col">
-				<label asp-for="LoanAmountRequesting">Loan Amount Requesting (GH₵) *</label>
-				<input type="number" asp-for="LoanAmountRequesting" required />
-			</div>
- *@
+		
+		
 			<div class="form-col">
 				<label>Proof of Income( Statement)</label>
-				<input type="file" name="attachments[]" multiple />
+				<input type="file" name="proofOfIncome" multiple />
 			</div>
 		</div>
 
-		<input name="upload" type="file" multiple />
+		<div>
+			@Html.Raw(ViewBag.MessageHtml)
+		</div>
 
 		<div class="btn-section">
 			<button type="button" class="btn-cancel">Cancel</button>
@@ -164,3 +176,25 @@
 		</div>
 	</form>
 </div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<div class="toast-container position-fixed p-3" style="z-index: 9999">
+		<div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+			<div class="d-flex">
+				<div class="toast-body">
+					@TempData["SuccessMessage"]
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+		toastElList.forEach(function (toastEl) {
+			new bootstrap.Toast(toastEl).show();
+		});
+	</script>
+}

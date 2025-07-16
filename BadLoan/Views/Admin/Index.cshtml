@@ -1,0 +1,215 @@
+﻿@using System.Globalization
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf9f3;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 230px;
+            background-color: #d2964c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .main-content {
+            margin-left: 230px;
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+            .profile img {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background-color: #eee;
+                margin-bottom: 10px;
+            }
+
+            .profile h3 {
+                margin: 5px 0;
+                font-weight: bold;
+                color: black;
+            }
+
+            .profile p {
+                font-size: 0.9em;
+                color: black;
+            }
+
+            .profile button {
+                background-color: white;
+                color: black;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding-left: 20px;
+        }
+
+            .menu a {
+                text-decoration: none;
+                color: black;
+                font-weight: bold;
+                padding: 10px 0;
+                display: block;
+            }
+
+                .menu a:hover {
+                    text-decoration: underline;
+                }
+
+        .header {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            color: black;
+            font-weight: bold;
+        }
+
+            .card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .card h2 {
+                font-size: 2.5rem;
+                margin: 0;
+                color: black;
+            }
+
+            .card p {
+                margin-top: 10px;
+                font-size: 1rem;
+            }
+
+        /* Specific card sizing */
+        .card-top {
+            flex: 1 1 240px;
+        }
+
+        .card-bottom {
+            flex: 1 1 100%;
+        }
+
+        /* Color accents */
+        .card-all {
+            border-left: 6px solid #f4c542;
+        }
+
+        .card-pending {
+            border-left: 6px solid #4e9fff;
+        }
+
+        .card-approved {
+            border-left: 6px solid #38c172;
+        }
+
+        .card-declined {
+            border-left: 6px solid #e3342f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <img src="#" alt="Profile Picture">
+                <h3>Glenn Inkoom</h3>
+                <p>Software Developer, BAD Company</p>
+                <button>Check Profile</button>
+            </div>
+            <div class="menu">
+                <a asp-controller="Admin" asp-action="GetPendingLoans">Pending Loans</a>
+                <a asp-controller="Admin" asp-action="GetDeclinedLoans">Declined Loans</a>
+                <a asp-controller="Admin" asp-action="GetApprovedLoans">Approved Loans</a>
+                <a asp-controller="Admin" asp-action="GetAllLoans">All Loans</a>
+                <a asp-controller="Account" asp-action="Logout">Log Out</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">Dashboard</div>
+            <div class="cards">
+                <div class="card card-top" style="border-left: 6px solid #20c997;">
+                    <h2>@ViewBag.totalDisbursed.ToString("C", new CultureInfo("en-GH"))</h2>
+                    <p>Total Disbursed</p>
+                </div>
+
+                <div class="card card-all card-top">
+                    <h2>@ViewBag.countAllLoans</h2>
+                    <p>All Loans</p>
+                </div>
+                <div class="card card-pending card-top">
+                    <h2>@ViewBag.countPending</h2>
+                    <p>Pending Loans</p>
+                </div>
+                <div class="card card-approved card-top">
+                    <h2>@ViewBag.countApproved</h2>
+                    <p>Approved Loans</p>
+                </div>
+
+                <!-- Rejected card appears at bottom -->
+                <div class="card card-declined card-bottom">
+                    <h2>@ViewBag.countRejected</h2>
+                    <p>Rejected Loans</p>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

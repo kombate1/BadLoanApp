@@ -1,0 +1,58 @@
+﻿@using System.Globalization
+@model IEnumerable<BadLoan.Models.LoanApplication>
+
+@{
+    ViewData["Title"] = "Loan Applications for Approval";
+}
+
+<h2>Loan Applications</h2>
+
+@if (!Model.Any())
+{
+    <p>No loan applications found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Loan Type</th>
+                <th>Amount</th>
+                <th>Duration</th>
+                <th>Occupation</th>
+                <th>Annual Income</th>
+                
+                <th>Status</th>
+                <th>Documents</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var app in Model)
+            {
+                <tr>
+                    <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
+                    <td>@app.LoanType?.LoanTypeName</td>
+                    <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
+                    <td>@app.Duration Year(s)</td>
+                    <td>@app.Customer.Occupation</td>
+                    <td>@app.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</td>
+                    <td>@app.Status</td>
+                    <td>
+                        @foreach (var doc in app.UploadedDocuments)
+                        {
+                            <a asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">View</a>
+                
+                            <br />
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="ApproveApplication" asp-route-id="@app.Id" class="btn btn-success btn-sm">Approve</a>
+                        <a asp-action="RejectApplication" asp-route-id="@app.Id" class="btn btn-danger btn-sm">Reject</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

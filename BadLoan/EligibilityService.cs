@@ -25,14 +25,16 @@ public class EligibilityService
         switch (loanType)
             {
                 case "personal":
+                min = 1;
                     max = 5;
                     break;
                 case "auto":
-                    max = 7;
+                min = 5;
+                    max = 10;
                     break;
                 case "mortgage":
-                    min = 5;
-                    max = 30;
+                    min = 10;
+                    max = 20;
                     break;
             }
 
@@ -47,15 +49,15 @@ public class EligibilityService
 
             if (LoanType == "Personal")
             {
-                interest = loanAmount * 0.15m; // Example calculation for personal loan
+                interest = loanAmount * 0.15m * duration; // Example calculation for personal loan
             }
             else if (LoanType == "Home")
             {
-                interest = loanAmount * 0.25m; // Example calculation for home loan
+                interest = loanAmount * 0.25m * duration; // Example calculation for home loan
             }
             else if (LoanType == "Auto")
             {
-                interest = loanAmount * 0.20m; // Example calculation for car loan
+                interest = loanAmount * 0.20m * duration; // Example calculation for car loan
             }
 
             decimal amountToPayYearly = (loanAmount / duration) + interest;

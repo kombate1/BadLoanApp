@@ -14,7 +14,8 @@ namespace BadLoan.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly EligibilityService _eligibilityService;
-            
+        private static readonly string[] AllowedExtensions = { ".pdf", ".jpg", ".jpeg", ".png"};
+
 
 
         public LoanApplicationController(
@@ -77,6 +78,7 @@ namespace BadLoan.Controllers
             //obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
 
 
+            //var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
             var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
             if (validLoanType == null)
             {
@@ -166,7 +168,7 @@ namespace BadLoan.Controllers
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Loan application submitted successfully!";
-            return RedirectToAction("Index"); // or redirect to a success page
+            return RedirectToAction("Details", "LoanApplication"); // or redirect to a success page
 
 
         }
@@ -187,6 +189,17 @@ namespace BadLoan.Controllers
 
             if (!attachments.Any())
                 return string.Empty;
+
+
+            // Validate file extensions
+            foreach (var file in attachments)
+            {
+                var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!AllowedExtensions.Contains(fileExtension))
+                {
+                    throw new InvalidOperationException("Only PDF and image files (.pdf, .jpg, .jpeg, .png) are allowed.");
+                }
+            }
 
             // Validate files before processing
             //var validationResult = _fileValidationService.ValidateFiles(attachments);
@@ -235,7 +248,7 @@ namespace BadLoan.Controllers
                 Include(l => l.Customer).
                 Include(l => l.UploadedDocuments).
                 ToListAsync();
-
+            
 
             return View(applications);
         }
@@ -303,6 +316,8 @@ namespace BadLoan.Controllers
 
                 // Return the file
                 return File(memory, GetContentType(fullPath), fileName);
+
+                
             }
             catch (Exception ex)
             {

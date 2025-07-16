@@ -68,12 +68,23 @@
         }
 
             .menu a {
-                text-decoration: none;
+                display: block;
+                background: none;
+                border: none;
                 color: black;
                 font-weight: bold;
                 padding: 10px 0;
-                cursor: pointer; 
+                text-align: left;
+                cursor: pointer;
+                font-size: 1em;
+                width: 100%;
+                text-decoration: none;
             }
+
+                .menu a:hover {
+                    color: white;
+                    background-color: #a56c2c;
+                }
 
         .main-content {
             flex: 1;
@@ -91,9 +102,7 @@
             flex-wrap: wrap;
             gap: 30px;
         }
-       .cards:hover{
 
-       }
         .card {
             flex: 1 1 200px;
             background-color: white;
@@ -101,14 +110,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-            .card:hover,
-            .card.active {
-                transform: translateY(-8px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            }
 
             .card h2 {
                 font-size: 2.5rem;
@@ -134,47 +136,30 @@
                 <button>Check Profile</button>
             </div>
             <div class="menu">
-                <a onclick="setActiveCard('pending')">Pending Loans</a>
-                <a onclick="setActiveCard('declined')">Declined Loans</a>
-                <a onclick="setActiveCard('approved')">Approved Loans</a>
-                <a onclick="setActiveCard('all')">All Loans</a>
-                <a href="#">Log Out</a>
+               <a asp-controller="admin" asp-action="Index">Pending Loans</a>
             </div>
         </div>
         <div class="main-content">
             <div class="header">Dashboard</div>
             <div class="cards">
-                <div class="card" id="card-all">
+                <div class="card">
                     <h2>39</h2>
                     <p>All Loans</p>
                 </div>
-                <div class="card" id="card-pending">
+                <div class="card">
                     <h2>9</h2>
                     <p>Pending Loans</p>
                 </div>
-                <div class="card" id="card-approved">
+                <div class="card">
                     <h2>22</h2>
                     <p>Approved Loans</p>
                 </div>
-                <div class="card" id="card-declined">
+                <div class="card">
                     <h2>8</h2>
                     <p>Rejected Loans</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        function setActiveCard(type) {
-            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-            const cardMap = {
-                pending: 'card-pending',
-                declined: 'card-declined',
-                approved: 'card-approved',
-                all: 'card-all'
-            };
-            document.getElementById(cardMap[type]).classList.add('active');
-        }
-    </script>
 </body>
 </html>

@@ -25,20 +25,22 @@ public class EligibilityService
         switch (loanType)
             {
                 case "personal":
+                min = 1;
                     max = 5;
                     break;
                 case "auto":
-                    max = 7;
+                min = 5;
+                    max = 10;
                     break;
                 case "mortgage":
-                    min = 5;
-                    max = 30;
+                    min = 10;
+                    max = 20;
                     break;
             }
 
             if (duration < min || duration > max)
             {
-            return (false,"", 0);
+            return (false,$"Duration for {loanType} must be between {min} and {max}", 0);
                 //ModelState.AddModelError("Duration", $"Duration for {c.LoanType} must be between {min} and {max} years.");
             }
 
@@ -47,15 +49,15 @@ public class EligibilityService
 
             if (LoanType == "Personal")
             {
-                interest = loanAmount * 0.15m; // Example calculation for personal loan
+                interest = loanAmount * 0.15m * duration; // Example calculation for personal loan
             }
             else if (LoanType == "Home")
             {
-                interest = loanAmount * 0.25m; // Example calculation for home loan
+                interest = loanAmount * 0.25m * duration; // Example calculation for home loan
             }
             else if (LoanType == "Auto")
             {
-                interest = loanAmount * 0.20m; // Example calculation for car loan
+                interest = loanAmount * 0.20m * duration; // Example calculation for car loan
             }
 
             decimal amountToPayYearly = (loanAmount / duration) + interest;
@@ -66,11 +68,11 @@ public class EligibilityService
 
             if (debtServiceRatio > 40)
             {
-                return (false, $"You are not eligible for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio);
+                return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio);
             }
             else
             {
-                return (true, "Congratulations! You are eligible for this loan.", debtServiceRatio);
+                return (true, "Congratulations! You are <strong> eligible </strong>for this loan.", debtServiceRatio);
             }
         }
 

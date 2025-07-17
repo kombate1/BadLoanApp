@@ -26,57 +26,86 @@
         }
 
         .sidebar {
-            width: 230px;
+            width: 180px;
             background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
+            padding: 20px 15px;
             position: fixed;
             height: 100vh;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            transition: width 0.3s;
         }
 
-        .profile {
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar .profile {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-            .profile h3 {
-                margin: 5px 0;
-                font-weight: bold;
-                color: #000;
-            }
+        .sidebar.collapsed .profile h3,
+        .sidebar.collapsed .profile p,
+        .sidebar.collapsed .menu span {
+            display: none;
+        }
 
-            .profile p {
-                font-size: 1rem;
-                color: #333;
-            }
+        .sidebar .profile h3 {
+            margin: 5px 0;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .sidebar .profile p {
+            font-size: 0.9rem;
+            color: #333;
+        }
 
         .menu {
             width: 100%;
-            margin-top: 20px;
         }
 
-            .menu a {
-                display: block;
-                padding: 14px 18px;
-                text-decoration: none;
-                color: white;
-                font-weight: bold;
-                border-radius: 8px;
-                transition: background 0.3s;
-            }
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
 
-                .menu a:hover {
-                    background-color: #d1975e;
-                }
+        .menu a:hover {
+            background-color: #d1975e;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -20px;
+            background: #e3aa6b;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
         .main-content {
-            margin-left: 230px;
+            margin-left: 180px;
             padding: 30px;
             flex: 1;
-            overflow-y: auto;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content.shifted {
+            margin-left: 60px;
         }
 
         .header {
@@ -119,27 +148,27 @@
             transition: transform 0.3s ease;
         }
 
-            .card:hover {
-                transform: translateY(-5px);
-            }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-            .card h2 {
-                font-size: 2rem;
-                margin: 10px 0;
-                color: #111827;
-            }
+        .card h2 {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: #111827;
+        }
 
-            .card p {
-                margin-top: 5px;
-                font-size: 0.95rem;
-                color: #6b7280;
-            }
+        .card p {
+            margin-top: 5px;
+            font-size: 0.95rem;
+            color: #6b7280;
+        }
 
-            .card i {
-                float: right;
-                font-size: 1.5rem;
-                color: #3b82f6;
-            }
+        .card i {
+            float: right;
+            font-size: 1.5rem;
+            color: #3b82f6;
+        }
 
         .card-all {
             border-left-color: #f59e0b;
@@ -165,20 +194,34 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <div class="profile">
                 <h3>Glenn Inkoom</h3>
                 <p>Approval Manager</p>
             </div>
+
             <div class="menu">
-                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
-                <a asp-controller="Admin" asp-action="GetAllLoans">Applications</a>
-                <a asp-controller="Account" asp-action="Logout">Log Out</a>
+                <a asp-controller="Admin" asp-action="Index">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a asp-controller="Admin" asp-action="GetAllLoans">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Applications</span>
+                </a>
+                <a asp-controller="Account" asp-action="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content" id="main-content">
             <div class="header">Dashboard</div>
             <div class="toolbar">
                 <div class="search-bar">
@@ -227,5 +270,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('shifted');
+        }
+    </script>
 </body>
 </html>
+

@@ -14,13 +14,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9fafb;
+            margin: 0;
+            padding: 0;
         }
 
         .main-container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 40px auto;
             background-color: white;
             padding: 30px;
@@ -31,14 +32,7 @@
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-        }
-
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
+            align-items: start;
         }
 
         .badge {
@@ -47,10 +41,15 @@
             font-weight: bold;
             padding: 6px 14px;
             border-radius: 20px;
+            display: inline-block;
+        }
+
+        .submitted-date {
+            color: #6b7280;
+            margin-left: 10px;
         }
 
         .actions {
-            margin-top: 20px;
             display: flex;
             gap: 10px;
         }
@@ -61,7 +60,7 @@
             font-weight: bold;
             border-radius: 6px;
             color: white;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
 
         .btn-approve {
@@ -78,17 +77,18 @@
 
         h2 {
             font-size: 1.6rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .section {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
+            gap: 20px;
         }
 
         .card {
-            width: 48%;
+            flex: 1;
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -103,20 +103,59 @@
             }
 
         .info-item {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
             .info-item label {
                 font-weight: bold;
-                display: block;
                 font-size: 0.95rem;
                 color: #374151;
+                display: block;
             }
 
             .info-item span {
                 display: block;
                 margin-top: 2px;
                 color: #1f2937;
+            }
+
+        .documents-section {
+            margin-top: 40px;
+        }
+
+            .documents-section h3 {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .file-list {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .file-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #1d4ed8;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 10px 14px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+            .file-link:hover {
+                background-color: #e0e7ff;
+            }
+
+            .file-link i {
+                color: #6366f1;
             }
     </style>
 </head>
@@ -125,10 +164,9 @@
         <div class="header">
             <div>
                 <h2>Loan Application Details</h2>
-                <p>Application ID: <strong>@Model.Id</strong></p>
                 <div class="status">
                     <span class="badge">@Model.Status</span>
-                    <span>Submitted @@Model.CreatedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt")</span>
+                    <span class="submitted-date">Submitted @@Model.CreatedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt")</span>
                 </div>
             </div>
             <div class="actions">
@@ -140,7 +178,7 @@
 
         <div class="section">
             <div class="card">
-                <h3>Customer Information</h3>
+                <h3><i class="fa-solid fa-user"></i> Customer Information</h3>
                 <div class="info-item">
                     <label>Name:</label>
                     <span>@Model.Customer?.FirstName @Model.Customer?.LastName</span>
@@ -160,7 +198,7 @@
             </div>
 
             <div class="card">
-                <h3>Loan Details</h3>
+                <h3><i class="fa-solid fa-sack-dollar"></i> Loan Details</h3>
                 <div class="info-item">
                     <label>Requested Amount:</label>
                     <span>@Model.LoanAmount.ToString("C", new CultureInfo("en-US"))</span>
@@ -175,6 +213,14 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="documents-section">
+            <h3><i class="fa-solid fa-file-lines"></i> Submitted Documents</h3>
+            <div class="file-list">
+                <a href="#" class="file-link"><i class="fa-solid fa-file"></i> ID Copy</a>
+                <a href="#" class="file-link"><i class="fa-solid fa-file-invoice-dollar"></i> Income Statement</a>
+            </div>
+        </div>
+
 </body>
 </html>

@@ -26,32 +26,34 @@
         }
 
         .sidebar {
-            width: 190px;
+            width: 160px;
             background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
+            padding: 30px 15px;
             position: fixed;
             height: 100vh;
         }
 
             .sidebar h3 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
                 margin-bottom: 5px;
             }
 
             .sidebar p {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 margin-bottom: 30px;
             }
 
             .sidebar .menu a {
-                display: block;
-                padding: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px;
                 text-decoration: none;
                 color: white;
-                font-size: 1.2rem;
+                font-size: 1rem;
                 font-weight: bold;
                 border-radius: 8px;
                 margin-bottom: 10px;
@@ -63,7 +65,7 @@
                 }
 
         .main-content {
-            margin-left: 230px;
+            margin-left: 180px;
             padding: 30px;
             flex: 1;
         }
@@ -122,7 +124,7 @@
         }
 
         .action-btns i {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin: 0 6px;
             cursor: pointer;
         }
@@ -144,12 +146,73 @@
 
         th {
             background-color: #f3f4f6;
-            font-size: 1rem;
+            font-size: 0.7rem;
         }
 
         td {
-            font-size: 0.95rem;
+            font-size: 0.6rem;
         }
+
+        /* Modal Styling */
+        #confirmationModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+            #confirmationModal.show {
+                display: flex;
+            }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 340px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+            .modal-box p {
+                font-size: 0.8rem;
+                margin-bottom: 20px;
+            }
+
+            .modal-box button {
+                padding: 10px 18px;
+                border: none;
+                border-radius: 6px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .btn-confirm {
+            background-color: #10b981;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-cancel {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .doc-link:hover {
+                text-decoration: underline;
+            }
     </style>
 </head>
 <body>
@@ -159,9 +222,15 @@
             <h3>Glenn Inkoom</h3>
             <p>Approval Manager</p>
             <div class="menu">
-                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
-                <a asp-controller="Admin" asp-action="GetAllLoans">Applications</a>
-                <a asp-controller="Account" asp-action="Logout">Logout</a>
+                <a asp-controller="Admin" asp-action="Index">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a asp-controller="Admin" asp-action="GetAllLoans">
+                    <i class="fas fa-folder-open"></i> Applications
+                </a>
+                <a asp-controller="Account" asp-action="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </div>
 
@@ -225,16 +294,17 @@
                                     <td>
                                         @foreach (var doc in app.UploadedDocuments)
                                         {
-                                            <a asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">@@doc.Type</a>
-                                
+                                            <a class="doc-link" asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="@doc.FilePath" download>
+                                                <i class="fas fa-file-alt"></i> @@doc.Type
+                                            </a>
                                             <br />
                                         }
                                     </td>
                                     <td class="action-btns">
-                                        <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("ApproveApplication", new { id = app.Id })')" title="Approve">
+                                        <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("ApproveApplication", new { id = app.Id })', 'approve this loan application')" title="Approve">
                                             <i class="fas fa-check-circle text-success"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("RejectApplication", new { id = app.Id })')" title="Reject">
+                                        <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("RejectApplication", new { id = app.Id })', 'reject this loan application')" title="Reject">
                                             <i class="fas fa-times-circle text-danger"></i>
                                         </a>
                                         <a asp-action="Details" asp-route-id="@app.Id" title="View">
@@ -250,7 +320,32 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div id="confirmationModal">
+        <div class="modal-box">
+            <p id="modalMessage">Are you sure?</p>
+            <button onclick="proceedAction()" class="btn-confirm">Yes</button>
+            <button onclick="closeModal()" class="btn-cancel">Cancel</button>
+        </div>
+    </div>
+
     <script>
+        let actionUrl = "";
+
+        function confirmAction(url, message) {
+            actionUrl = url;
+            document.getElementById("modalMessage").innerText = "Are you sure you want to " + message + "?";
+            document.getElementById("confirmationModal").classList.add("show");
+        }
+
+        function proceedAction() {
+            window.location.href = actionUrl;
+        }
+
+        function closeModal() {
+            document.getElementById("confirmationModal").classList.remove("show");
+        }
+
         function filterTable() {
             const selectedStatus = document.getElementById("statusFilter").value.toLowerCase();
             const searchInput = document.getElementById("searchInput").value.toLowerCase();
@@ -265,12 +360,6 @@
 
                 row.style.display = (statusMatch && searchMatch) ? "" : "none";
             });
-        }
-
-        function confirmAction(url) {
-            if (confirm("Are you sure you want to proceed with this action?")) {
-                window.location.href = url;
-            }
         }
     </script>
 </body>

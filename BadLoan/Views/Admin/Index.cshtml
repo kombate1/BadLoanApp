@@ -1,7 +1,15 @@
 ﻿@using System.Globalization
+@using BadLoan.Utility
 @{
     Layout = null;
 }
+
+@* @{
+    var isApprovalManager = User.IsInRole(SD.role_approvalManager);
+} *@
+
+
+@* @if (isApprovalManager){ *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -175,6 +183,18 @@
                 <a asp-controller="Admin" asp-action="GetDeclinedLoans">Declined Loans</a>
                 <a asp-controller="Admin" asp-action="GetApprovedLoans">Approved Loans</a>
                 <a asp-controller="Admin" asp-action="GetAllLoans">All Loans</a>
+                @{
+                    if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                            <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p>You have successfully logged out of the application.</p>
+                    }
+                }
                 <a asp-controller="Account" asp-action="Logout">Log Out</a>
             </div>
         </div>
@@ -212,4 +232,14 @@
         </div>
     </div>
 </body>
-</html>
+    </html>
+
+@* }
+
+else
+{
+    <div class="alert alert-danger">
+        You do not have permission to view this page.
+    </div>
+    
+} *@

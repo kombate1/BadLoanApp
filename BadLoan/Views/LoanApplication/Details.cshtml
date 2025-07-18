@@ -42,6 +42,7 @@ else
                     <td>
                         @foreach (var doc in app.UploadedDocuments)
                         {
+
                             <a asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">View</a>
                 
                             <br />

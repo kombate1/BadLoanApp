@@ -2,57 +2,303 @@
 @model IEnumerable<BadLoan.Models.LoanApplication>
 
 @{
+    Layout = null;
     ViewData["Title"] = "Loan Applications for Approval";
 }
 
-<h2>Loan Applications</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+        }
 
-@if (!Model.Any())
-{
-    <p>No loan applications found.</p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Loan Type</th>
-                <th>Amount</th>
-                <th>Duration</th>
-                <th>Occupation</th>
-                <th>Annual Income</th>
-                
-                <th>Status</th>
-                <th>Documents</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var app in Model)
-            {
-                <tr>
-                    <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
-                    @* <td>@app.LoanType?.LoanTypeName</td> *@
-                    <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
-                    <td>@app.Duration Year(s)</td>
-                    <td>@app.Customer.Occupation</td>
-                    <td>@app.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</td>
-                    <td>@app.Status</td>
-                    <td>
-                        @foreach (var doc in app.UploadedDocuments)
-                        {
-                            <a asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">View</a>
-                
-                            <br />
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="ApproveApplication" asp-route-id="@app.Id" class="btn btn-success btn-sm">Approve</a>
-                        <a asp-action="RejectApplication" asp-route-id="@app.Id" class="btn btn-danger btn-sm">Reject</a>
-                    </td>
-                </tr>
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 230px;
+            background-color: #e3aa6b;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+        }
+
+            .sidebar h3 {
+                font-size: 1.6rem;
+                margin-bottom: 5px;
             }
-        </tbody>
-    </table>
-}
+
+            .sidebar p {
+                font-size: 1.1rem;
+                margin-bottom: 30px;
+            }
+
+            .sidebar .menu a {
+                display: block;
+                padding: 16px;
+                text-decoration: none;
+                color: white;
+                font-size: 1.2rem;
+                font-weight: bold;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                transition: background 0.3s;
+            }
+
+                .sidebar .menu a:hover {
+                    background-color: #d1975e;
+                }
+
+        .main-content {
+            margin-left: 230px;
+            padding: 30px;
+            flex: 1;
+        }
+
+        .table-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+            .filter-bar h2 {
+                font-size: 1.8rem;
+            }
+
+            .filter-bar select, .filter-bar input[type="text"] {
+                padding: 8px 14px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                margin-left: 10px;
+            }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .under-review {
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .action-btns i {
+            font-size: 1.1rem;
+            margin: 0 6px;
+            cursor: pointer;
+        }
+
+            .action-btns i:hover {
+                transform: scale(1.1);
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-size: 1rem;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>Glenn Inkoom</h3>
+            <p>Approval Manager</p>
+            <div class="menu">
+                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
+                <a asp-controller="Admin" asp-action="GetAllLoans">Applications</a>
+                <a asp-controller="Account" asp-action="Logout">Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="table-wrapper">
+                <div class="filter-bar">
+                    <h2>Loan Applications</h2>
+                    <div>
+                        <select id="statusFilter" onchange="filterTable()">
+                            <option value="All">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="under review">Under Review</option>
+                        </select>
+                        <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterTable()" />
+                    </div>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <p>No loan applications found.</p>
+                }
+                else
+                {
+                    <table id="loanTable">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Loan Type</th>
+                                <th>Amount</th>
+                                <th>Duration</th>
+                                <th>Occupation</th>
+                                <th>Annual Income</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>Documents</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model)
+                            {
+                                var statusClass = app.Status?.ToLower() switch
+                                {
+                                    "pending" => "pending",
+                                    "approved" => "approved",
+                                    "rejected" => "rejected",
+                                    "under review" => "under-review",
+                                    _ => ""
+                                };
+
+                                <tr data-status="@app.Status?.ToLower()" data-name="@app.Customer?.FirstName @app.Customer?.LastName">
+                                    <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
+                                    <td>@app.LoanType?.LoanTypeName</td>
+                                    <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
+                                    <td>@app.Duration Year(s)</td>
+                                    <td>@app.Customer?.Occupation</td>
+                                    <td>@app.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</td>
+                                    <td>@@app.SubmissionDate.ToString("MMM dd, yyyy")</td>
+                                    <td><span class="status-badge @statusClass">@app.Status</span></td>
+                                    <td>
+                                        @foreach (var doc in app.UploadedDocuments)
+                                        {
+                                            <a asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">@@doc.Type</a>
+                                
+                                            <br />
+                                        }
+                                    </td>
+                                    <td class="action-btns">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="@Url.Action("ApproveApplication", new { id = app.Id })" data-action="Approve">
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        </a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="@Url.Action("RejectApplication", new { id = app.Id })" data-action="Reject">
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@app.Id" title="View">
+                                            <i class="fas fa-eye text-primary"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to <span id="modalActionType"></span> this loan application?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-primary" id="confirmActionBtn">Yes, proceed</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filterTable() {
+            const selectedStatus = document.getElementById("statusFilter").value.toLowerCase();
+            const searchInput = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#loanTable tbody tr");
+
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute("data-status");
+                const rowName = row.getAttribute("data-name").toLowerCase();
+
+                const statusMatch = (selectedStatus === "all" || rowStatus === selectedStatus);
+                const searchMatch = rowName.includes(searchInput);
+
+                row.style.display = (statusMatch && searchMatch) ? "" : "none";
+            });
+        }
+
+        const confirmModal = document.getElementById('confirmModal');
+        confirmModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-url');
+            const action = button.getAttribute('data-action');
+
+            document.getElementById('confirmActionBtn').href = url;
+            document.getElementById('modalActionType').textContent = action;
+        });
+    </script>
+</body>
+</html>

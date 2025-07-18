@@ -2,214 +2,299 @@
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fdf9f3;
+            background-color: #f8fafc;
         }
 
         .container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .sidebar {
-            width: 230px;
-            background-color: #d2964c;
+            width: 180px;
+            background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding-top: 30px;
+            padding: 20px 15px;
             position: fixed;
             height: 100vh;
+            font-size: 1rem;
+            transition: width 0.3s;
         }
 
-        .main-content {
-            margin-left: 230px;
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-            height: 100vh;
-        }
-
-        .profile {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-            .profile img {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background-color: #eee;
-                margin-bottom: 10px;
+            .sidebar.collapsed {
+                width: 60px;
             }
 
-            .profile h3 {
+            .sidebar .profile {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .sidebar.collapsed .profile h3,
+            .sidebar.collapsed .profile p,
+            .sidebar.collapsed .menu span {
+                display: none;
+            }
+
+            .sidebar .profile h3 {
                 margin: 5px 0;
                 font-weight: bold;
-                color: black;
+                color: #000;
             }
 
-            .profile p {
-                font-size: 0.9em;
-                color: black;
-            }
-
-            .profile button {
-                background-color: white;
-                color: black;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-weight: bold;
+            .sidebar .profile p {
+                font-size: 0.9rem;
+                color: #333;
             }
 
         .menu {
-            display: flex;
-            flex-direction: column;
             width: 100%;
-            padding-left: 20px;
         }
 
             .menu a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 14px;
                 text-decoration: none;
-                color: black;
+                color: white;
                 font-weight: bold;
-                padding: 10px 0;
-                display: block;
+                border-radius: 8px;
+                transition: background 0.3s;
             }
 
                 .menu a:hover {
-                    text-decoration: underline;
+                    background-color: #d1975e;
                 }
+
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -20px;
+            background: #e3aa6b;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .main-content {
+            margin-left: 180px;
+            padding: 30px;
+            flex: 1;
+            transition: margin-left 0.3s;
+        }
+
+            .main-content.shifted {
+                margin-left: 60px;
+            }
 
         .header {
             font-size: 2rem;
             font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 30px;
         }
 
+        .search-bar input {
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 250px;
+        }
+
+        .export-menu select {
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
         .cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background-color: white;
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 6px solid #ccc;
+            border-radius: 12px;
+            padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            color: black;
-            font-weight: bold;
+            transition: transform 0.3s ease;
         }
 
             .card:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                transform: translateY(-5px);
             }
 
             .card h2 {
-                font-size: 2.5rem;
-                margin: 0;
-                color: black;
+                font-size: 2rem;
+                margin: 10px 0;
+                color: #111827;
             }
 
             .card p {
-                margin-top: 10px;
-                font-size: 1rem;
+                margin-top: 5px;
+                font-size: 0.95rem;
+                color: #6b7280;
             }
 
-        /* Specific card sizing */
-        .card-top {
-            flex: 1 1 240px;
-        }
+            .card i {
+                float: right;
+                font-size: 1.5rem;
+                color: #3b82f6;
+            }
 
-        .card-bottom {
-            flex: 1 1 100%;
-        }
-
-        /* Color accents */
+        /* Updated colors */
         .card-all {
-            border-left: 6px solid #f4c542;
+            border-left-color: #3b82f6;
         }
 
         .card-pending {
-            border-left: 6px solid #4e9fff;
+            border-left-color: #f59e0b;
         }
 
         .card-approved {
-            border-left: 6px solid #38c172;
+            border-left-color: #10b981;
         }
 
         .card-declined {
-            border-left: 6px solid #e3342f;
+            border-left-color: #ef4444;
+        }
+
+        .card-disbursed {
+            border-left-color: #8b5cf6;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <div class="profile">
-                <img src="#" alt="Profile Picture">
                 <h3>Glenn Inkoom</h3>
-                <p>Software Developer, BAD Company</p>
-                <button>Check Profile</button>
+                <p>Approval Manager</p>
             </div>
+
             <div class="menu">
-                <a asp-controller="Admin" asp-action="GetPendingLoans">Pending Loans</a>
-                <a asp-controller="Admin" asp-action="GetDeclinedLoans">Declined Loans</a>
-                <a asp-controller="Admin" asp-action="GetApprovedLoans">Approved Loans</a>
-                <a asp-controller="Admin" asp-action="GetAllLoans">All Loans</a>
-                <a asp-controller="Account" asp-action="Logout">Log Out</a>
+                <a asp-controller="Admin" asp-action="Index">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a asp-controller="Admin" asp-action="GetAllLoans">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Applications</span>
+                </a>
+                <a asp-controller="Account" asp-action="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content" id="main-content">
             <div class="header">Dashboard</div>
+            <div class="toolbar">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search applications..." />
+                </div>
+                <div class="export-menu">
+                    <select onchange="filterCards(this.value)">
+                        <option disabled selected>All Status</option>
+                        <option value="all">All Loans</option>
+                        <option value="pending">Pending Loans</option>
+                        <option value="approved">Approved Loans</option>
+                        <option value="declined">Rejected Loans</option>
+                        <option value="disbursed">Total Disbursed</option>
+                    </select>
+                </div>
+            </div>
             <div class="cards">
-                <div class="card card-top" style="border-left: 6px solid #20c997;">
+                <div class="card card-disbursed status-disbursed">
+                    <i class="fas fa-dollar-sign"></i>
                     <h2>@ViewBag.totalDisbursed.ToString("C", new CultureInfo("en-GH"))</h2>
                     <p>Total Disbursed</p>
                 </div>
 
-                <div class="card card-all card-top">
+                <div class="card card-all status-all">
+                    <i class="fas fa-file-alt"></i>
                     <h2>@ViewBag.countAllLoans</h2>
                     <p>All Loans</p>
                 </div>
-                <div class="card card-pending card-top">
+
+                <div class="card card-pending status-pending">
+                    <i class="fas fa-clock"></i>
                     <h2>@ViewBag.countPending</h2>
                     <p>Pending Loans</p>
                 </div>
-                <div class="card card-approved card-top">
+
+                <div class="card card-approved status-approved">
+                    <i class="fas fa-check-circle"></i>
                     <h2>@ViewBag.countApproved</h2>
                     <p>Approved Loans</p>
                 </div>
 
-                <!-- Rejected card appears at bottom -->
-                <div class="card card-declined card-bottom">
+                <div class="card card-declined status-declined">
+                    <i class="fas fa-times-circle"></i>
                     <h2>@ViewBag.countRejected</h2>
                     <p>Rejected Loans</p>
                 </div>
-
-                
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('shifted');
+        }
+
+        function filterCards(value) {
+            const allCards = document.querySelectorAll('.card');
+            allCards.forEach(card => card.classList.add('hidden'));
+
+            if (value === "all") {
+                document.querySelectorAll('.status-all, .status-pending, .status-approved, .status-declined, .status-disbursed').forEach(el => el.classList.remove('hidden'));
+            } else {
+                document.querySelectorAll(`.status-${value}`).forEach(el => el.classList.remove('hidden'));
+            }
+        }
+    </script>
 </body>
 </html>

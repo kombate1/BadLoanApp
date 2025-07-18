@@ -26,38 +26,55 @@
         }
 
         .sidebar {
-            width: 160px;
+            width: 180px;
             background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 30px 15px;
+            padding: 20px 10px;
             position: fixed;
             height: 100vh;
+            transition: width 0.3s ease;
+            overflow: hidden;
         }
 
-            .sidebar h3 {
-                font-size: 1.4rem;
-                margin-bottom: 5px;
+            .sidebar.collapsed {
+                width: 60px;
             }
 
-            .sidebar p {
-                font-size: 1rem;
-                margin-bottom: 30px;
+            .sidebar h3,
+            .sidebar p,
+            .sidebar .menu a span {
+                transition: opacity 0.3s ease;
+            }
+
+            .sidebar.collapsed h3,
+            .sidebar.collapsed p,
+            .sidebar.collapsed .menu a span {
+                opacity: 0;
+            }
+
+            .sidebar .toggle-btn {
+                font-size: 1.2rem;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                margin-bottom: 20px;
             }
 
             .sidebar .menu a {
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding: 14px;
+                padding: 12px;
                 text-decoration: none;
                 color: white;
                 font-size: 1rem;
                 font-weight: bold;
                 border-radius: 8px;
                 margin-bottom: 10px;
-                transition: background 0.3s;
+                transition: background 0.3s ease;
             }
 
                 .sidebar .menu a:hover {
@@ -68,6 +85,11 @@
             margin-left: 180px;
             padding: 30px;
             flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+
+        .collapsed + .main-content {
+            margin-left: 60px;
         }
 
         .table-wrapper {
@@ -88,7 +110,8 @@
                 font-size: 1.8rem;
             }
 
-            .filter-bar select, .filter-bar input[type="text"] {
+            .filter-bar select,
+            .filter-bar input[type="text"] {
                 padding: 8px 14px;
                 border-radius: 6px;
                 border: 1px solid #ccc;
@@ -153,7 +176,6 @@
             font-size: 0.6rem;
         }
 
-        /* Modal Styling */
         #confirmationModal {
             display: none;
             position: fixed;
@@ -218,24 +240,25 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <h3>Glenn Inkoom</h3>
             <p>Approval Manager</p>
             <div class="menu">
                 <a asp-controller="Admin" asp-action="Index">
-                    <i class="fas fa-chart-line"></i> Dashboard
+                    <i class="fas fa-chart-line"></i><span>Dashboard</span>
                 </a>
                 <a asp-controller="Admin" asp-action="GetAllLoans">
-                    <i class="fas fa-folder-open"></i> Applications
+                    <i class="fas fa-folder-open"></i><span>Applications</span>
                 </a>
                 <a asp-controller="Account" asp-action="Logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i><span>Logout</span>
                 </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content" id="mainContent">
             <div class="table-wrapper">
                 <div class="filter-bar">
                     <h2>Loan Applications</h2>
@@ -279,7 +302,6 @@
                                     "pending" => "pending",
                                     "approved" => "approved",
                                     "rejected" => "rejected",
-                                    "under review" => "under-review",
                                     _ => ""
                                 };
 
@@ -360,6 +382,13 @@
 
                 row.style.display = (statusMatch && searchMatch) ? "" : "none";
             });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const main = document.getElementById("mainContent");
+            sidebar.classList.toggle("collapsed");
+            main.classList.toggle("collapsed");
         }
     </script>
 </body>

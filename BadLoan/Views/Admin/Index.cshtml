@@ -38,51 +38,51 @@
             transition: width 0.3s;
         }
 
-        .sidebar.collapsed {
-            width: 60px;
-        }
+            .sidebar.collapsed {
+                width: 60px;
+            }
 
-        .sidebar .profile {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+            .sidebar .profile {
+                text-align: center;
+                margin-bottom: 30px;
+            }
 
-        .sidebar.collapsed .profile h3,
-        .sidebar.collapsed .profile p,
-        .sidebar.collapsed .menu span {
-            display: none;
-        }
+            .sidebar.collapsed .profile h3,
+            .sidebar.collapsed .profile p,
+            .sidebar.collapsed .menu span {
+                display: none;
+            }
 
-        .sidebar .profile h3 {
-            margin: 5px 0;
-            font-weight: bold;
-            color: #000;
-        }
+            .sidebar .profile h3 {
+                margin: 5px 0;
+                font-weight: bold;
+                color: #000;
+            }
 
-        .sidebar .profile p {
-            font-size: 0.9rem;
-            color: #333;
-        }
+            .sidebar .profile p {
+                font-size: 0.9rem;
+                color: #333;
+            }
 
         .menu {
             width: 100%;
         }
 
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 14px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
+            .menu a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 14px;
+                text-decoration: none;
+                color: white;
+                font-weight: bold;
+                border-radius: 8px;
+                transition: background 0.3s;
+            }
 
-        .menu a:hover {
-            background-color: #d1975e;
-        }
+                .menu a:hover {
+                    background-color: #d1975e;
+                }
 
         .toggle-btn {
             position: absolute;
@@ -104,9 +104,9 @@
             transition: margin-left 0.3s;
         }
 
-        .main-content.shifted {
-            margin-left: 60px;
-        }
+            .main-content.shifted {
+                margin-left: 60px;
+            }
 
         .header {
             font-size: 2rem;
@@ -148,34 +148,35 @@
             transition: transform 0.3s ease;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
+            .card:hover {
+                transform: translateY(-5px);
+            }
 
-        .card h2 {
-            font-size: 2rem;
-            margin: 10px 0;
-            color: #111827;
-        }
+            .card h2 {
+                font-size: 2rem;
+                margin: 10px 0;
+                color: #111827;
+            }
 
-        .card p {
-            margin-top: 5px;
-            font-size: 0.95rem;
-            color: #6b7280;
-        }
+            .card p {
+                margin-top: 5px;
+                font-size: 0.95rem;
+                color: #6b7280;
+            }
 
-        .card i {
-            float: right;
-            font-size: 1.5rem;
-            color: #3b82f6;
-        }
+            .card i {
+                float: right;
+                font-size: 1.5rem;
+                color: #3b82f6;
+            }
 
+        /* Updated colors */
         .card-all {
-            border-left-color: #f59e0b;
+            border-left-color: #3b82f6;
         }
 
         .card-pending {
-            border-left-color: #3b82f6;
+            border-left-color: #f59e0b;
         }
 
         .card-approved {
@@ -187,7 +188,11 @@
         }
 
         .card-disbursed {
-            border-left-color: #14b8a6;
+            border-left-color: #8b5cf6;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
@@ -228,41 +233,42 @@
                     <input type="text" placeholder="Search applications..." />
                 </div>
                 <div class="export-menu">
-                    <select>
+                    <select onchange="filterCards(this.value)">
                         <option disabled selected>All Status</option>
-                        <option>Pending Loans</option>
-                        <option>Declined Loans</option>
-                        <option>Approved Loans</option>
-                        <option>All Loans</option>
+                        <option value="all">All Loans</option>
+                        <option value="pending">Pending Loans</option>
+                        <option value="approved">Approved Loans</option>
+                        <option value="declined">Rejected Loans</option>
+                        <option value="disbursed">Total Disbursed</option>
                     </select>
                 </div>
             </div>
             <div class="cards">
-                <div class="card card-disbursed">
+                <div class="card card-disbursed status-disbursed">
                     <i class="fas fa-dollar-sign"></i>
                     <h2>@ViewBag.totalDisbursed.ToString("C", new CultureInfo("en-GH"))</h2>
                     <p>Total Disbursed</p>
                 </div>
 
-                <div class="card card-all">
+                <div class="card card-all status-all">
                     <i class="fas fa-file-alt"></i>
                     <h2>@ViewBag.countAllLoans</h2>
                     <p>All Loans</p>
                 </div>
 
-                <div class="card card-pending">
+                <div class="card card-pending status-pending">
                     <i class="fas fa-clock"></i>
                     <h2>@ViewBag.countPending</h2>
                     <p>Pending Loans</p>
                 </div>
 
-                <div class="card card-approved">
+                <div class="card card-approved status-approved">
                     <i class="fas fa-check-circle"></i>
                     <h2>@ViewBag.countApproved</h2>
                     <p>Approved Loans</p>
                 </div>
 
-                <div class="card card-declined">
+                <div class="card card-declined status-declined">
                     <i class="fas fa-times-circle"></i>
                     <h2>@ViewBag.countRejected</h2>
                     <p>Rejected Loans</p>
@@ -278,7 +284,17 @@
             sidebar.classList.toggle('collapsed');
             main.classList.toggle('shifted');
         }
+
+        function filterCards(value) {
+            const allCards = document.querySelectorAll('.card');
+            allCards.forEach(card => card.classList.add('hidden'));
+
+            if (value === "all") {
+                document.querySelectorAll('.status-all, .status-pending, .status-approved, .status-declined, .status-disbursed').forEach(el => el.classList.remove('hidden'));
+            } else {
+                document.querySelectorAll(`.status-${value}`).forEach(el => el.classList.remove('hidden'));
+            }
+        }
     </script>
 </body>
 </html>
-

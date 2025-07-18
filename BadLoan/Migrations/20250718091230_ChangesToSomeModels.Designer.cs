@@ -4,6 +4,7 @@ using BadLoan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BadLoan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718091230_ChangesToSomeModels")]
+    partial class ChangesToSomeModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,6 +134,10 @@ namespace BadLoan.Migrations
 
                     b.Property<int>("LoanTermYears")
                         .HasColumnType("int");
+
+                    b.Property<string>("LoanType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LoanTypeId")
                         .HasColumnType("int");
@@ -482,15 +489,13 @@ namespace BadLoan.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BadLoan.Models.LoanType", "LoanType")
+                    b.HasOne("BadLoan.Models.LoanType", null)
                         .WithMany("LoanApplication")
                         .HasForeignKey("LoanTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("LoanType");
                 });
 
             modelBuilder.Entity("BadLoan.Models.UploadedDocument", b =>

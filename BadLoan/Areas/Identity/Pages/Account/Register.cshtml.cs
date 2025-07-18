@@ -10,12 +10,15 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using BadLoan.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -100,15 +103,37 @@ namespace BadLoan.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string? Role { get; set; }
+
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList { get; set; }
+
+
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            _roleManager.CreateAsync(new IdentityRole("Customer"));
+            if(!_roleManager.RoleExistsAsync(SD.role_approvalManager).GetAwaiter().GetResult())
+            {
+                // Create the roles and seed them to the database
+                _roleManager.CreateAsync(new IdentityRole(SD.role_approvalManager)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.role_User_Customer)).GetAwaiter().GetResult();
+
+            }
+            
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            Input = new InputModel()
+            {
+                RoleList = _roleManager.Roles.Select(x =>x.Name).Select(i=> new SelectListItem
+                {
+                    Text = i,
+                    Value = i
 
+                })
+            };
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -126,6 +151,23 @@ namespace BadLoan.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    string assignedRole = Input.Role ?? SD.role_User_Customer;
+
+                    if (!string.IsNullOrEmpty(assignedRole))
+                    {
+                        //Associate the user with the specified role
+                        await _userManager.AddToRoleAsync(user, assignedRole);
+                    }
+
+                    //if (Input.Role == null)
+                    //{
+                    //    await _userManager.AddToRoleAsync(user, SD.role_User_Customer);
+                    //}
+                    //else
+                    //{
+                    //    await _userManager.AddToRoleAsync(user, Input.Role);
+                    //}
+
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -146,8 +188,17 @@ namespace BadLoan.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction("Create", "Home");
-                        //return LocalRedirect(returnUrl);
+
+                        // Use the assigned role for redirect logic
+                        if (assignedRole == SD.role_User_Customer)
+                        {
+                            return RedirectToAction("Create", "Home");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+
                     }
                 }
                 foreach (var error in result.Errors)

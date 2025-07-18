@@ -33,7 +33,7 @@ else
             {
                 <tr>
                     <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
-                    <td>@app.LoanType?.LoanTypeName</td>
+                    @* <td>@app.LoanType?.LoanTypeName.</td> *@
                     <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
                     <td>@app.Duration Year(s)</td>
                     <td>@app.Customer.Occupation</td>

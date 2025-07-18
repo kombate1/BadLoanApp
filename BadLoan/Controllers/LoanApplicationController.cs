@@ -11,16 +11,18 @@ namespace BadLoan.Controllers
     public class LoanApplicationController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<IdentityUser>
+    _userManager;
         private readonly IConfiguration _configuration;
         private readonly EligibilityService _eligibilityService;
-        private static readonly string[] AllowedExtensions = { ".pdf", ".jpg", ".jpeg", ".png"};
+        private static readonly string[] AllowedExtensions = { ".pdf", ".jpg", ".jpeg", ".png" };
 
 
 
         public LoanApplicationController(
-            ApplicationDbContext db,
-            UserManager<IdentityUser> userManager,
+        ApplicationDbContext db,
+        UserManager<IdentityUser>
+            userManager,
             IConfiguration configuration,
             EligibilityService eligibilityService
             )
@@ -32,28 +34,29 @@ namespace BadLoan.Controllers
 
         }
 
-        
+
 
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult>
+            Index()
         {
             if (User?.Identity == null || !User.Identity.IsAuthenticated || string.IsNullOrEmpty(User.Identity.Name))
             {
                 TempData["ErrorMessage"] = "Please login to access Loan Application Or SignUp if you don't have an account";
-                return RedirectToPage("/Account/Login", new { area = "Identity" , returnUrl = Url.Action("Index", "LoanApplication")}); // Redirect to login page and return back to this page after login
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = Url.Action("Index", "LoanApplication") }); // Redirect to login page and return back to this page after login
             }
             var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
 
-            if (customer == null || customer.CustomerId == 0 )
+            if (customer == null || customer.CustomerId == 0)
             {
                 TempData["ErrorMessage"] = "Customer record not found because Customer details have not been filled. PLease fill in the details below.";
                 return RedirectToAction("Create", "Home", new { returnUrl = Url.Action("Index", "LoanApplication") });
             }
 
-            
+
 
             LoanAttachmentViewModel viewModel = new LoanAttachmentViewModel()
             {
@@ -68,7 +71,8 @@ namespace BadLoan.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(LoanAttachmentViewModel obj, IFormCollection myFiles)
+        public async Task<IActionResult>
+            Index(LoanAttachmentViewModel obj, IFormCollection myFiles)
         {
 
             var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
@@ -79,15 +83,20 @@ namespace BadLoan.Controllers
 
 
             //var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
-            var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
-            if (validLoanType == null)
-            {
-                // Optional: create a dummy loan type if your table is empty (for test only)
-                validLoanType = new LoanType { LoanTypeName = "Personal" };
-                _db.LoanTypes.Add(validLoanType);
-                await _db.SaveChangesAsync();
 
+            if (obj.LoanType == null)
+            {
+                ViewBag.MessageHtml = "Please select a loan type.";
+                return View(obj);
             }
+            
+                var loantypeInput = obj.LoanType;
+                var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync(l => l.LoanTypeName == loantypeInput);
+            
+
+               
+            
+             
 
 
 
@@ -109,6 +118,15 @@ namespace BadLoan.Controllers
             //var findLoanType = _db.LoanTypes.Where(c => c.LoanTypeId == loanTypeId).FirstOrDefault().LoanTypeName;
             //obj.Calculation!.LoanType = findLoanType;
 
+            var proofOfIncomeAttachment = await HandleFileAttachments(myFiles, "proofOfIncome");
+            var employmentAttachment = await HandleFileAttachments(myFiles, "employmentAttachments");
+
+            if (!proofOfIncomeAttachment.IsValid || !employmentAttachment.IsValid)
+            {
+                ViewBag.MessageHtml = proofOfIncomeAttachment.ErrorMessage ?? employmentAttachment.ErrorMessage;
+                return View(obj); // Do not save the application
+            }
+
 
 
             bool isEligible = results.IsEligible;
@@ -122,7 +140,7 @@ namespace BadLoan.Controllers
 
             obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
             obj.LoanApplicationDetails.CustomerId = customer.CustomerId;
-            if (obj.LoanApplicationDetails != null && isEligible )
+            if (obj.LoanApplicationDetails != null && isEligible)
             {
                 _db.LoanApplications.Add(obj!.LoanApplicationDetails!);
                 await _db.SaveChangesAsync();
@@ -133,31 +151,31 @@ namespace BadLoan.Controllers
                 return View(obj);
             }
 
-                var proofOfIncomeAttachment = await HandleFileAttachments(myFiles, "proofOfIncome");
-            var employmentAttachment = await HandleFileAttachments(myFiles, "employmentAttachments");
+           
 
 
-
-            if (proofOfIncomeAttachment != null && isEligible)
+            if (!string.IsNullOrEmpty(proofOfIncomeAttachment.FilePath) && isEligible)
             {
                 UploadedDocument uploadedDocument = new UploadedDocument
                 {
-                    FilePath = proofOfIncomeAttachment.ToString(),
+                    FilePath = proofOfIncomeAttachment.FilePath.ToString(),
+                    FileType = "Proof Of Income Attachment",
                     LoanApplicationId = obj.LoanApplicationDetails!.Id
                 };
 
-                 _db.UploadedDocuments.Add(uploadedDocument);
+                _db.UploadedDocuments.Add(uploadedDocument);
             }
 
 
 
 
 
-            if (employmentAttachment != null && isEligible)
+            if (!string.IsNullOrEmpty(employmentAttachment.FilePath) && isEligible)
             {
                 UploadedDocument uploadedDoc = new UploadedDocument
                 {
-                    FilePath = employmentAttachment.ToString(),
+                    FilePath = employmentAttachment.FilePath.ToString(),
+                    FileType = "Employment Attachment",
                     LoanApplicationId = obj.LoanApplicationDetails!.Id
                 };
 
@@ -176,7 +194,8 @@ namespace BadLoan.Controllers
 
 
 
-        private async Task<string> HandleFileAttachments(IFormCollection collectedFiles, string fileKey)
+        private async Task<(bool IsValid, string FilePath, string ErrorMessage)>
+            HandleFileAttachments(IFormCollection collectedFiles, string fileKey)
         {
             //var drivePath = _configuration["PathDetails:DrivePath"];
             var drivePath = _configuration["PathDetails:DrivePath"];
@@ -184,20 +203,20 @@ namespace BadLoan.Controllers
                 throw new InvalidOperationException("Drive path configuration is missing.");
 
             var attachments = collectedFiles.Files
-                .Where(f => f.Name == fileKey && f.Length > 0)
-                .ToList();
+            .Where(f => f.Name == fileKey && f.Length > 0)
+            .ToList();
 
             if (!attachments.Any())
-                return string.Empty;
+                return (true, string.Empty, string.Empty); 
 
 
-            // Validate file extensions
+            //Validate file extensions
             foreach (var file in attachments)
             {
                 var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
                 if (!AllowedExtensions.Contains(fileExtension))
                 {
-                    throw new InvalidOperationException("Only PDF and image files (.pdf, .jpg, .jpeg, .png) are allowed.");
+                    return (false, string.Empty, "Only PDF and image files (.pdf, .jpg, .jpeg, .png) are allowed.");
                 }
             }
 
@@ -210,10 +229,11 @@ namespace BadLoan.Controllers
             //}
 
             //var uploadFolder = Path.Combine(drivePath, "Uploaded Documents");
-            var uploadFolder = Path.Combine( "Uploaded Documents");
+            var uploadFolder = Path.Combine(drivePath, "Uploaded Documents");
             Directory.CreateDirectory(uploadFolder); // Ensure path exists
 
-            var fileUrls = new List<string>();
+            var fileUrls = new List<string>
+                ();
 
             foreach (var file in attachments)
             {
@@ -232,28 +252,30 @@ namespace BadLoan.Controllers
 
                 // Relative URL for later usage
                 var relativeUrl = Path.Combine("Document Uploads", uniqueFileName)
-                                  .Replace("\\", "/");
+                .Replace("\\", "/");
                 fileUrls.Add($"{relativeUrl}");
             }
 
-            return string.Join("", fileUrls);
+            return (true, string.Join("", fileUrls), string.Empty);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult>
+            Details()
         {
 
             var applications = await _db.LoanApplications.
-                Include(l => l.LoanType).
-                Include(l => l.Customer).
-                Include(l => l.UploadedDocuments).
-                ToListAsync();
-            
+            Include(l => l.LoanType).
+            Include(l => l.Customer).
+            Include(l => l.UploadedDocuments).
+            ToListAsync();
+
 
             return View(applications);
         }
 
-        public async Task<IActionResult> DownloadFile(string filePath)
+        public async Task<IActionResult>
+            DownloadFile(string filePath)
         {
             try
             {
@@ -283,17 +305,17 @@ namespace BadLoan.Controllers
                 if (filePath.StartsWith("Uploaded Documents"))
                 {
                     // Handle relative path format
-                    fullPath = Path.Combine( drivePath, filePath);
+                    fullPath = Path.Combine(drivePath, filePath);
                 }
                 else
                 {
-                //C:\\YebesiSavingsLoans / Document Uploads / internet_speed_78abd740 - a0b7 - 44f5 - bf4b - b8080f19542a.pdf
-                //"C:\YebesiSavingsLoans\Uploaded Documents\internet_speed_78abd740-a0b7-44f5-bf4b-b8080f19542a.pdf"
-                
-        // Handle full path format
-        //fullPath = Path.Combine(Directory.GetCurrentDirectory(), drivePath, "uploads", "receipts", filePath);
-        fullPath = Path.Combine(drivePath, "Uploaded Documents", filePath);
-                    
+                    //C:\\YebesiSavingsLoans / Document Uploads / internet_speed_78abd740 - a0b7 - 44f5 - bf4b - b8080f19542a.pdf
+                    //"C:\YebesiSavingsLoans\Uploaded Documents\internet_speed_78abd740-a0b7-44f5-bf4b-b8080f19542a.pdf"
+
+                    // Handle full path format
+                    //fullPath = Path.Combine(Directory.GetCurrentDirectory(), drivePath, "uploads", "receipts", filePath);
+                    fullPath = Path.Combine(drivePath, "Uploaded Documents", filePath);
+
                 }
 
                 if (!System.IO.File.Exists(fullPath))
@@ -317,15 +339,15 @@ namespace BadLoan.Controllers
                 // Return the file
                 return File(memory, GetContentType(fullPath), fileName);
 
-                
+
             }
             catch (Exception ex)
             {
-               
+
                 return StatusCode(500, "Error downloading file");
             }
 
-            
+
         }
 
         private string GetContentType(string path)

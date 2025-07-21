@@ -18,6 +18,7 @@ namespace BadLoan.Data
         public DbSet<ApprovalLog> ApprovalLogs { get; set; }
         public DbSet<UploadedDocument> UploadedDocuments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<RejectionLog> RejectionLogs { get; set; }
 
         public DbSet<User> Users { get; set; }
         //protected override void OnModelCreating(ModelBuilder builder)

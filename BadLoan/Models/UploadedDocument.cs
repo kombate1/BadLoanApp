@@ -15,10 +15,13 @@ namespace BadLoan.Models
         [Required]
         public string? FilePath { get; set; }  // e.g., "/uploads/loan123/id-proof.pdf"
 
+        [Required]
+        public string? FileType { get; set; }
+
         //[Required]
         //public byte[] Content { get; set; }   // e.g., "id-proof.pdf"
 
-       
+
 
 
     }

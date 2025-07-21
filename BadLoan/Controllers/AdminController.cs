@@ -1,4 +1,5 @@
 ﻿using BadLoan.Data;
+using BadLoan.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +49,7 @@ namespace BadLoan.Controllers
 
             return View(getLoans);
         }
-        public async Task<IActionResult> GetAllLoans(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var getLoans = await _db.LoanApplications
                 .Include(l => l.LoanType)
@@ -62,10 +63,84 @@ namespace BadLoan.Controllers
                 return NotFound();
             }
 
-            ViewBag.countAllLoans = getLoans.Count;
-
             return View(getLoans);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ApproveApplication(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var application = await _db.LoanApplications.FindAsync(id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            //var alreadyApproved = await _db.
+
+            // Example: update status to "Approved"
+            application.Status = "Approved";
+            application.LastUpdated = DateTime.UtcNow;
+
+            _db.LoanApplications.Update(application);
+
+            var approved = new ApprovalLog
+            {
+                CustomerId = application.CustomerId,
+                LoanApplicationId = application.Id,
+                ApprovedAmount = application.LoanAmount,
+            };
+
+            await _db.ApprovalLogs.AddAsync(approved);
+            await _db.SaveChangesAsync();
+
+
+            TempData["Message"] = "Application approved successfully.";
+            // Redirect or return confirmation view
+            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RejectApplication(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var application = await _db.LoanApplications.FindAsync(id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            // Example: update status to "Approved"
+            application.Status = "Reject";
+            application.LastUpdated = DateTime.UtcNow;
+            _db.LoanApplications.Update(application);
+
+            var rejected = new RejectionLog
+            {
+                CustomerId = application.CustomerId,
+                LoanApplicationId = application.Id,
+                ApprovedAmount = application.LoanAmount,
+            };
+
+            await _db.RejectionLogs.AddAsync(rejected);
+            await _db.SaveChangesAsync();
+
+            // Redirect or return confirmation view
+            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
+        }
+
+       
 
 
         [HttpGet]

@@ -26,63 +26,97 @@
         }
 
         .sidebar {
-            width: 180px;
+            width: 160px;
             background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 20px 10px;
+            padding: 20px 12px;
             position: fixed;
             height: 100vh;
             transition: width 0.3s ease;
             overflow: hidden;
+            align-items: flex-start;
+            box-sizing: border-box;
         }
 
             .sidebar.collapsed {
                 width: 60px;
             }
 
-            .sidebar h3,
-            .sidebar p,
-            .sidebar .menu a span {
-                transition: opacity 0.3s ease;
-            }
-
-            .sidebar.collapsed h3,
-            .sidebar.collapsed p,
-            .sidebar.collapsed .menu a span {
-                opacity: 0;
+            .sidebar .sidebar-header {
+                width: 100%;
+                margin-bottom: 30px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                position: relative;
             }
 
             .sidebar .toggle-btn {
-                font-size: 1.2rem;
+                position: absolute;
+                top: 0;
+                right: 0;
+                font-size: 1.3rem;
                 background: none;
                 border: none;
                 color: white;
                 cursor: pointer;
-                margin-bottom: 20px;
+                padding: 4px;
             }
 
-            .sidebar .menu a {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 12px;
-                text-decoration: none;
-                color: white;
-                font-size: 1rem;
-                font-weight: bold;
-                border-radius: 8px;
-                margin-bottom: 10px;
-                transition: background 0.3s ease;
+        .sidebar-name {
+            color: black;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 30px 0 0 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sidebar-role {
+            color: #333;
+            font-size: 0.9rem;
+            margin-top: 4px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-name,
+        .sidebar.collapsed .sidebar-role,
+        .sidebar.collapsed .menu a span {
+            opacity: 0;
+            transform: translateX(-10px);
+            pointer-events: none;
+        }
+
+        .menu a span {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+            .sidebar .menu a:hover {
+                background-color: #d1975e;
             }
 
-                .sidebar .menu a:hover {
-                    background-color: #d1975e;
-                }
+            .sidebar .menu a i {
+                font-size: 1.2rem;
+            }
 
         .main-content {
-            margin-left: 180px;
+            margin-left: 160px;
             padding: 30px;
             flex: 1;
             transition: margin-left 0.3s ease;
@@ -241,18 +275,22 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
-            <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            <h3>Glenn Inkoom</h3>
-            <p>Approval Manager</p>
+            <div class="sidebar-header">
+                <button class="toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h3 class="sidebar-name">Glenn Inkoom</h3>
+                <p class="sidebar-role">Approval Manager</p>
+            </div>
             <div class="menu">
                 <a asp-controller="Admin" asp-action="Index">
-                    <i class="fas fa-chart-line"></i><span>Dashboard</span>
+                    <i class="fas fa-home"></i><span>Dashboard</span>
                 </a>
                 <a asp-controller="Admin" asp-action="GetAllLoans">
-                    <i class="fas fa-folder-open"></i><span>Applications</span>
+                    <i class="fas fa-file-invoice-dollar"></i><span>Applications</span>
                 </a>
                 <a asp-controller="Account" asp-action="Logout">
-                    <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+                    <i class="fas fa-sign-out-alt"></i><span>Log Out</span>
                 </a>
             </div>
         </div>
@@ -268,7 +306,6 @@
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
                             <option value="rejected">Rejected</option>
-                            <option value="under review">Under Review</option>
                         </select>
                         <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterTable()" />
                     </div>

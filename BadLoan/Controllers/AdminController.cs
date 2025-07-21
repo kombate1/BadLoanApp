@@ -1,6 +1,8 @@
 ﻿using BadLoan.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace BadLoan.Controllers
 {
@@ -8,10 +10,12 @@ namespace BadLoan.Controllers
     {
 
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminController(ApplicationDbContext db)
+        public AdminController(ApplicationDbContext db, UserManager<IdentityUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -23,6 +27,8 @@ namespace BadLoan.Controllers
                 Where(l => l.Status == "approved").
                 SumAsync(l => l.LoanAmount);
 
+
+            //ViewBag.Name = _userManager.GetUserNameAsync(User)
 
             return View();
         }
@@ -39,6 +45,24 @@ namespace BadLoan.Controllers
 
             int countAllLoan = getLoans.Count;
             ViewBag.countAllLoans = countAllLoan;
+
+            return View(getLoans);
+        }
+        public async Task<IActionResult> GetAllLoans(int id)
+        {
+            var getLoans = await _db.LoanApplications
+                .Include(l => l.LoanType)
+                .Include(l => l.Customer)
+                .Include(l => l.UploadedDocuments)
+                .Where(l => l.Id == id) 
+                .ToListAsync();
+
+            if (getLoans == null || getLoans.Count == 0)
+            {
+                return NotFound();
+            }
+
+            ViewBag.countAllLoans = getLoans.Count;
 
             return View(getLoans);
         }

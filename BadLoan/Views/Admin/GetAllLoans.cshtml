@@ -1,5 +1,8 @@
 ﻿@using System.Globalization
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<BadLoan.Models.LoanApplication>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     Layout = null;
@@ -242,7 +245,12 @@
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            <h3>Glenn Inkoom</h3>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <h3 class="nav-item">
+                    <a id="manage" class="nav-link text-dark custom-auth-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                </h3>
+            }
             <p>Approval Manager</p>
             <div class="menu">
                 <a asp-controller="Admin" asp-action="Index">
@@ -251,9 +259,18 @@
                 <a asp-controller="Admin" asp-action="GetAllLoans">
                     <i class="fas fa-folder-open"></i><span>Applications</span>
                 </a>
-                <a asp-controller="Account" asp-action="Logout">
-                    <i class="fas fa-sign-out-alt"></i><span>Logout</span>
-                </a>
+
+                <div class="menu">
+                <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="form-inline">
+                    <a>
+                        <button type="submit" style="all: unset; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </a>
+               </form>
+               </div>
+
             </div>
         </div>
 

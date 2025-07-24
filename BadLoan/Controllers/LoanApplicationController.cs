@@ -123,8 +123,14 @@ namespace BadLoan.Controllers
 
             if (!proofOfIncomeAttachment.IsValid || !employmentAttachment.IsValid)
             {
-                ViewBag.MessageHtml = proofOfIncomeAttachment.ErrorMessage ?? employmentAttachment.ErrorMessage;
-                return View(obj); // Do not save the application
+                var errorMessages = new List<string>();
+                if (!proofOfIncomeAttachment.IsValid)
+                    errorMessages.Add(proofOfIncomeAttachment.ErrorMessage);
+                if (!employmentAttachment.IsValid)
+                    errorMessages.Add(employmentAttachment.ErrorMessage);
+
+                ViewBag.MessageHtml = string.Join("<br/>", errorMessages);
+                return View(obj);
             }
 
 
@@ -186,7 +192,7 @@ namespace BadLoan.Controllers
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Loan application submitted successfully!";
-            return RedirectToAction("Details", "LoanApplication"); // or redirect to a success page
+            return RedirectToAction("Index"); // or redirect to a success page
 
 
         }
@@ -207,7 +213,7 @@ namespace BadLoan.Controllers
             .ToList();
 
             if (!attachments.Any())
-                return (true, string.Empty, string.Empty); 
+                return (true, string.Empty, string.Empty);
 
 
             //Validate file extensions
@@ -219,6 +225,23 @@ namespace BadLoan.Controllers
                     return (false, string.Empty, "Only PDF and image files (.pdf, .jpg, .jpeg, .png) are allowed.");
                 }
             }
+
+
+            //var invalidFiles = new List<string>();  // creates a list that adds all invalid files so that the error displays after checking and sees one has an invalid 
+            //foreach (var file in attachments)
+            //{
+            //    var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            //    if (!AllowedExtensions.Contains(fileExtension))
+            //    {
+            //        invalidFiles.Add(file.FileName);
+            //    }
+            //}
+            //if (invalidFiles.Any())
+            //{
+            //    var errorMsg = "Only PDF and image files (.pdf, .jpg, .jpeg, .png) are allowed. Invalid file(s): " +
+            //                   string.Join(", ", invalidFiles);
+            //    return (false, string.Empty, errorMsg);
+            //}
 
             // Validate files before processing
             //var validationResult = _fileValidationService.ValidateFiles(attachments);

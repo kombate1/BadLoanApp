@@ -7,26 +7,72 @@
 
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
+
 <div class="row">
     <div class="col-md-6">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
             <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Input.Firstname" class="form-control" placeholder="First name" disabled />
+                <label asp-for="Input.Firstname" class="form-label"></label>
             </div>
 
-            
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
+                <input asp-for="Input.Lastname" class="form-control" placeholder="Last name" disabled />
+                <label asp-for="Input.Lastname" class="form-label"></label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.DateOfBirth" class="form-control" placeholder="Date of Birth" type="date" disabled/>
+                <label asp-for="Input.DateOfBirth" class="form-label"></label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Gender" class="form-control" placeholder="Gender" disabled/>
+                <label asp-for="Input.Gender" class="form-label"></label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Occupation" class="form-control" placeholder="Occupation" disabled/>
+                <label asp-for="Input.Occupation" class="form-label"></label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.AnnualIncome" class="form-control" placeholder="Annual Income" type="number" disabled/>
+                <label asp-for="Input.AnnualIncome" class="form-label"></label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number" disabled/>
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+
+
+
+            <button id="edit-button" type="button" class="btn btn-secondary mb-3" onclick="enableEditing()">Edit</button>
+
+            <button id="save-button" type="submit" class="w-100 btn btn-lg btn-primary d-none">Save</button>
+
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <script>
+        function enableEditing() {
+            // Enable all input fields
+            document.querySelectorAll("#profile-form input").forEach(input => {
+                input.removeAttribute("disabled");
+            });
+
+            // Show Save button and hide Edit button
+            document.getElementById("edit-button").classList.add("d-none");
+            document.getElementById("save-button").classList.remove("d-none");
+        }
+    </script>
     <partial name="_ValidationScriptsPartial" />
 }
+
+

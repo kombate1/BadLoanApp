@@ -8,7 +8,6 @@
     Layout = null;
     ViewData["Title"] = "Loan Applications for Approval";
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,106 +28,91 @@
         }
 
         .sidebar {
-            width: 160px;
+            width: 180px;
             background-color: #e3aa6b;
             color: white;
             display: flex;
             flex-direction: column;
-            padding: 20px 12px;
+            padding: 20px 15px;
             position: fixed;
             height: 100vh;
-            transition: width 0.3s ease;
-            overflow: hidden;
-            align-items: flex-start;
-            box-sizing: border-box;
+            font-size: 1rem;
+            transition: width 0.3s;
         }
 
             .sidebar.collapsed {
                 width: 60px;
             }
 
-            .sidebar .sidebar-header {
-                width: 100%;
+            .sidebar .profile {
+                text-align: center;
                 margin-bottom: 30px;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                position: relative;
             }
 
-            .sidebar .toggle-btn {
-                position: absolute;
-                top: 0;
-                right: 0;
-                font-size: 1.3rem;
-                background: none;
-                border: none;
-                color: white;
-                cursor: pointer;
-                padding: 4px;
+            .sidebar.collapsed .profile h3,
+            .sidebar.collapsed .profile p,
+            .sidebar.collapsed .profile span,
+            .sidebar.collapsed .menu span {
+                display: none;
             }
 
-        .sidebar-name {
-            color: black;
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin: 30px 0 0 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
 
-        .sidebar-role {
-            color: #333;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+            .sidebar .profile h3 {
+                margin: 5px 0;
+                font-weight: bold;
+                color: #000;
+            }
 
-        .sidebar.collapsed .sidebar-name,
-        .sidebar.collapsed .sidebar-role,
-        .sidebar.collapsed .menu a span {
-            opacity: 0;
-            transform: translateX(-10px);
-            pointer-events: none;
-        }
+            .sidebar .profile p {
+                font-size: 0.9rem;
+                color: #333;
+            }
 
-        .menu a span {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .sidebar .menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            text-decoration: none;
-            color: white;
-            font-size: 0.95rem;
-            font-weight: bold;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: background 0.3s ease;
+        .menu {
             width: 100%;
         }
 
-            .sidebar .menu a:hover {
-                background-color: #d1975e;
+            .menu a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 14px;
+                text-decoration: none;
+                color: white;
+                font-weight: bold;
+                border-radius: 8px;
+                transition: background 0.3s;
             }
 
-            .sidebar .menu a i {
-                font-size: 1.2rem;
-            }
+                .menu a:hover {
+                    background-color: #d1975e;
+                }
+
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -20px;
+            background: #e3aa6b;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
         .main-content {
-            margin-left: 160px;
+            margin-left: 180px;
             padding: 30px;
             flex: 1;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s;
         }
 
-        .collapsed + .main-content {
-            margin-left: 60px;
-        }
+            .main-content.collapsed {
+                margin-left: 60px;
+            }
 
+        /* Keep your existing styles below */
         .table-wrapper {
             background: white;
             padding: 20px;
@@ -147,8 +131,7 @@
                 font-size: 1.8rem;
             }
 
-            .filter-bar select,
-            .filter-bar input[type="text"] {
+            .filter-bar select, .filter-bar input[type="text"], .filter-bar input[type="date"] {
                 padding: 8px 14px;
                 border-radius: 6px;
                 border: 1px solid #ccc;
@@ -176,11 +159,6 @@
         .rejected {
             background-color: #fee2e2;
             color: #991b1b;
-        }
-
-        .under-review {
-            background-color: #e0e7ff;
-            color: #3730a3;
         }
 
         .action-btns i {
@@ -278,36 +256,27 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
 
-<!--             <div class="sidebar-header">
-                <button class="toggle-btn" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h3 class="sidebar-name">Glenn Inkoom</h3>
-                <p class="sidebar-role">Approval Manager</p>
-            </div> -->
+            <div class="profile" style="display: flex; flex-direction: column; align-items: start; gap: 6px;">
+                <h3 style="margin: 0;">Glenn Inkoom</h3>
+                <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; color: black;">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Approval Manager</span>
+                </div>
+            </div>
 
-            <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <h3 class="nav-item">
-                    <a id="manage" class="nav-link text-dark custom-auth-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-                </h3>
-            }
-            <p>Approval Manager</p>
-          
             <div class="menu">
                 <a asp-controller="Admin" asp-action="Index">
-                    <i class="fas fa-home"></i><span>Dashboard</span>
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
                 </a>
                 <a asp-controller="Admin" asp-action="GetAllLoans">
-                    <i class="fas fa-file-invoice-dollar"></i><span>Applications</span>
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Applications</span>
                 </a>
-
-              
-
-
-                <div class="menu">
                 <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="form-inline">
                     <a>
                         <button type="submit" style="all: unset; cursor: pointer;">
@@ -315,10 +284,7 @@
                             <span>Logout</span>
                         </button>
                     </a>
-               </form>
-               </div>
-
-
+                </form>
             </div>
         </div>
 
@@ -334,10 +300,10 @@
                             <option value="approved">Approved</option>
                             <option value="rejected">Rejected</option>
                         </select>
+                        <input type="date" id="dateInput" onchange="filterTable()" />
                         <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterTable()" />
                     </div>
                 </div>
-
                 @if (!Model.Any())
                 {
                     <p>No loan applications found.</p>
@@ -355,6 +321,7 @@
                                 <th>Annual Income</th>
                                 <th>Status</th>
                                 <th>Documents</th>
+                                <th>Date Submitted</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -368,8 +335,7 @@
                                     "rejected" => "rejected",
                                     _ => ""
                                 };
-
-                                <tr data-status="@app.Status?.ToLower()" data-name="@app.Customer?.FirstName @app.Customer?.LastName">
+                                <tr data-status="@app.Status?.ToLower()" data-name="@app.Customer?.FirstName @app.Customer?.LastName" data-date="@app.SubmittedDate.ToString("yyyy-MM-dd")">
                                     <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
                                     <td>@app.LoanType?.LoanTypeName</td>
                                     <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
@@ -380,21 +346,22 @@
                                     <td>
                                         @foreach (var doc in app.UploadedDocuments)
                                         {
+
                                             <a class="doc-link" asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="@doc.FilePath" download>
+
                                                 <i class="fas fa-file-alt"></i> @doc.FileType
                                             </a>
+                                
                                             <br />
                                         }
                                     </td>
+                                    <td>@app.SubmittedDate.ToString("dd MMM yyyy, hh:mm tt")</td>
                                     <td class="action-btns">
                                         <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("ApproveApplication", new { id = app.Id })', 'approve this loan application')" title="Approve">
                                             <i class="fas fa-check-circle text-success"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("RejectApplication", new { id = app.Id })', 'reject this loan application')" title="Reject">
                                             <i class="fas fa-times-circle text-danger"></i>
-                                        </a>
-                                        <a asp-action="Details" asp-route-id="@app.Id" title="View">
-                                            <i class="fas fa-eye text-primary"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -406,10 +373,15 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div id="confirmationModal">
         <div class="modal-box">
             <p id="modalMessage">Are you sure?</p>
+
+            <div id="commentContainer" style="display: none; margin-bottom: 1em; text-align: left;">
+                <label for="commentInput"><strong>Rejection Reason:</strong></label>
+                <textarea id="commentInput" rows="3" style="width: 100%; margin-top: 6px;"></textarea>
+            </div>
+
             <button onclick="proceedAction()" class="btn-confirm">Yes</button>
             <button onclick="closeModal()" class="btn-cancel">Cancel</button>
         </div>
@@ -420,39 +392,54 @@
 
         function confirmAction(url, message) {
             actionUrl = url;
+            const isReject = url.toLowerCase().includes("reject");
             document.getElementById("modalMessage").innerText = "Are you sure you want to " + message + "?";
+            document.getElementById("commentContainer").style.display = isReject ? "block" : "none";
+            document.getElementById("commentInput").value = "";
             document.getElementById("confirmationModal").classList.add("show");
         }
 
         function proceedAction() {
-            window.location.href = actionUrl;
+            const comment = document.getElementById("commentInput").value;
+            const encodedComment = encodeURIComponent(comment);
+            const finalUrl = actionUrl.toLowerCase().includes("reject")
+                ? actionUrl + "&comment=" + encodedComment
+                : actionUrl;
+            window.location.href = finalUrl;
         }
 
         function closeModal() {
             document.getElementById("confirmationModal").classList.remove("show");
         }
 
-        function filterTable() {
-            const selectedStatus = document.getElementById("statusFilter").value.toLowerCase();
-            const searchInput = document.getElementById("searchInput").value.toLowerCase();
-            const rows = document.querySelectorAll("#loanTable tbody tr");
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('collapsed');
+        }
 
+        function filterTable() {
+            const status = document.getElementById("statusFilter").value.toLowerCase();
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const date = document.getElementById("dateInput").value;
+
+            const rows = document.querySelectorAll("#loanTable tbody tr");
             rows.forEach(row => {
                 const rowStatus = row.getAttribute("data-status");
                 const rowName = row.getAttribute("data-name").toLowerCase();
+                const rowDate = row.getAttribute("data-date");
 
-                const statusMatch = (selectedStatus === "all" || rowStatus === selectedStatus);
-                const searchMatch = rowName.includes(searchInput);
+                const matchesStatus = status === "all" || rowStatus === status;
+                const matchesName = rowName.includes(search);
+                const matchesDate = !date || rowDate === date;
 
-                row.style.display = (statusMatch && searchMatch) ? "" : "none";
+                if (matchesStatus && matchesName && matchesDate) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             });
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const main = document.getElementById("mainContent");
-            sidebar.classList.toggle("collapsed");
-            main.classList.toggle("collapsed");
         }
     </script>
 </body>

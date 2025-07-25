@@ -36,8 +36,13 @@ namespace BadLoan.Models
         
         public DateTime? LastUpdated { get; set; }
 
+        [Range(1, 10000000000)]
         public decimal AnnualIncome { get; set; }
+
+        [Range(1, 31)]
         public int Duration { get; set; }
+
+        [Range(1, 10000000000)]
         public decimal LoanAmount { get; set; }
 
 

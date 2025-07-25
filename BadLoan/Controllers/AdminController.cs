@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Linq;
 
 namespace BadLoan.Controllers
 {
@@ -39,6 +40,7 @@ namespace BadLoan.Controllers
         {
 
             var getLoans = await _db.LoanApplications.
+                OrderByDescending(l => l.SubmittedDate).
                 Include(l => l.LoanType).
                 Include(l => l.Customer).
                 Include(l => l.UploadedDocuments).
@@ -55,7 +57,7 @@ namespace BadLoan.Controllers
                 .Include(l => l.LoanType)
                 .Include(l => l.Customer)
                 .Include(l => l.UploadedDocuments)
-                .Where(l => l.Id == id) 
+                .Where(l => l.Id == id)
                 .ToListAsync();
 
             if (getLoans == null || getLoans.Count == 0)
@@ -122,7 +124,7 @@ namespace BadLoan.Controllers
             }
 
             // Example: update status to "Approved"
-            application.Status = "Reject";
+            application.Status = "Rejected";
             application.LastUpdated = DateTime.UtcNow;
             _db.LoanApplications.Update(application);
 
@@ -140,13 +142,13 @@ namespace BadLoan.Controllers
             return RedirectToAction("Index", "Admin"); // Or wherever makes sense
         }
 
-       
+
 
 
         [HttpGet]
         public async Task<IActionResult> GetApprovedLoans()
         {
-           
+
             var approvedLoan = await _db.LoanApplications.
                 Include(l => l.LoanType).
                 Include(l => l.Customer).
@@ -167,7 +169,7 @@ namespace BadLoan.Controllers
                 Include(l => l.LoanType).
                 Include(l => l.Customer).
                 Include(l => l.UploadedDocuments).
-                Where(l => l.Status == "rejected").
+                Where(l => l.Status.ToLower() == "rejected").
                 ToListAsync();
 
             int countRejected = rejectedLoan.Count;
@@ -178,7 +180,7 @@ namespace BadLoan.Controllers
 
             return View(rejectedLoan);
 
-           
+
         }
 
         public async Task<IActionResult> GetPendingLoans()
@@ -197,5 +199,34 @@ namespace BadLoan.Controllers
             return View(pendingLoan);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> ApprovalMessage(ApprovalLog obj, int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var application = await _db.LoanApplications.FindAsync(id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            var approved = new ApprovalLog
+            {
+                Comment = obj.Comment,
+            };
+
+            await _db.ApprovalLogs.AddAsync(approved);
+            await _db.SaveChangesAsync();
+
+            return View(approved);
+
+
+
+        }
     }
 }

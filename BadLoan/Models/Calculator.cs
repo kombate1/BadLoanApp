@@ -10,5 +10,7 @@ namespace BadLoan.Models
         public decimal LoanAmount { get; set; }
         public string LoanType { get; set; }
         public int Duration { get; set; }
+
+        
     }
 }

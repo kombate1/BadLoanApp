@@ -346,7 +346,9 @@
                                     <td>
                                         @foreach (var doc in app.UploadedDocuments)
                                         {
-                                            <a class="doc-link" asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="/@doc.FilePath" target="_blank">
+
+                                            <a class="doc-link" asp-controller="LoanApplication" asp-action="DownloadFile" asp-route-filepath="@doc.FilePath" download>
+
                                                 <i class="fas fa-file-alt"></i> @doc.FileType
                                             </a>
                                 

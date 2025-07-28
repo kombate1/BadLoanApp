@@ -1,4 +1,6 @@
-﻿namespace BadLoan.Models.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace BadLoan.Models.ViewModels
 {
     public class LoanAttachmentViewModel
     {
@@ -11,6 +13,8 @@
         public string? LoanType { get; set; }
         public int Duration { get; set; }
         public decimal LoanAmount { get; set; }
+
+        public List<SelectListItem> Loans { get; set; } = new List<SelectListItem>();
 
         public Calculator Calculation { get; set; }
 

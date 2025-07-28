@@ -4,6 +4,7 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+
 @{
     Layout = null;
     ViewData["Title"] = "Loan Applications for Approval";
@@ -378,7 +379,7 @@
             <p id="modalMessage">Are you sure?</p>
 
             <div id="commentContainer" style="display: none; margin-bottom: 1em; text-align: left;">
-                <label for="commentInput"><strong>Rejection Reason:</strong></label>
+                <label for="Comment"><strong>Rejection Reason:</strong></label>
                 <textarea id="commentInput" rows="3" style="width: 100%; margin-top: 6px;"></textarea>
             </div>
 
@@ -400,13 +401,16 @@
         }
 
         function proceedAction() {
-            const comment = document.getElementById("commentInput").value;
-            const encodedComment = encodeURIComponent(comment);
-            const finalUrl = actionUrl.toLowerCase().includes("reject")
-                ? actionUrl + "&comment=" + encodedComment
-                : actionUrl;
-            window.location.href = finalUrl;
-        }
+    const comment = document.getElementById("commentInput").value;
+    const encodedComment = encodeURIComponent(comment);
+
+    let finalUrl = actionUrl;
+    if (actionUrl.toLowerCase().includes("reject")) {
+        finalUrl += (actionUrl.includes("?") ? "&" : "?") + "comment=" + encodedComment;
+    }
+
+    window.location.href = finalUrl;
+}
 
         function closeModal() {
             document.getElementById("confirmationModal").classList.remove("show");

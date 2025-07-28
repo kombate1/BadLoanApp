@@ -49,7 +49,7 @@
         {
             interest = loanAmount * 0.15m * duration; // Example calculation for personal loan
         }
-        else if (LoanType == "Home")
+        else if (LoanType == "Mortgage")
         {
             interest = loanAmount * 0.25m * duration; // Example calculation for home loan
         }
@@ -58,7 +58,7 @@
             interest = loanAmount * 0.20m * duration; // Example calculation for car loan
         }
 
-        decimal amountToPayYearly = (loanAmount / duration) + interest;
+        decimal amountToPayYearly = (loanAmount + interest) / duration;
 
         decimal debtServiceRatio = (amountToPayYearly / annualIncome) * 100;
 

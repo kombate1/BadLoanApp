@@ -5,6 +5,7 @@ namespace BadLoan.Models
 {
     public class User : IdentityUser
     {
+
         public DateTime DateRegistered = DateTime.Now;
 
         //public int id { get; set; }

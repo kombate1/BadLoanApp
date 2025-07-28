@@ -109,7 +109,7 @@ namespace BadLoan.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RejectApplication(int id)
+        public async Task<IActionResult> RejectApplication(int id, string comment)
         {
             if (id == 0)
             {
@@ -133,6 +133,7 @@ namespace BadLoan.Controllers
                 CustomerId = application.CustomerId,
                 LoanApplicationId = application.Id,
                 ApprovedAmount = application.LoanAmount,
+                Comment = comment
             };
 
             await _db.RejectionLogs.AddAsync(rejected);

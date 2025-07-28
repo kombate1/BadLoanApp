@@ -4,6 +4,7 @@ using BadLoan.Models;
 using BadLoan.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BadLoan.Controllers
@@ -64,7 +65,12 @@ namespace BadLoan.Controllers
                 CustomerId = customer!.CustomerId,
                 Occupation = customer!.Occupation,
                 AnnualIncome = customer!.AnnualIncome,
-                UploadedDocuments = new List<UploadedDocument>()
+                UploadedDocuments = new List<UploadedDocument>(),
+                Loans = _db.LoanTypes.Select(l => new SelectListItem
+                {
+                    Value = l.LoanTypeName,
+                    Text = l.LoanTypeName
+                }).ToList()
             };
 
             return View(viewModel);

@@ -149,16 +149,14 @@
 
 				<div class="form-col">
 					<label asp-for="LoanType">Type of Loan</label>
-					<select asp-for="LoanType" class="form-control" required>
+					<select asp-for="LoanType" asp-items="Model.Loans" class="form-control" required>
 						<option value="">Select Loan Type</option>
-						<option value="Personal">Personal Loan</option>
-						<option value="Auto">Auto Loan</option>
-						<option value="Mortgage">Mortgage Loan</option>
+						
 					</select>
 				</div>
 
 				<div class="form-col">
-					<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in years)</label>
+					<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in months)</label>
 					<input type="number" asp-for="LoanApplicationDetails.Duration" class="form-control" required />
 				</div>
 
@@ -170,7 +168,7 @@
 			
 			<div class="form-col">
 				<label>Proof of Employment *</label>
-				<input type="file" name="employmentAttachments" multiple />
+					<input type="file" name="employmentAttachments" accept=".pdf,.jpg,.jpeg,.png" multiple />
 			</div>
 
 		</div>
@@ -180,7 +178,7 @@
 		
 			<div class="form-col">
 				<label>Proof of Income( Statement)</label>
-				<input type="file" name="proofOfIncome" multiple />
+				<input type="file" name="proofOfIncome" accept=".pdf,.jpg,.jpeg,.png" multiple />
 			</div>
 		</div>
 
@@ -198,21 +196,26 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
-	<div class="toast-container position-fixed p-3" style="z-index: 9999">
-		<div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+	<div class="toast-container position-fixed p-3 top-0 end-0" style="z-index: 9999">
+		<div class="toast align-items-center text-white bg-success border-0" role="alert" data-bs-autohide="true" data-bs-delay="3000">
 			<div class="d-flex">
 				<div class="toast-body">
 					@TempData["SuccessMessage"]
 				</div>
-				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
 
 	<script>
-		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-		toastElList.forEach(function (toastEl) {
-			new bootstrap.Toast(toastEl).show();
+		document.addEventListener("DOMContentLoaded", function () {
+			const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+			toastElList.forEach(function (toastEl) {
+				const toast = new bootstrap.Toast(toastEl);
+				toast.show();
+			});
 		});
 	</script>
 }
+
+

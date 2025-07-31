@@ -3,6 +3,8 @@
 #nullable disable
 
 using BadLoan.Data;
+using BadLoan.Models;
+
 //using BadLoan.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +45,8 @@ namespace BadLoan.Areas.Identity.Pages.Account.Manage
         /// </summary>
         [BindProperty]
         public ProfileViewModel Input { get; set; }
+        public IList<LoanApplication> loans { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -56,6 +60,7 @@ namespace BadLoan.Areas.Identity.Pages.Account.Manage
 
             // Load profile from Customer table
             var profile = _db.Customers.FirstOrDefault(x => x.UserId == user.Id);
+            var customerId = profile.CustomerId;
             if (profile == null)
             {
                 return NotFound();
@@ -72,6 +77,11 @@ namespace BadLoan.Areas.Identity.Pages.Account.Manage
                 AnnualIncome = profile.AnnualIncome,
                 PhoneNumber = await _userManager.GetPhoneNumberAsync(user)
             };
+
+            loans = await _db.LoanApplications.Where(l => l.CustomerId == customerId).
+                 Include(l => l.LoanType).
+                 ToListAsync();
+
 
             return Page();
         }

@@ -9,7 +9,8 @@ namespace BadLoan.Models
     {
         [Key]
         public int NotificationId  { get; set; }
-        [Required]
+       
+        public int UserId { get; set; }
         public string? Email { get; set; }
         public string? Message { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;

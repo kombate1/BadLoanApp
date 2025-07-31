@@ -13,11 +13,13 @@ namespace BadLoan.Controllers
 
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly NotificationService _notificationService;
 
-        public AdminController(ApplicationDbContext db, UserManager<IdentityUser> userManager)
+        public AdminController(ApplicationDbContext db, UserManager<IdentityUser> userManager, NotificationService notificationService)
         {
             _db = db;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
         public async Task<IActionResult> Index()
         {
@@ -100,6 +102,14 @@ namespace BadLoan.Controllers
             };
 
             await _db.ApprovalLogs.AddAsync(approved);
+
+            var CustomerId = application.CustomerId;
+            var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+
+            await _notificationService.CreateNotification(
+                           CustomerId,
+                           $"Dear {user.UserName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} ");
+
             await _db.SaveChangesAsync();
 
 
@@ -137,6 +147,16 @@ namespace BadLoan.Controllers
             };
 
             await _db.RejectionLogs.AddAsync(rejected);
+
+            var CustomerId = application.CustomerId;
+            var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+
+            await _notificationService.CreateNotification(
+                           CustomerId,
+                           $"Dear {user.UserName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reasons:{rejected.Comment}");
+        
+
+
             await _db.SaveChangesAsync();
 
             // Redirect or return confirmation view

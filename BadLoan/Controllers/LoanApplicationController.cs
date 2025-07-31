@@ -14,8 +14,10 @@ namespace BadLoan.Controllers
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser>
     _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly EligibilityService _eligibilityService;
+        private readonly NotificationService _notificationService;
         private static readonly string[] AllowedExtensions = { ".pdf", ".jpg", ".jpeg", ".png" };
 
 
@@ -25,13 +27,18 @@ namespace BadLoan.Controllers
         UserManager<IdentityUser>
             userManager,
             IConfiguration configuration,
-            EligibilityService eligibilityService
+            EligibilityService eligibilityService,
+            NotificationService notificationService,
+            RoleManager<IdentityRole> roleManager
             )
         {
             _db = db;
             _userManager = userManager;
+
             _configuration = configuration;
             _eligibilityService = eligibilityService;
+            _notificationService = notificationService;
+            _roleManager = roleManager;
 
         }
 
@@ -66,7 +73,7 @@ namespace BadLoan.Controllers
                 Occupation = customer!.Occupation,
                 AnnualIncome = customer!.AnnualIncome,
                 UploadedDocuments = new List<UploadedDocument>(),
-                Loans = _db.LoanTypes.Select(l => new SelectListItem
+                Loans =  _db.LoanTypes.Select(l => new SelectListItem
                 {
                     Value = l.LoanTypeName,
                     Text = l.LoanTypeName
@@ -98,11 +105,7 @@ namespace BadLoan.Controllers
             
                 var loantypeInput = obj.LoanType;
                 var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync(l => l.LoanTypeName == loantypeInput);
-            
 
-               
-            
-             
 
 
 
@@ -117,8 +120,25 @@ namespace BadLoan.Controllers
 
             var results = _eligibilityService.LoanEligibility(annualIncome, duration, loantype, loanAmount);
 
+            decimal debtServiceRatio = results.DebtServiceRatio;
+
             ViewBag.MessageHtml = results.Message;
 
+
+            string creditRate = "";
+
+            if (debtServiceRatio < 10)
+            {
+                creditRate = "Low Risk";
+            }
+            else if (debtServiceRatio > 10 && debtServiceRatio < 25)
+            {
+                creditRate = "Medium Risk";
+            }
+            else if (debtServiceRatio > 25)
+            {
+                creditRate = "High Risk";
+            }
 
             //var loanTypeId = Convert.ToInt32(obj.LoanType);
             //var findLoanType = _db.LoanTypes.Where(c => c.LoanTypeId == loanTypeId).FirstOrDefault().LoanTypeName;
@@ -152,13 +172,39 @@ namespace BadLoan.Controllers
 
             obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
             obj.LoanApplicationDetails.CustomerId = customer.CustomerId;
+            obj.LoanApplicationDetails.creditRate = creditRate;
             if (obj.LoanApplicationDetails != null && isEligible)
             {
                 _db.LoanApplications.Add(obj!.LoanApplicationDetails!);
                 await _db.SaveChangesAsync();
+
+                
+
+                // determine the recipient (approval manager)
+                var approvalManagerRole = await _roleManager.FindByNameAsync("Approval Manager");
+                var approvalManagerId = approvalManagerRole?.Id; // choose your routing logic
+
+                if (approvalManagerId != null)
+                {
+                    // fire-and-forget is OK if a failed notification shouldn't block the user
+                     await _notificationService.CreateNotification(
+                            Convert.ToInt32(approvalManagerId),
+                            $"New loan application submitted by {customer.FirstName} {customer.LastName} ");
+                }
             }
             else
             {
+                obj.Loans = await _db.LoanTypes.Select(l => new SelectListItem
+                {
+                    Value = l.LoanTypeName,
+                    Text = l.LoanTypeName
+                }).ToListAsync();
+
+                // Reassign customer values
+                obj.CustomerId = customer.CustomerId;
+                obj.AnnualIncome = customer.AnnualIncome;
+                obj.Occupation = customer.Occupation;
+
                 ViewBag.MessageHtml = results.Message;
                 return View(obj);
             }

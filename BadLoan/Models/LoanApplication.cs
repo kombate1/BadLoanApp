@@ -45,6 +45,8 @@ namespace BadLoan.Models
         [Range(1, 10000000000)]
         public decimal LoanAmount { get; set; }
 
+        public string creditRate { get; set; }
+
 
 
 

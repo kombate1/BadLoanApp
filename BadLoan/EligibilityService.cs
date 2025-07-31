@@ -10,7 +10,7 @@
 
 
         decimal min = 1 * 12, max = 30 * 12;
-        string loanType = LoanType?.ToLower() ?? string.Empty;
+       string loanType = LoanType?.ToLower() ?? string.Empty;
 
         if (loanType == null)
         {
@@ -42,20 +42,24 @@
 
         // Assuming c.AnnualIncome is a decimal and you want to calculate interest based on input from the Calculator model in the view
         decimal interest = 0;
+        decimal principalInterest = 0;
 
         duration /= 12;
 
         if (LoanType == "Personal")
         {
             interest = loanAmount * 0.15m * duration; // Example calculation for personal loan
+            principalInterest = 0.15m;
         }
         else if (LoanType == "Mortgage")
         {
             interest = loanAmount * 0.25m * duration; // Example calculation for home loan
+            principalInterest = 0.25m;
         }
         else if (LoanType == "Auto")
         {
             interest = loanAmount * 0.20m * duration; // Example calculation for car loan
+            principalInterest = 0.20m;
         }
 
         decimal amountToPayYearly = (loanAmount + interest) / duration;
@@ -63,13 +67,12 @@
         decimal debtServiceRatio = (amountToPayYearly / annualIncome) * 100;
 
 
-        
 
-        decimal maxLoanAmount = annualIncome * 0.4m; // Assuming max loan amount is 40% of annual income
 
-       
-        
-       
+      //  decimal maxLoanAmount = (annualIncome * 0.4m * duration) - principalInterest; // Assuming max loan amount is 40% of annual income
+        decimal maxLoanAmount = (annualIncome * 0.4m)/(1 + (principalInterest*duration)); // Assuming max loan amount is 40% of annual income
+
+
 
         if (debtServiceRatio > 40)
         {

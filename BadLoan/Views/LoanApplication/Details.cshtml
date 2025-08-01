@@ -9,114 +9,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fafb;
+            background-color: #f1f5f9;
             margin: 0;
             padding: 0;
         }
 
         .main-container {
-            max-width: 1100px;
+            max-width: 950px;
             margin: 40px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 30px;
+        }
+
+            .header h2 {
+                margin: 0;
+                font-size: 26px;
+                color: #1e40af;
+            }
+
+        .status {
+            text-align: right;
         }
 
         .badge {
-            background-color: #facc15;
-            color: #92400e;
-            font-weight: bold;
             padding: 6px 14px;
-            border-radius: 20px;
-            display: inline-block;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
+
+            .badge.approved {
+                background-color: #10b981;
+                color: white;
+            }
+
+            .badge.rejected {
+                background-color: #ef4444;
+                color: white;
+            }
+
+            .badge.pending {
+                background-color: #f59e0b;
+                color: white;
+            }
 
         .submitted-date {
+            display: block;
+            font-size: 12px;
             color: #6b7280;
-            margin-left: 10px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            text-decoration: none;
-            padding: 10px 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            color: white;
-            transition: background 0.3s ease;
-        }
-
-        .btn-approve {
-            background-color: #10b981;
-        }
-
-        .btn-reject {
-            background-color: #ef4444;
-        }
-
-        .btn-review {
-            background-color: #3b82f6;
-        }
-
-        h2 {
-            font-size: 1.6rem;
-            margin-bottom: 5px;
+            margin-top: 4px;
         }
 
         .section {
             display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 24px;
         }
 
         .card {
             flex: 1;
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
+            min-width: 320px;
+            padding: 24px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
         }
 
             .card h3 {
-                font-size: 1.2rem;
-                margin-bottom: 15px;
-                border-bottom: 1px solid #d1d5db;
-                padding-bottom: 10px;
+                font-size: 18px;
+                margin-bottom: 16px;
+                color: #1e293b;
             }
 
         .info-item {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
             .info-item label {
-                font-weight: bold;
-                font-size: 0.95rem;
-                color: #374151;
                 display: block;
+                font-size: 13px;
+                color: #64748b;
+                margin-bottom: 3px;
             }
 
             .info-item span {
-                display: block;
-                margin-top: 2px;
-                color: #1f2937;
+                font-size: 15px;
+                color: #0f172a;
+                font-weight: 500;
             }
 
         .documents-section {
@@ -124,55 +120,49 @@
         }
 
             .documents-section h3 {
-                font-size: 1.2rem;
-                margin-bottom: 15px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
+                font-size: 18px;
+                margin-bottom: 12px;
+                color: #1e293b;
             }
 
         .file-list {
             display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .file-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             text-decoration: none;
             color: #1d4ed8;
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            padding: 10px 14px;
-            border-radius: 8px;
-            transition: background 0.3s;
+            background-color: #e0e7ff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s ease;
         }
 
             .file-link:hover {
-                background-color: #e0e7ff;
-            }
-
-            .file-link i {
-                color: #6366f1;
+                background-color: #c7d2fe;
             }
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="header">
-            <div>
-                <h2>Loan Application Details</h2>
-                <div class="status">
-                    <span class="badge">@Model.Status</span>
-                    <span class="submitted-date">Submitted @@Model.CreatedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt")</span>
-                </div>
-            </div>
-            <div class="actions">
-                <a asp-action="ApproveApplication" asp-route-id="@Model.Id" class="btn btn-approve">Approve</a>
-                <a asp-action="RejectApplication" asp-route-id="@Model.Id" class="btn btn-reject">Reject</a>
-                <a href="#" class="btn btn-review">Review</a>
+            <h2>Loan Application Details</h2>
+            <div class="status">
+                @{
+                    var statusClass = Model.Status?.ToLower() switch
+                    {
+                        "approved" => "approved",
+                        "rejected" => "rejected",
+                        _ => "pending"
+                    };
+                }
+                <span class="badge @statusClass">@Model.Status</span>
+                <span class="submitted-date">Status as of today</span>
             </div>
         </div>
 
@@ -180,19 +170,15 @@
             <div class="card">
                 <h3><i class="fa-solid fa-user"></i> Customer Information</h3>
                 <div class="info-item">
-                    <label>Name:</label>
+                    <label>Full Name</label>
                     <span>@Model.Customer?.FirstName @Model.Customer?.LastName</span>
                 </div>
                 <div class="info-item">
-                    <label>Email:</label>
-                    <span>@@Model.Customer?.Email</span>
-                </div>
-                <div class="info-item">
-                    <label>Employment Type:</label>
+                    <label>Occupation</label>
                     <span>@Model.Customer?.Occupation</span>
                 </div>
                 <div class="info-item">
-                    <label>Annual Income:</label>
+                    <label>Annual Income</label>
                     <span>@Model.AnnualIncome.ToString("C", new CultureInfo("en-US"))</span>
                 </div>
             </div>
@@ -200,15 +186,15 @@
             <div class="card">
                 <h3><i class="fa-solid fa-sack-dollar"></i> Loan Details</h3>
                 <div class="info-item">
-                    <label>Requested Amount:</label>
+                    <label>Requested Amount</label>
                     <span>@Model.LoanAmount.ToString("C", new CultureInfo("en-US"))</span>
                 </div>
                 <div class="info-item">
-                    <label>Purpose:</label>
+                    <label>Loan Purpose</label>
                     <span>@Model.LoanType?.LoanTypeName</span>
                 </div>
                 <div class="info-item">
-                    <label>Duration:</label>
+                    <label>Loan Duration</label>
                     <span>@Model.Duration year(s)</span>
                 </div>
             </div>
@@ -217,10 +203,41 @@
         <div class="documents-section">
             <h3><i class="fa-solid fa-file-lines"></i> Submitted Documents</h3>
             <div class="file-list">
-                <a href="#" class="file-link"><i class="fa-solid fa-file"></i> ID Copy</a>
-                <a href="#" class="file-link"><i class="fa-solid fa-file-invoice-dollar"></i> Income Statement</a>
+                @if (Model.UploadedDocuments != null && Model.UploadedDocuments.Any())
+                {
+                    foreach (var doc in Model.UploadedDocuments)
+                    {
+                        var icon = doc.FileType?.ToLower() switch
+                        {
+                            "proofofemployment" => "fa-id-card",
+                            "proofofincome" => "fa-money-check-dollar",
+                            _ => "fa-file"
+                        };
+
+                        <a class="file-link" asp-controller="LoanApplication" asp-action="DownloadDocument" asp-route-filePath="@doc.FilePath">
+                            <i class="fa-solid @icon"></i> @GetFriendlyName(doc.FileType)
+                        </a>
+                    }
+                }
+                else
+                {
+                    <span style="color: #64748b;">No documents submitted.</span>
+                }
             </div>
         </div>
 
+        @functions {
+            private string GetFriendlyName(string type)
+            {
+                return type?.ToLower() switch
+                {
+                    "proofofincome" => "Income Statement",
+                    "proofofemployment" => "Proof of Employment",
+                    _ => type ?? "Unknown"
+                };
+            }
+        }
+
+    </div>
 </body>
 </html>

@@ -287,6 +287,25 @@ namespace BadLoan.Controllers
 
             return (true, string.Join("", fileUrls), string.Empty);
         }
+        [HttpGet]
+        [HttpGet]
+        public IActionResult ViewLoanDetails(int id)
+        {
+            var loan = _db.LoanApplications
+                .Include(l => l.Customer)
+                .Include(l => l.LoanType)
+                .FirstOrDefault(l => l.Id == id);
+
+            if (loan == null)
+            {
+                return NotFound();
+            }
+
+            return View("Details", loan); // or View("ViewLoanDetails", loan) if you create a new view
+        }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult>

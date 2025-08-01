@@ -12,7 +12,7 @@ namespace BadLoan
             _context = context;
         }
 
-        public async Task CreateNotification(int userId, string message)
+        public async Task CreateNotification(string userId, string message)
         {
             var notification = new Notification
             {

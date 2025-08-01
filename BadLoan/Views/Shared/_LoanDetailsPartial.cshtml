@@ -1,0 +1,52 @@
+﻿@model BadLoan.Models.LoanApplication
+
+<div class="p-4">
+    <h4 class="text-primary fw-bold mb-3">Loan Details</h4>
+
+    <div class="mb-3">
+        <strong>Customer Name:</strong>
+        <span>@Model.Customer.FirstName @Model.Customer.LastName</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Loan Type:</strong>
+        <span>@Model.LoanType.LoanTypeName</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Amount:</strong>
+        <span>₵@Model.LoanAmount.ToString("N2")</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Status:</strong>
+        <span class="badge bg-secondary text-uppercase">@Model.Status</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Submitted Date:</strong>
+        <span>@Model.SubmittedDate.ToString("f")</span>
+    </div>
+
+    
+
+    <hr />
+
+    <h5 class="text-muted mt-4">Uploaded Documents</h5>
+    <ul class="list-group list-group-flush">
+        @if (Model.UploadedDocuments != null && Model.UploadedDocuments.Any())
+        {
+            foreach (var doc in Model.UploadedDocuments)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>@doc.FileType</span>
+                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="@doc.FilePath">View</a>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item text-muted">No documents uploaded.</li>
+        }
+    </ul>
+</div>

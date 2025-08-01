@@ -70,6 +70,24 @@ namespace BadLoan.Controllers
             return View(getLoans);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> LoadLoanDetailsPartial(int id)
+        {
+            var loan = await _db.LoanApplications
+                .Include(l => l.Customer)
+                .Include(l => l.LoanType)
+                .Include(l => l.UploadedDocuments)
+                .FirstOrDefaultAsync(l => l.Id == id);
+
+            if (loan == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("~/Views/Shared/_LoanDetailsPartial.cshtml", loan);
+        }
+
+
 
         [HttpGet]
         public async Task<IActionResult> ApproveApplication(int id)

@@ -267,7 +267,31 @@
             </div>
             <div class="cards">
                 <div class="card card-disbursed status-disbursed">
-                    <i class="fas fa-dollar-sign"></i>
+                    <div class="cedi-container">
+                        <span class="cedi-icon">₵</span>
+                    </div>
+
+                    <style>
+                        .cedi-container {
+                            width: 100%;
+                            background-color: white;
+                            padding: 10px;
+                            border-radius: 10px;
+                            position: relative;
+                        }
+
+                        .cedi-icon {
+                            position: absolute;
+                            right: 20px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            color: #3b82f6; /* blue color */
+                            font-size: 28px;
+                            font-weight: bold;
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        }
+                    </style>
+
                     <h2>@ViewBag.totalDisbursed.ToString("C", new CultureInfo("en-GH"))</h2>
                     <p>Total Disbursed</p>
                 </div>

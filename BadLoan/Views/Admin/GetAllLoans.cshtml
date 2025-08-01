@@ -352,12 +352,15 @@
 
                                                 <i class="fas fa-file-alt"></i> @doc.FileType
                                             </a>
-                                
+
                                             <br />
                                         }
                                     </td>
                                     <td>@app.SubmittedDate.ToString("dd MMM yyyy, hh:mm tt")</td>
                                     <td class="action-btns">
+                                        <a asp-action="ViewLoanDetails" asp-controller="LoanApplication" asp-route-id="@app.Id" title="View Details">
+                                            <i class="fas fa-eye text-primary"></i>
+                                        </a>
                                         <a href="javascript:void(0)" onclick="confirmAction('@Url.Action("ApproveApplication", new { id = app.Id })', 'approve this loan application')" title="Approve">
                                             <i class="fas fa-check-circle text-success"></i>
                                         </a>
@@ -365,6 +368,7 @@
                                             <i class="fas fa-times-circle text-danger"></i>
                                         </a>
                                     </td>
+
                                 </tr>
                             }
                         </tbody>
@@ -389,62 +393,62 @@
     </div>
 
     <script>
-        let actionUrl = "";
+                let actionUrl = "";
 
-        function confirmAction(url, message) {
-            actionUrl = url;
-            const isReject = url.toLowerCase().includes("reject");
-            document.getElementById("modalMessage").innerText = "Are you sure you want to " + message + "?";
-            document.getElementById("commentContainer").style.display = isReject ? "block" : "none";
-            document.getElementById("commentInput").value = "";
-            document.getElementById("confirmationModal").classList.add("show");
-        }
-
-        function proceedAction() {
-    const comment = document.getElementById("commentInput").value;
-    const encodedComment = encodeURIComponent(comment);
-
-    let finalUrl = actionUrl;
-    if (actionUrl.toLowerCase().includes("reject")) {
-        finalUrl += (actionUrl.includes("?") ? "&" : "?") + "comment=" + encodedComment;
-    }
-
-    window.location.href = finalUrl;
-}
-
-        function closeModal() {
-            document.getElementById("confirmationModal").classList.remove("show");
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const main = document.getElementById('mainContent');
-            sidebar.classList.toggle('collapsed');
-            main.classList.toggle('collapsed');
-        }
-
-        function filterTable() {
-            const status = document.getElementById("statusFilter").value.toLowerCase();
-            const search = document.getElementById("searchInput").value.toLowerCase();
-            const date = document.getElementById("dateInput").value;
-
-            const rows = document.querySelectorAll("#loanTable tbody tr");
-            rows.forEach(row => {
-                const rowStatus = row.getAttribute("data-status");
-                const rowName = row.getAttribute("data-name").toLowerCase();
-                const rowDate = row.getAttribute("data-date");
-
-                const matchesStatus = status === "all" || rowStatus === status;
-                const matchesName = rowName.includes(search);
-                const matchesDate = !date || rowDate === date;
-
-                if (matchesStatus && matchesName && matchesDate) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
+                function confirmAction(url, message) {
+                    actionUrl = url;
+                    const isReject = url.toLowerCase().includes("reject");
+                    document.getElementById("modalMessage").innerText = "Are you sure you want to " + message + "?";
+                    document.getElementById("commentContainer").style.display = isReject ? "block" : "none";
+                    document.getElementById("commentInput").value = "";
+                    document.getElementById("confirmationModal").classList.add("show");
                 }
-            });
+
+                function proceedAction() {
+            const comment = document.getElementById("commentInput").value;
+            const encodedComment = encodeURIComponent(comment);
+
+            let finalUrl = actionUrl;
+            if (actionUrl.toLowerCase().includes("reject")) {
+                finalUrl += (actionUrl.includes("?") ? "&" : "?") + "comment=" + encodedComment;
+            }
+
+            window.location.href = finalUrl;
         }
+
+                function closeModal() {
+                    document.getElementById("confirmationModal").classList.remove("show");
+                }
+
+                function toggleSidebar() {
+                    const sidebar = document.getElementById('sidebar');
+                    const main = document.getElementById('mainContent');
+                    sidebar.classList.toggle('collapsed');
+                    main.classList.toggle('collapsed');
+                }
+
+                function filterTable() {
+                    const status = document.getElementById("statusFilter").value.toLowerCase();
+                    const search = document.getElementById("searchInput").value.toLowerCase();
+                    const date = document.getElementById("dateInput").value;
+
+                    const rows = document.querySelectorAll("#loanTable tbody tr");
+                    rows.forEach(row => {
+                        const rowStatus = row.getAttribute("data-status");
+                        const rowName = row.getAttribute("data-name").toLowerCase();
+                        const rowDate = row.getAttribute("data-date");
+
+                        const matchesStatus = status === "all" || rowStatus === status;
+                        const matchesName = rowName.includes(search);
+                        const matchesDate = !date || rowDate === date;
+
+                        if (matchesStatus && matchesName && matchesDate) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                }
     </script>
 </body>
 </html>

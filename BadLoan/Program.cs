@@ -1,3 +1,4 @@
+using BadLoan;
 using BadLoan.Data;
 using BadLoan.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<EligibilityService>();
+builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();
 

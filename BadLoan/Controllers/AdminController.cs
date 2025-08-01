@@ -122,11 +122,12 @@ namespace BadLoan.Controllers
             await _db.ApprovalLogs.AddAsync(approved);
 
             var CustomerId = application.CustomerId;
-            var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == CustomerId);
+            var UserID = user.UserId;
 
             await _notificationService.CreateNotification(
-                           CustomerId,
-                           $"Dear {user.UserName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} ");
+                           UserID,
+                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} ");
 
             await _db.SaveChangesAsync();
 
@@ -167,11 +168,12 @@ namespace BadLoan.Controllers
             await _db.RejectionLogs.AddAsync(rejected);
 
             var CustomerId = application.CustomerId;
-            var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == CustomerId);
+            var UserID = user.UserId;
 
             await _notificationService.CreateNotification(
-                           CustomerId,
-                           $"Dear {user.UserName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reasons:{rejected.Comment}");
+                            UserID,
+                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reasons:{rejected.Comment}");
         
 
 

@@ -26,6 +26,11 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+
+        <li class="nav-item d-flex align-items-center me-3">
+            @await Html.PartialAsync("_NotificationPartial", (int?)(ViewBag.notificationsCount?? 0))
+        </li>
+
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark custom-auth-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>

@@ -83,6 +83,8 @@ namespace BadLoan.Controllers
             return View(viewModel);
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult>
             Index(LoanAttachmentViewModel obj, IFormCollection myFiles)
@@ -178,18 +180,18 @@ namespace BadLoan.Controllers
                 _db.LoanApplications.Add(obj!.LoanApplicationDetails!);
                 await _db.SaveChangesAsync();
 
+
+
                 
+                    var usersInRole = await _userManager.GetUsersInRoleAsync("Approval Manager");
 
-                // determine the recipient (approval manager)
-                var approvalManagerRole = await _roleManager.FindByNameAsync("Approval Manager");
-                var approvalManagerId = approvalManagerRole?.Id; // choose your routing logic
-
-                if (approvalManagerId != null)
+                foreach (var person in usersInRole)
                 {
-                    // fire-and-forget is OK if a failed notification shouldn't block the user
-                     await _notificationService.CreateNotification(
-                            Convert.ToInt32(approvalManagerId),
-                            $"New loan application submitted by {customer.FirstName} {customer.LastName} ");
+                    // Send notification to each approval manager
+                    await _notificationService.CreateNotification(
+                        person.Id,
+                        $"New loan application submitted by {customer.FirstName} {customer.LastName}"
+                    );
                 }
             }
             else
@@ -368,8 +370,7 @@ namespace BadLoan.Controllers
             return View(applications);
         }
 
-        public async Task<IActionResult>
-            DownloadFile(string filePath)
+        public async Task<IActionResult> DownloadFile(string filePath)
         {
             try
             {
@@ -385,31 +386,20 @@ namespace BadLoan.Controllers
                     filePath = filePath.Substring(prefix.Length);
                 }
 
-
-                // Get the drive path from configuration
-                // var drivePath = _configuration["NEWCONFIG:drivePath"];
                 var drivePath = _configuration["PathDetails:DrivePath"];
                 if (string.IsNullOrEmpty(drivePath))
                 {
                     return StatusCode(500, "Drive path configuration is missing");
                 }
 
-                // Handle both formats of file paths
                 string fullPath;
                 if (filePath.StartsWith("Uploaded Documents"))
                 {
-                    // Handle relative path format
                     fullPath = Path.Combine(drivePath, filePath);
                 }
                 else
                 {
-                    //C:\\YebesiSavingsLoans / Document Uploads / internet_speed_78abd740 - a0b7 - 44f5 - bf4b - b8080f19542a.pdf
-                    //"C:\YebesiSavingsLoans\Uploaded Documents\internet_speed_78abd740-a0b7-44f5-bf4b-b8080f19542a.pdf"
-
-                    // Handle full path format
-                    //fullPath = Path.Combine(Directory.GetCurrentDirectory(), drivePath, "uploads", "receipts", filePath);
                     fullPath = Path.Combine(drivePath, "Uploaded Documents", filePath);
-
                 }
 
                 if (!System.IO.File.Exists(fullPath))
@@ -417,32 +407,28 @@ namespace BadLoan.Controllers
                     return NotFound("File not found");
                 }
 
-                // Get the file name from the path
                 var fileName = Path.GetFileName(fullPath);
+                var contentType = GetContentType(fullPath);
 
-                // Read the file
                 var memory = new MemoryStream();
-                using (var stream = new FileStream(fullPath, FileMode.Open))
+                using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
                 {
                     await stream.CopyToAsync(memory);
                 }
                 memory.Position = 0;
 
-                Response.Headers["Content-Disposition"] = $"inline; filename={fileName}";
+                // Set inline header manually
+                Response.Headers["Content-Disposition"] = $"inline; filename=\"{fileName}\"";
 
-                // Return the file
-                return File(memory, GetContentType(fullPath), fileName);
-
-
+                return File(memory, contentType);
+                //return File(memory, contentType,fileName); // Don't pass fileName here, this will force it to only download
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, "Error downloading file");
             }
-
-
         }
+
 
         private string GetContentType(string path)
         {
@@ -459,6 +445,22 @@ namespace BadLoan.Controllers
                 ".png" => "image/png",
                 _ => "application/octet-stream"
             };
+        }
+
+        private IActionResult GetNotification()
+        {
+
+            var user =  _userManager.FindByNameAsync(User!.Identity!.Name!);
+            var userID = user.Id.ToString();
+
+
+            var notifications = _db.Notifications.Where(n => n.UserId == userID).ToList();
+
+            var numNotifications = notifications.Count();
+
+            ViewBag.notificationsCount = numNotifications;
+
+            return PartialView("_NotificationPartial", ViewBag.notificationsCount);
         }
 
 

@@ -447,20 +447,20 @@ namespace BadLoan.Controllers
             };
         }
 
-        private IActionResult GetNotification()
+        public async Task<IActionResult> GetNotification()
         {
 
-            var user =  _userManager.FindByNameAsync(User!.Identity!.Name!);
+            var user = await  _userManager.FindByNameAsync(User!.Identity!.Name!);
             var userID = user.Id.ToString();
 
 
             var notifications = _db.Notifications.Where(n => n.UserId == userID).ToList();
 
-            var numNotifications = notifications.Count();
+            var notificationsCount = notifications.Count();
 
-            ViewBag.notificationsCount = numNotifications;
 
-            return PartialView("_NotificationPartial", ViewBag.notificationsCount);
+
+            return PartialView("_NotificationCardsPartial", notifications);
         }
 
 

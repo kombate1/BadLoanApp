@@ -173,7 +173,7 @@ namespace BadLoan.Controllers
 
             await _notificationService.CreateNotification(
                             UserID,
-                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reasons:{rejected.Comment}");
+                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reason: {rejected.Comment}");
         
 
 

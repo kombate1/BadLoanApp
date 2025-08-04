@@ -70,7 +70,7 @@
 
 
       //  decimal maxLoanAmount = (annualIncome * 0.4m * duration) - principalInterest; // Assuming max loan amount is 40% of annual income
-        decimal maxLoanAmount = (annualIncome * 0.4m)/(1 + (principalInterest*duration)); // Assuming max loan amount is 40% of annual income
+        decimal maxLoanAmount = (annualIncome * 0.4m* duration)/(1 + (principalInterest*duration)); // Assuming max loan amount is 40% of annual income
 
 
 
@@ -80,7 +80,7 @@
         }
         else
         {
-            return (true, "Congratulations! You are <strong> eligible </strong>for this loan.", debtServiceRatio);
+            return (true, "Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% ", debtServiceRatio);
         }
     }
 

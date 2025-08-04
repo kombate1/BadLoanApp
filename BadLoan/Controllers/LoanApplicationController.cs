@@ -294,6 +294,7 @@ namespace BadLoan.Controllers
             var loan = _db.LoanApplications
                 .Include(l => l.Customer)
                 .Include(l => l.LoanType)
+                .Include(l => l.UploadedDocuments) // 👈 Add this line
                 .FirstOrDefault(l => l.Id == id);
 
             if (loan == null)
@@ -301,8 +302,9 @@ namespace BadLoan.Controllers
                 return NotFound();
             }
 
-            return View("Details", loan); // or View("ViewLoanDetails", loan) if you create a new view
+            return View("Details", loan);
         }
+
 
 
 

@@ -99,6 +99,7 @@
 		gap: 15px;
 	}
 
+
 	.btn-submit {
 		background-color: #F4C085;
 		color: black;
@@ -126,6 +127,19 @@
 			flex-direction: column;
 		}
 	}
+
+	.loan-select {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		background-color: #fff;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6 6 6-6' stroke='black' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 12px center;
+		background-size: 16px 16px;
+		padding-right: 2rem;
+	}
+
 </style>
 
 <div>
@@ -147,13 +161,13 @@
 					@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })
 				</div>
 
-				<div class="form-col">
+				<div class="form-col position-relative">
 					<label asp-for="LoanType">Type of Loan</label>
-					<select asp-for="LoanType" asp-items="Model.Loans" class="form-control" required>
+					<select asp-for="LoanType" asp-items="Model.Loans" class="form-control loan-select" required>
 						<option value="">Select Loan Type</option>
-						
 					</select>
 				</div>
+
 
 				<div class="form-col">
 					<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in months)</label>
@@ -187,7 +201,8 @@
 		</div>
 
 		<div class="btn-section">
-			<button type="button" class="btn-cancel">Cancel</button>
+			<a href="/Home/Index" class="btn-cancel">Cancel</a>
+
 			<button type="submit" class="btn-submit">Submit</button>
 		</div>
 	</form>
@@ -196,26 +211,31 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
-	<div class="toast-container position-fixed p-3 top-0 end-0" style="z-index: 9999">
-		<div class="toast align-items-center text-white bg-success border-0" role="alert" data-bs-autohide="true" data-bs-delay="3000">
-			<div class="d-flex">
-				<div class="toast-body">
+	<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="background-color: #fffdd0; color: #000;">
+				<div class="modal-header" style="background-color: #fff5cc; border-bottom: 1px solid #e6dca8;">
+					<h5 class="modal-title" id="successModalLabel">Success</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
 					@TempData["SuccessMessage"]
 				</div>
-				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">OK</button>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
-			const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-			toastElList.forEach(function (toastEl) {
-				const toast = new bootstrap.Toast(toastEl);
-				toast.show();
-			});
+			var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+			successModal.show();
 		});
 	</script>
 }
+
+
 
 

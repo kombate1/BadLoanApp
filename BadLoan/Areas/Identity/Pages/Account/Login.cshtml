@@ -65,7 +65,7 @@
         padding: 16px 18px;
         border-radius: 10px;
         border: none;
-        background: #d9d9d9;
+        background: #ffffff;
         font-size: 1.1rem;
         margin-top: 0.3rem;
         margin-bottom: 0.2rem;
@@ -73,7 +73,7 @@
     }
 
         .login-input:focus {
-            background: #ececec;
+            background: #ffff;
         }
 
     .login-btn {
@@ -117,7 +117,7 @@
 <div class="login-container">
     <form class="login-form" method="post">
         @*asp-page="/Login" *@
-        <p>Create your account</p>
+        <h2>Login</h2>
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                <div class="form-group">
                 <label asp-for="Input.Email" class="login-label">Email</label>

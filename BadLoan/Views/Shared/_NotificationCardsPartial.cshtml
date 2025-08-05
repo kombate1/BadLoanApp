@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BadLoan.Models.Notification>
+@{
+    ViewData["Title"] = "Your Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">Your Notifications</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have no notifications.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var notification in Model)
+        {
+            <div class="col">
+                <div class="card  border-@(notification.IsRead ? "secondary" : "warning") shadow-sm">                   
+                    <div class="card-body">
+                        <h5 class="text-@(notification.IsRead ? "secondary" : "dark")card-title ">                           
+                            @(notification.IsRead ? "Read" : "New Notification")
+                        </h5>
+                        <p class="card-text">@notification.Message</p>
+                        <p class="card-text">
+                            <small class="text-muted">Received on @notification.Timestamp.ToString("f")</small>
+                        </p>
+
+                        @if (!notification.IsRead)
+                        {
+                            <form asp-action="MarkAsRead" asp-controller="LoanApplication" method="post" class="d-inline">
+                                <input type="hidden"  asp-route-id="@notification.NotificationId" />
+                                <button type="submit" class="btn btn-sm btn-outline-success">Mark as Read</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

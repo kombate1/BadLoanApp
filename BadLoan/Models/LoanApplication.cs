@@ -51,6 +51,8 @@ namespace BadLoan.Models
 
 
         //public virtual ICollection<ApprovalLog> ApprovalLogs { get; set; }
+
+        [Required]
         public virtual ICollection<UploadedDocument> UploadedDocuments { get; set; } = new List<UploadedDocument>();
     }
 }

@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using BadLoan.Data  
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext db
 
 
 <style>
@@ -25,10 +27,16 @@
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
-{
+{           var user = await  UserManager.FindByNameAsync(User!.Identity!.Name!);
+            var userID = user.Id.ToString();
 
-        <li class="nav-item d-flex align-items-center me-3">
-            @await Html.PartialAsync("_NotificationPartial", (int?)(ViewBag.notificationsCount?? 0))
+
+            var notifications = db.Notifications.Where(n => n.UserId == userID).ToList();
+
+            var notificationsCount = notifications.Count();
+
+        <li id="notificationArea" class="nav-item d-flex align-items-center me-3">
+            @await Html.PartialAsync("_NotificationPartial",notificationsCount)
         </li>
 
     <li class="nav-item">
@@ -51,3 +59,6 @@ else
     </li>
 }
 </ul>
+
+
+

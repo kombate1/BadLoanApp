@@ -94,6 +94,10 @@ namespace BadLoan.Controllers
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
 
+            var loans = await _db.LoanApplications.Where(l => l.CustomerId == customer.CustomerId).ToListAsync();
+            var totalLoanAmount = loans.Sum(l => l.LoanAmount);
+            
+
             //obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
 
 
@@ -164,6 +168,7 @@ namespace BadLoan.Controllers
 
 
             bool isEligible = results.IsEligible;
+            decimal maxLoanAmount = results.maxLoanAmount;
 
             if (obj?.LoanApplicationDetails == null)
             {
@@ -175,6 +180,24 @@ namespace BadLoan.Controllers
             obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
             obj.LoanApplicationDetails.CustomerId = customer.CustomerId;
             obj.LoanApplicationDetails.creditRate = creditRate;
+
+            if(totalLoanAmount > maxLoanAmount)
+            {
+                ViewBag.MessageHtml = "You have exceeded your maximum loan request amount.";
+                obj.Loans = await _db.LoanTypes.Select(l => new SelectListItem
+                {
+                    Value = l.LoanTypeName,
+                    Text = l.LoanTypeName
+                }).ToListAsync();
+
+                // Reassign customer values
+                obj.CustomerId = customer.CustomerId;
+                obj.AnnualIncome = customer.AnnualIncome;
+                obj.Occupation = customer.Occupation;
+                return View(obj);
+
+            }
+
             if (obj.LoanApplicationDetails != null && isEligible)
             {
                 _db.LoanApplications.Add(obj!.LoanApplicationDetails!);
@@ -449,20 +472,20 @@ namespace BadLoan.Controllers
             };
         }
 
-        private IActionResult GetNotification()
+        public async Task<IActionResult> GetNotification()
         {
 
-            var user =  _userManager.FindByNameAsync(User!.Identity!.Name!);
+            var user = await  _userManager.FindByNameAsync(User!.Identity!.Name!);
             var userID = user.Id.ToString();
 
 
             var notifications = _db.Notifications.Where(n => n.UserId == userID).ToList();
 
-            var numNotifications = notifications.Count();
+            var notificationsCount = notifications.Count();
 
-            ViewBag.notificationsCount = numNotifications;
 
-            return PartialView("_NotificationPartial", ViewBag.notificationsCount);
+
+            return PartialView("_NotificationCardsPartial", notifications);
         }
 
 

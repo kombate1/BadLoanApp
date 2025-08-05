@@ -1,9 +1,8 @@
 ﻿@model int
 
-<a href="/Notifications" class="notification-icon" style="position: relative;">
+<a href="@Url.Action("GetNotification", "LoanApplication")" class="notification-icon" style="position: relative;">
     <i class="fa-solid fa-bell" style="font-size: 18px;"></i>
-    @if (Model > 0)
-    {
+    
         <span class="badge" style="
                 position: absolute;
                 top: -5px;
@@ -14,9 +13,9 @@
                 padding: 3px 7px;
                 font-size: 12px;
             ">
-            @ViewBag.notificationsCount
+          @Model
         </span>
-
+        
        
-    }
+    
 </a>

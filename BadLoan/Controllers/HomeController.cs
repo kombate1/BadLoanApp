@@ -44,13 +44,16 @@ namespace BadLoan.Controllers
         //POST
 
         [HttpPost]
-        public IActionResult Create( Customer obj) {
-
+        public IActionResult Create(Customer obj)
+        {
             obj.UserId = _userManager.GetUserId(HttpContext.User);
             _db.Customers.Add(obj);
             _db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Your account has been created successfully!";
             return RedirectToAction("Index");
         }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

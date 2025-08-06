@@ -51,8 +51,9 @@ namespace BadLoan.Controllers
             _db.SaveChanges();
 
             TempData["SuccessMessage"] = "Your account has been created successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Create"); // Stay on Create.cshtml to show modal
         }
+
 
 
 

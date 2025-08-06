@@ -103,14 +103,19 @@
                         
                     </div>
 
-                    @if (!string.IsNullOrEmpty(ViewBag.Message as string))
+
+                    <div id="resultMessage">
+                        @Html.Raw(ViewBag.MessageHtml)
+                    </div>
+
+                    @* @if (!string.IsNullOrEmpty(ViewBag.Message as string))
                     {
                         <div class="alert alert-info mt-3">@ViewBag.Message</div>
                     }
 
                     @Html.Raw(ViewBag.MessageHtml)
 
-                    <div id="resultMessage"></div>
+                    <div id="resultMessage"></div> *@
                 }
             </div>
 
@@ -126,11 +131,17 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        // AJAX form submission
-        document.getElementById('eligibilityForm').addEventListener('submit', function (e) {
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('eligibilityForm');
+    const resultDiv = document.getElementById('resultMessage');
+    const clearBtn = document.getElementById('clearBtn');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
-            var form = this;
-            var formData = new FormData(form);
+            resultDiv.innerHTML = '<div class="alert alert-info">Calculating...</div>';
+
+            const formData = new FormData(form);
 
             fetch(form.action, {
                 method: 'POST',
@@ -139,23 +150,42 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.text();
+            })
             .then(html => {
-                // Optionally, parse and display only the result message
-                document.getElementById('resultMessage').innerHTML = html;
+                resultDiv.innerHTML = html;
             })
             .catch(error => {
-                document.getElementById('resultMessage').innerHTML = '<div class="alert alert-danger mt-3">An error occurred.</div>';
+                if (error.errors) {
+                    // Handle validation errors
+                    let errorHtml = '<div class="alert alert-danger">';
+                    for (const [key, value] of Object.entries(error.errors)) {
+                        errorHtml += `<p>${value}</p>`;
+                    }
+                    errorHtml += '</div>';
+                    resultDiv.innerHTML = errorHtml;
+                } else {
+                    resultDiv.innerHTML = '<div class="alert alert-danger mt-3">An error occurred.</div>';
+                }
             });
         });
+    }
 
-        // Clear form fields
-        document.getElementById('clearBtn').addEventListener('click', function () {
-            var form = document.getElementById('eligibilityForm');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
             form.reset();
-            document.getElementById('resultMessage').innerHTML = '';
+            resultDiv.innerHTML = '';
         });
+    }
+});
     </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 }
 
 

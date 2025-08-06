@@ -94,7 +94,7 @@ namespace BadLoan.Controllers
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
 
-            var loans = await _db.LoanApplications.Where(l => l.CustomerId == customer.CustomerId).ToListAsync();
+            var loans = await _db.LoanApplications.Where(l => l.CustomerId == customer.CustomerId && l.Status == "Approved").ToListAsync();
             var totalLoanAmount = loans.Sum(l => l.LoanAmount);
             
 
@@ -258,17 +258,19 @@ namespace BadLoan.Controllers
                 UploadedDocument uploadedDoc = new UploadedDocument
                 {
                     FilePath = employmentAttachment.FilePath.ToString(),
-                    FileType = "Employment Attachment",
+                    FileType = "Supporting Document Attachment",
                     LoanApplicationId = obj.LoanApplicationDetails!.Id
                 };
 
                 _db.UploadedDocuments.Add(uploadedDoc);
             }
 
+            
+
 
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Loan application submitted successfully!";
+            TempData["SuccessMessage"] = $"Loan application with ID #{obj.LoanApplicationDetails.Id} submitted successfully! You monthly repayment is {results.amountToPayMonthly} ";
             return RedirectToAction("Index"); // or redirect to a success page
 
 

@@ -4,7 +4,7 @@
 
 
 
-    public (bool IsEligible, string Message, decimal DebtServiceRatio, decimal maxLoanAmount) LoanEligibility(decimal annualIncome, decimal duration, string LoanType, decimal loanAmount)
+    public (bool IsEligible, string Message, decimal DebtServiceRatio, decimal maxLoanAmount, decimal amountToPayMonthly) LoanEligibility(decimal annualIncome, decimal duration, string LoanType, decimal loanAmount)
     {
 
 
@@ -14,7 +14,7 @@
 
         if (loanType == null)
         {
-            return (false, $"Enter the loan type before proceeding.", 0,0);
+            return (false, $"Enter the loan type before proceeding.", 0,0,0);
             //ModelState.AddModelError("Duration", $"Duration for {c.LoanType} must be between {min} and {max} years.");
         }
 
@@ -36,7 +36,7 @@
 
         if (duration < min || duration > max)
         {
-            return (false, $"Duration for {loanType} must be between {min:F1} months  and {max:F1} months", 0,0);
+            return (false, $"Duration for {loanType} must be between {min:F1} months  and {max:F1} months", 0,0,0);
             //ModelState.AddModelError("Duration", $"Duration for {c.LoanType} must be between {min} and {max} years.");
         }
 
@@ -66,6 +66,8 @@
 
         decimal debtServiceRatio = (amountToPayYearly / annualIncome) * 100;
 
+        decimal amountToPayMonthly = (amountToPayYearly) / 12;
+
 
 
 
@@ -76,11 +78,11 @@
 
         if (debtServiceRatio > 40)
         {
-            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio,maxLoanAmount);
+            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary a month which is <strong>{amountToPayMonthly}</strong>. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
         }
         else
         {
-            return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% ", debtServiceRatio,maxLoanAmount);
+            return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly}</strong> per year", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
         }
     }
 

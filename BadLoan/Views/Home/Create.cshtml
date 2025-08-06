@@ -1,6 +1,6 @@
 ﻿@model Customer
 @{
-    ViewData["Title"] = "Perosnal Information"; // Removed the "Login" title
+    ViewData["Title"] = "Personal Information"; // Removed the "Login" title
 }
 
 <style>
@@ -137,7 +137,6 @@
                                 <div class="radio-group">
                                     <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
                                     <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
-                                    <label><input type="radio" asp-for="Gender" value="Other" /> Other</label>
                                 </div>
                             </div>
 
@@ -163,6 +162,18 @@
                 </section>
     </form>
 </div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const dobInput = document.querySelector('input[name="DateOfBirth"]');
+        if (dobInput) {
+            const today = new Date();
+            const minAge = 18;
+            const maxDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+            dobInput.max = maxDate.toISOString().split("T")[0];
+        }
+    });
+</script>
 
 
 @section Scripts {

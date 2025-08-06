@@ -47,6 +47,9 @@ namespace BadLoan.Models
 
         public string creditRate { get; set; }
 
+        public decimal debtServiceRatio { get; set; }
+        public decimal monthlyRepayment { get; set; }
+
 
 
 

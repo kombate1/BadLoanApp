@@ -180,8 +180,11 @@ namespace BadLoan.Controllers
             obj.LoanApplicationDetails.LoanTypeId = validLoanType.LoanTypeId;
             obj.LoanApplicationDetails.CustomerId = customer.CustomerId;
             obj.LoanApplicationDetails.creditRate = creditRate;
+            obj.LoanApplicationDetails.debtServiceRatio = results.DebtServiceRatio;
+            obj.LoanApplicationDetails.monthlyRepayment = results.amountToPayMonthly;
 
-            if(totalLoanAmount > maxLoanAmount)
+
+            if (totalLoanAmount > maxLoanAmount)
             {
                 ViewBag.MessageHtml = "You have exceeded your maximum loan request amount.";
                 obj.Loans = await _db.LoanTypes.Select(l => new SelectListItem

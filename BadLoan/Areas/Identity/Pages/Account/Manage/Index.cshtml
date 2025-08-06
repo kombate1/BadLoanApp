@@ -83,6 +83,7 @@
                                         <th>Amount</th>
                                         <th>Status</th>
                                         <th>Date</th>
+                                        <th>Monthly Repayment</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +98,7 @@
                                                 </span>
                                             </td>
                                             <td>@loan.SubmittedDate.ToShortDateString()</td>
+                                            <td>@loan.monthlyRepayment</td>
                                         </tr>
                                     }
                                 </tbody>

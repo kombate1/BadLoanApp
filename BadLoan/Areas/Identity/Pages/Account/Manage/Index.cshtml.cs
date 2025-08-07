@@ -78,7 +78,8 @@ namespace BadLoan.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = await _userManager.GetPhoneNumberAsync(user)
             };
 
-            loans = await _db.LoanApplications.Where(l => l.CustomerId == customerId).
+            loans = await _db.LoanApplications.OrderByDescending(l => l.SubmittedDate).
+                 Where(l => l.CustomerId == customerId).
                  Include(l => l.LoanType).
                  ToListAsync();
 

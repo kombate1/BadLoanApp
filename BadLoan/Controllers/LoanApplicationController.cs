@@ -484,13 +484,30 @@ namespace BadLoan.Controllers
             var userID = user.Id.ToString();
 
 
-            var notifications = _db.Notifications.Where(n => n.UserId == userID).ToList();
+            var notifications = _db.Notifications.Where(n => n.UserId == userID && !n.IsRead).ToList();
 
             var notificationsCount = notifications.Count();
 
 
 
             return PartialView("_NotificationCardsPartial", notifications);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsReadAjax([FromBody] int id)
+        {
+            if (id == 0)
+                return BadRequest("No ID received.");
+
+            var notification = await _db.Notifications.FindAsync(id);
+            if (notification == null)
+                return NotFound();
+
+            notification.IsRead = true;
+            await _db.SaveChangesAsync();
+
+            return Ok(new { success = true });
         }
 
 

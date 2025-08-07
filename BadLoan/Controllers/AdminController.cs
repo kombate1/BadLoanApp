@@ -23,6 +23,12 @@ namespace BadLoan.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+
             ViewBag.countAllLoans = await _db.LoanApplications.CountAsync();
             ViewBag.countPending = await _db.LoanApplications.CountAsync(l => l.Status == "pending");
             ViewBag.countApproved = await _db.LoanApplications.CountAsync(l => l.Status == "approved");
@@ -30,11 +36,22 @@ namespace BadLoan.Controllers
             ViewBag.totalDisbursed = await _db.LoanApplications.
                 Where(l => l.Status == "approved").
                 SumAsync(l => l.LoanAmount);
+            var user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
+            var userID = user.Id.ToString();
+
+
+            var notifications = await  _db.Notifications.Where(n => n.UserId == userID).ToListAsync();
+
+            
 
             //ViewBag.Name = _userManager.GetUserNameAsync(User)
 
-            return View();
+            return View(notifications);
         }
 
 

@@ -31,7 +31,7 @@
             var userID = user.Id.ToString();
 
 
-            var notifications = db.Notifications.Where(n => n.UserId == userID).ToList();
+            var notifications = db.Notifications.Where(n => n.UserId == userID && !n.IsRead).ToList();
 
             var notificationsCount = notifications.Count();
 

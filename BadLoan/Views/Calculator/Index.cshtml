@@ -1,3 +1,246 @@
-﻿<partial name="_LoanEligibilityCalculator" model="Model" />
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Notifications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+            .header h2 {
+                font-size: 2.5rem;
+                font-weight: 300;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+
+        .no-notifications {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .no-notifications p {
+                font-size: 1.2rem;
+                color: #6c757d;
+                margin: 0;
+            }
+
+        .notifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .notification-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .notification-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            }
+
+            .notification-card.unread {
+                border-left: 4px solid #ffc107;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 220, 0.95) 100%);
+            }
+
+            .notification-card.read {
+                border-left: 4px solid #6c757d;
+                opacity: 0.8;
+            }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .notification-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .notification-card.unread .notification-title {
+            color: #d68910;
+        }
+
+        .notification-card.read .notification-title {
+            color: #6c757d;
+        }
+
+        .notification-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .notification-card.unread .notification-status {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .notification-card.read .notification-status {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .notification-message {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .notification-timestamp {
+            color: #868e96;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timestamp-icon {
+            width: 14px;
+            height: 14px;
+            opacity: 0.6;
+        }
+
+        .mark-read-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+            .mark-read-btn:hover {
+                background: linear-gradient(135deg, #218838, #1ea085);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            }
+
+            .mark-read-btn:active {
+                transform: translateY(0);
+            }
+
+    
+    </style>
+</head>
+<div>
+    <div class="container">
+        <div class="header">
+            <h2>Your Notifications</h2>
+        </div>
+
+        <!-- Example with notifications -->
+        <div class="notifications-grid">
+            <div class="notification-card unread">
+                <div class="notification-header">
+                    <div class="notification-title">New Notification</div>
+                    <div class="notification-status">New</div>
+                </div>
+                <div class="notification-message">
+                    Your loan application has been approved! Please review the terms and conditions.
+                </div>
+                <div class="notification-timestamp">
+                    <svg class="timestamp-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Received on December 15, 2023 at 2:30 PM
+                </div>
+                <button class="mark-read-btn">Mark as Read</button>
+            </div>
+
+            <div class="notification-card unread">
+                <div class="notification-header">
+                    <div class="notification-title">New Notification</div>
+                    <div class="notification-status">New</div>
+                </div>
+                <div class="notification-message">
+                    Additional documents are required for your application. Please upload them within 7 days.
+                </div>
+                <div class="notification-timestamp">
+                    <svg class="timestamp-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Received on December 14, 2023 at 11:45 AM
+                </div>
+                <button class="mark-read-btn">Mark as Read</button>
+            </div>
+
+            <div class="notification-card read">
+                <div class="notification-header">
+                    <div class="notification-title">Read</div>
+                    <div class="notification-status">Read</div>
+                </div>
+                <div class="notification-message">
+                    Your application has been received and is under review. We'll notify you of any updates.
+                </div>
+                <div class="notification-timestamp">
+                    <svg class="timestamp-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Received on December 13, 2023 at 9:15 AM
+                </div>
+            </div>
+
+            <div class="notification-card read">
+                <div class="notification-header">
+                    <div class="notification-title">Read</div>
+                    <div class="notification-status">Read</div>
+                </div>
+                <div class="notification-message">
+                    Welcome to our loan application system! Your account has been successfully created.
+                </div>
+             </div>  
+        </div>
+    </div>
+</div>

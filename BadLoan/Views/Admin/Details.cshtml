@@ -1,5 +1,259 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model BadLoan.Models.LoanApplication
+@using System.Globalization
 @{
+    Layout = null;
+    ViewData["Title"] = "Loan Application Details";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fceddd;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 24px;
+            background-color: #fff8e7;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f4d8b4;
+            padding-bottom: 16px;
+            margin-bottom: 30px;
+        }
+
+            .header h2 {
+                margin: 0;
+                font-size: 28px;
+                color: #8a4b08;
+            }
+
+        .status {
+            text-align: right;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+            .badge.approved {
+                background-color: #c6a664;
+                color: white;
+            }
+
+            .badge.rejected {
+                background-color: #c05959;
+                color: white;
+            }
+
+            .badge.pending {
+                background-color: #e0b252;
+                color: white;
+            }
+
+        .submitted-date {
+            display: block;
+            font-size: 12px;
+            color: #7a5c3e;
+            margin-top: 4px;
+        }
+
+        .section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 320px;
+            padding: 24px;
+            background-color: #fff2dc;
+            border-radius: 12px;
+            border: 1px solid #f1d4b1;
+        }
+
+            .card h3 {
+                font-size: 18px;
+                margin-bottom: 16px;
+                color: #8a4b08;
+            }
+
+        .info-item {
+            margin-bottom: 14px;
+        }
+
+            .info-item label {
+                display: block;
+                font-size: 13px;
+                color: #a1733d;
+                margin-bottom: 3px;
+            }
+
+            .info-item span {
+                font-size: 15px;
+                color: #5b3b0a;
+                font-weight: 500;
+            }
+
+        .documents-section {
+            margin-top: 40px;
+        }
+
+            .documents-section h3 {
+                font-size: 18px;
+                margin-bottom: 12px;
+                color: #8a4b08;
+            }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .file-link {
+            text-decoration: none;
+            color: #7c4d1e;
+            background-color: #f7e1c2;
+            padding: 10px 16px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+            .file-link:hover {
+                background-color: #f0d3a3;
+            }
+
+        .back-button {
+            margin-top: 40px;
+            display: inline-block;
+            background-color: #8a4b08;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+            .back-button:hover {
+                background-color: #783f06;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h2>Loan Application Details</h2>
+            <div class="status">
+                @{
+                    var statusClass = Model.Status?.ToLower() switch
+                    {
+                        "approved" => "approved",
+                        "rejected" => "rejected",
+                        _ => "pending"
+                    };
+                }
+                <span class="badge @statusClass">@Model.Status</span>
+                <span class="submitted-date">Status as of today</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="card">
+                <h3><i class="fa-solid fa-user"></i> Customer Information</h3>
+                <div class="info-item">
+                    <label>Full Name</label>
+                    <span>@Model.Customer?.FirstName @Model.Customer?.LastName</span>
+                </div>
+                <div class="info-item">
+                    <label>Occupation</label>
+                    <span>@Model.Customer?.Occupation</span>
+                </div>
+                <div class="info-item">
+                    <label>Annual Income</label>
+                    <span>@Model.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fa-solid fa-sack-dollar"></i> Loan Details</h3>
+                <div class="info-item">
+                    <label>Requested Amount</label>
+                    <span>@Model.LoanAmount.ToString("C", new CultureInfo("en-GH"))</span>
+                </div>
+                <div class="info-item">
+                    <label>Loan Purpose</label>
+                    <span>@Model.LoanType?.LoanTypeName</span>
+                </div>
+                <div class="info-item">
+                    <label>Loan Duration</label>
+                    <span>@Model.Duration month(s)</span>
+                </div>
+                <div class="info-item">
+                    <label>Credit Rate</label>
+                    <span>@Model.creditRate</span>
+                </div>
+                <div class="info-item">
+                    <label>Debt Service Ratio (DSR)</label>
+                    <span>@Model.debtServiceRatio</span>
+                </div>
+                <div class="info-item">
+                    <label>Monthly Repayment</label>
+                    <span>@Model.monthlyRepayment</span>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.UploadedDocuments != null && Model.UploadedDocuments.Any())
+        {
+            <div class="documents-section">
+                <h3><i class="fa-solid fa-paperclip"></i> Submitted Documents</h3>
+                <div class="file-list">
+                    @foreach (var doc in Model.UploadedDocuments)
+                    {
+                        <a class="file-link" href="@Url.Action("DownloadFile", "LoanApplication", new { filePath = doc.FilePath })" target="_blank">
+                            <i class="fa-solid fa-file"></i> @doc.FileType
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="documents-section">
+                <h3><i class="fa-solid fa-paperclip"></i> Submitted Documents</h3>
+                <p class="text-muted">No documents submitted.</p>
+            </div>
+        }
+
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i> Back to Profile
+        </a>
+
+    </div>
+</body>
+</html>

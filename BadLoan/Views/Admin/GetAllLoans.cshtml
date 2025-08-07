@@ -262,7 +262,7 @@
             </button>
 
             <div class="profile" style="display: flex; flex-direction: column; align-items: start; gap: 6px;">
-                <h3 style="margin: 0;">Glenn Inkoom</h3>
+             
                 <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; color: black;">
                     <i class="fas fa-user-tie"></i>
                     <span>Approval Manager</span>
@@ -318,8 +318,8 @@
                                 <th>Customer</th>
                                 <th>Loan Type</th>
                                 <th>Amount</th>
-                                <th>Duration</th>
-                                <th>Occupation</th>
+                                <th>Duration(months)</th>
+
                                 <th>Annual Income</th>
                                 <th>Status</th>
                                 <th>Documents</th>
@@ -342,8 +342,8 @@
                                     <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
                                     <td>@app.LoanType?.LoanTypeName</td>
                                     <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
-                                    <td>@app.Duration (Months)</td>
-                                    <td>@app.Customer?.Occupation</td>
+                                    <td>@app.Duration </td>
+                                  
                                     <td>@app.AnnualIncome.ToString("C", new CultureInfo("en-GH"))</td>
                                     <td><span class="status-badge @statusClass">@app.Status</span></td>
                                     <td>

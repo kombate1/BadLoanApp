@@ -275,7 +275,7 @@ namespace BadLoan.Controllers
 
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Loan application with ID #{obj.LoanApplicationDetails.Id} submitted successfully! You monthly repayment is {results.amountToPayMonthly} ";
+            TempData["SuccessMessage"] = $"Loan application with Reference #{obj.LoanApplicationDetails.Id} submitted successfully! You monthly repayment is {results.amountToPayMonthly} ";
             return RedirectToAction("Index"); // or redirect to a success page
 
 

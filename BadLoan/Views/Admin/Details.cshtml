@@ -202,6 +202,10 @@
             <div class="card">
                 <h3><i class="fa-solid fa-sack-dollar"></i> Loan Details</h3>
                 <div class="info-item">
+                    <label>Reference ID</label>
+                    <span>@Model.Id</span>
+                </div>
+                <div class="info-item">
                     <label>Requested Amount</label>
                     <span>@Model.LoanAmount.ToString("C", new CultureInfo("en-GH"))</span>
                 </div>

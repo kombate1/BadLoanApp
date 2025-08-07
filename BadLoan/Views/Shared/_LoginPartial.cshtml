@@ -51,8 +51,12 @@
         var firstName = customer?.FirstName ?? "";
         var lastName = customer?.LastName ?? "";
 
+
+            var notifications = db.Notifications.Where(n => n.UserId == userID && !n.IsRead).ToList();
+
         var initials = $"{(firstName.Length > 0 ? firstName[0] : ' ')}{(lastName.Length > 0 ? lastName[0] : ' ')}".ToUpper();
         var fullName = $"{firstName} {lastName}".Trim();
+
 
         var notifications = db.Notifications.Where(n => n.UserId == userId).ToList();
         var notificationsCount = notifications.Count();

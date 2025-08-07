@@ -84,7 +84,11 @@
         }
         else
         {
+
+            return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per month", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
+
             return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per year", debtServiceRatio, maxLoanAmount, amountToPayMonthly);
+
         }
     }
 

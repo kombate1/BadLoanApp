@@ -484,7 +484,9 @@ namespace BadLoan.Controllers
             var userID = user.Id.ToString();
 
 
-            var notifications = _db.Notifications.Where(n => n.UserId == userID && !n.IsRead).ToList();
+            var notifications = _db.Notifications.OrderByDescending(n => n.Timestamp)
+                .Where(n => n.UserId == userID && !n.IsRead)
+                .ToList();
 
             var notificationsCount = notifications.Count();
 

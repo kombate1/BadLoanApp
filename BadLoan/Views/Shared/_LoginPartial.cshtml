@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿﻿@using Microsoft.AspNetCore.Identity
 @using BadLoan.Data
 
 @inject SignInManager<IdentityUser> SignInManager
@@ -42,38 +42,46 @@
 </style>
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{           var user = await  UserManager.FindByNameAsync(User!.Identity!.Name!);
-            var userID = user.Id.ToString();
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var userId = user?.Id;
 
-        var customer = db.Customers.FirstOrDefault(c => c.UserId == userID);
+        var customer = db.Customers.FirstOrDefault(c => c.UserId == userId);
         var firstName = customer?.FirstName ?? "";
         var lastName = customer?.LastName ?? "";
-
-
-           
 
         var initials = $"{(firstName.Length > 0 ? firstName[0] : ' ')}{(lastName.Length > 0 ? lastName[0] : ' ')}".ToUpper();
         var fullName = $"{firstName} {lastName}".Trim();
 
-            var notificationsCount = notifications.Count();
+        var notifications = db.Notifications.Where(n => n.UserId == userId).ToList();
+        var notificationsCount = notifications.Count();
 
         <li id="notificationArea" class="nav-item d-flex align-items-center me-3">
             @await Html.PartialAsync("_NotificationPartial", notificationsCount)
         </li>
 
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark custom-auth-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item p-lg-1">
+        <li class="nav-item dropdown d-flex align-items-center">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="avatar-circle">@initials</div>
+                <span class="fw-bold">@fullName</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/MyLoans">Recent loans</a>
+                </li>
+                <li>
+                    <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item p-0">
+                        <button type="submit" class="btn w-100 text-start">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item p-lg-1">
             <a class="nav-link text-dark custom-auth-btn" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
         <br />

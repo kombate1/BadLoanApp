@@ -10,6 +10,7 @@
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
     <style>
         * {
             box-sizing: border-box;
@@ -330,10 +331,9 @@
                                     </p>
                                     @if (!notification.IsRead)
                                     {
-                                        <form asp-action="MarkAsRead" asp-controller="LoanApplication" method="post" class="d-inline">
-                                            <input type="hidden" asp-route-id="@notification.NotificationId" />
-                                            <button type="submit" class="btn btn-sm btn-outline-success">Mark as Read</button>
-                                        </form>
+                                        <button class="btn btn-sm btn-outline-success mark-as-read" data-id="@notification.NotificationId">
+                                            Mark as Read
+                                        </button>
                                     }
                                 </div>
                             </div>
@@ -362,5 +362,37 @@
             }
         }
     </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".mark-as-read").forEach(button => {
+                button.addEventListener("click", function () {
+                    const notificationId = this.getAttribute("data-id");
+
+                    fetch('/LoanApplication/MarkAsReadAjax', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(parseInt(notificationId))
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.textContent = "Read";
+                            this.classList.remove("btn-outline-success");
+                            this.classList.add("btn-success");
+                            this.disabled = true;
+                        } else {
+                            alert("Failed to mark as read.");
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
 </body>
 </html>

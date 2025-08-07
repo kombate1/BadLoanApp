@@ -62,6 +62,8 @@
             principalInterest = 0.20m;
         }
 
+        decimal maxLoanAmount = (annualIncome * 0.4m * duration) / (1 + (principalInterest * duration));
+
         decimal amountToPayYearly = (loanAmount + interest) / duration;
 
         decimal debtServiceRatio = (amountToPayYearly / annualIncome) * 100;
@@ -72,17 +74,21 @@
 
 
       //  decimal maxLoanAmount = (annualIncome * 0.4m * duration) - principalInterest; // Assuming max loan amount is 40% of annual income
-        decimal maxLoanAmount = (annualIncome * 0.4m* duration)/(1 + (principalInterest*duration)); // Assuming max loan amount is 40% of annual income
+        // Assuming max loan amount is 40% of annual income
 
 
 
         if (debtServiceRatio > 40)
         {
-            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary a month which is <strong>{amountToPayMonthly}</strong>. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
+            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary a month which is <strong>{amountToPayMonthly}</strong>. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio,maxLoanAmount, amountToPayMonthly);
         }
         else
         {
+
             return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per month", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
+
+            return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per year", debtServiceRatio, maxLoanAmount, amountToPayMonthly);
+
         }
     }
 

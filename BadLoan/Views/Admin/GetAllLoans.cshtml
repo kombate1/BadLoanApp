@@ -314,6 +314,7 @@
                     <table id="loanTable">
                         <thead>
                             <tr>
+                                <th>Reference ID</th>
                                 <th>Customer</th>
                                 <th>Loan Type</th>
                                 <th>Amount</th>
@@ -336,7 +337,8 @@
                                     "rejected" => "rejected",
                                     _ => ""
                                 };
-                                <tr data-status="@app.Status?.ToLower()" data-name="@app.Customer?.FirstName @app.Customer?.LastName" data-date="@app.SubmittedDate.ToString("yyyy-MM-dd")">
+                                <tr data-status="@app.Status?.ToLower()" data-name="@app.Id @app.Customer?.FirstName @app.Customer?.LastName" data-date="@app.SubmittedDate.ToString("yyyy-MM-dd")">
+                                    <td>@app.Id</td>
                                     <td>@app.Customer?.FirstName @app.Customer?.LastName</td>
                                     <td>@app.LoanType?.LoanTypeName</td>
                                     <td>@app.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>

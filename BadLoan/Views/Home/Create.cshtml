@@ -1,8 +1,7 @@
-﻿@model Customer
+@model Customer
 @{
-    ViewData["Title"] = "Personal Information"; // Removed the "Login" title
+    ViewData["Title"] = "Perosnal Information"; // Removed the "Login" title
 }
-
 <style>
     body {
         background-color: #FFF1E2;
@@ -98,83 +97,103 @@
         <div class="alert alert-danger">
             @TempData["ErrorMessage"]
         </div>
-        
     }
-            <form method="post">
-        
-                <section>
-                    <fieldset>
-                        <section class="form-row">
-                            <div class="form-col">
-                                <label asp-for="FirstName">First Name:</label>
-                                <input type="text" asp-for="FirstName" placeholder="Enter your First Name" required />
-                            </div>
-                            <div class="form-col">
-                                <label asp-for="LastName">Last Name:</label>
-                                <input type="text" asp-for="LastName" placeholder="Enter your Surname" required />
-                            </div>
 
-                            <div class="form-col">
-                                <label asp-for="DateOfBirth">Birthday:</label>
-                                <input type="date" asp-for="DateOfBirth" placeholder="yyyy/mm/dd" />
-                            </div>
-                            <div class="form-col">
-                                <label asp-for="Occupation">Occupation:</label>
-                                <input type="text" asp-for="Occupation" placeholder="Lawyer/doctor etc..." />
-                            </div>
+    <form method="post">
+        <h2 class="form-title">Personal Information</h2>
 
-                            <div class="form-col">
-                                <label asp-for="PlaceOfWork">Place Of Work:</label>
-                                <input type="text" asp-for="PlaceOfWork" placeholder="CBG/ etc..." />
-                            </div>
+        <section>
+            <fieldset>
+                <section class="form-row">
+                    <div class="form-col">
+                        <label asp-for="FirstName">First Name:</label>
+                        <input type="text" asp-for="FirstName" placeholder="Enter your First Name" required />
+                    </div>
+                    <div class="form-col">
+                        <label asp-for="LastName">Last Name:</label>
+                        <input type="text" asp-for="LastName" placeholder="Enter your Surname" required />
+                    </div>
 
-                            <div class="form-col">
-                                <label asp-for="EmployerName">Employer Name:</label>
-                                <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
-                            </div>
-                            <div class="form-col">
-                                <label asp-for="Gender">Select Gender:</label>
-                                <div class="radio-group">
-                                    <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
-                                    <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
-                                </div>
-                            </div>
+                    <div class="form-col">
+                        <label asp-for="DateOfBirth">Birthday:</label>
+                        <input type="date" asp-for="DateOfBirth" placeholder="yyyy/mm/dd" />
+                    </div>
+                    <div class="form-col">
+                        <label asp-for="Occupation">Occupation:</label>
+                        <input type="text" asp-for="Occupation" placeholder="Lawyer/doctor etc..." />
+                    </div>
 
-                            <div class="form-col">
-                                <label asp-for="EmployerContact">Employer Email:</label>
-                                <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
-                            </div>
-                            <div class="form-col">
-                                <label asp-for="AnnualIncome">Yearly Income:</label>
-                                <input type="text" asp-for="AnnualIncome" placeholder="eg. $5000" />
-                            </div>
+                    <div class="form-col">
+                        <label asp-for="PlaceOfWork">Place Of Work:</label>
+                        <input type="text" asp-for="PlaceOfWork" placeholder="CBG/ etc..." />
+                    </div>
 
-                            <div class="form-col">
-                                <label asp-for="HomeAddress">Home Address:</label>
-                                <input type="text" asp-for="HomeAddress" placeholder="eg. Adenta" />
-                            </div>
-                        </section>
-
-                        <div class="pt-4">
-                            <button type="submit" class="btn-submit">Submit</button>
+                    <div class="form-col">
+                        <label asp-for="EmployerName">Employer Name:</label>
+                        <input type="text" asp-for="EmployerName" placeholder="Enter your employer's name" />
+                    </div>
+                    <div class="form-col">
+                        <label asp-for="Gender">Select Gender:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
+                            <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
                         </div>
-                    </fieldset>
+                    </div>
+
+                    <div class="form-col">
+                        <label asp-for="EmployerContact">Employer Email:</label>
+                        <input type="email" asp-for="EmployerContact" placeholder="Enter your employer's email" />
+                    </div>
+                    <div class="form-col">
+                        <label asp-for="AnnualIncome">Yearly Income:</label>
+                        <input type="text" asp-for="AnnualIncome" placeholder="eg. $5000" />
+                    </div>
+
+                    <div class="form-col">
+                        <label asp-for="HomeAddress">Home Address:</label>
+                        <input type="text" asp-for="HomeAddress" placeholder="eg. Adenta" />
+                    </div>
                 </section>
+
+                <div class="pt-4">
+                    <button type="submit" class="btn-submit">Submit</button>
+                </div>
+            </fieldset>
+        </section>
     </form>
 </div>
 
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const dobInput = document.querySelector('input[name="DateOfBirth"]');
-        if (dobInput) {
-            const today = new Date();
-            const minAge = 18;
-            const maxDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
-            dobInput.max = maxDate.toISOString().split("T")[0];
-        }
-    });
-</script>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #fffdd0; color: #000;">
+                <div class="modal-header" style="background-color: #fff5cc; border-bottom: 1px solid #e6dca8;">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMessage"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" id="okBtn" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+
+            var okBtn = document.getElementById("okBtn");
+            okBtn.addEventListener("click", function () {
+                window.location.href = "/LoanApplication/Index";
+            });
+        });
+    </script>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

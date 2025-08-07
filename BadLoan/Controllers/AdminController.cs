@@ -10,7 +10,6 @@ namespace BadLoan.Controllers
 {
     public class AdminController : Controller
     {
-
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly NotificationService _notificationService;
@@ -21,6 +20,7 @@ namespace BadLoan.Controllers
             _userManager = userManager;
             _notificationService = notificationService;
         }
+
         public async Task<IActionResult> Index()
         {
             if (!User.Identity.IsAuthenticated)
@@ -33,6 +33,7 @@ namespace BadLoan.Controllers
             ViewBag.countPending = await _db.LoanApplications.CountAsync(l => l.Status == "pending");
             ViewBag.countApproved = await _db.LoanApplications.CountAsync(l => l.Status == "approved");
             ViewBag.countRejected = await _db.LoanApplications.CountAsync(l => l.Status == "rejected");
+
             ViewBag.totalDisbursed = await _db.LoanApplications.
                 Where(l => l.Status == "approved").
                 SumAsync(l => l.LoanAmount);
@@ -51,25 +52,25 @@ namespace BadLoan.Controllers
 
             //ViewBag.Name = _userManager.GetUserNameAsync(User)
 
+           
+
+
             return View(notifications);
         }
 
-
         public async Task<IActionResult> GetAllLoans()
         {
+            var getLoans = await _db.LoanApplications
+                .OrderByDescending(l => l.SubmittedDate)
+                .Include(l => l.LoanType)
+                .Include(l => l.Customer)
+                .Include(l => l.UploadedDocuments)
+                .ToListAsync();
 
-            var getLoans = await _db.LoanApplications.
-                OrderByDescending(l => l.SubmittedDate).
-                Include(l => l.LoanType).
-                Include(l => l.Customer).
-                Include(l => l.UploadedDocuments).
-                ToListAsync();
-
-            int countAllLoan = getLoans.Count;
-            ViewBag.countAllLoans = countAllLoan;
-
+            ViewBag.countAllLoans = getLoans.Count;
             return View(getLoans);
         }
+
         public async Task<IActionResult> Details(int id)
         {
             var getLoans = await _db.LoanApplications
@@ -80,9 +81,7 @@ namespace BadLoan.Controllers
                 .ToListAsync();
 
             if (getLoans == null || getLoans.Count == 0)
-            {
                 return NotFound();
-            }
 
             return View(getLoans);
         }
@@ -97,33 +96,21 @@ namespace BadLoan.Controllers
                 .FirstOrDefaultAsync(l => l.Id == id);
 
             if (loan == null)
-            {
                 return NotFound();
-            }
 
             return PartialView("~/Views/Shared/_LoanDetailsPartial.cshtml", loan);
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> ApproveApplication(int id)
         {
             if (id == 0)
-            {
                 return NotFound();
-            }
 
             var application = await _db.LoanApplications.FindAsync(id);
-
             if (application == null)
-            {
                 return NotFound();
-            }
 
-            //var alreadyApproved = await _db.
-
-            // Example: update status to "Approved"
             application.Status = "Approved";
             application.LastUpdated = DateTime.UtcNow;
 
@@ -138,40 +125,32 @@ namespace BadLoan.Controllers
 
             await _db.ApprovalLogs.AddAsync(approved);
 
-            var CustomerId = application.CustomerId;
-            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == CustomerId);
+            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == application.CustomerId);
             var UserID = user.UserId;
 
             await _notificationService.CreateNotification(
-                           UserID,
-                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} ");
+                UserID,
+                $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status}");
 
             await _db.SaveChangesAsync();
 
-
             TempData["Message"] = "Application approved successfully.";
-            // Redirect or return confirmation view
-            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
+            return RedirectToAction("GetAllLoans", "Admin");
         }
 
         [HttpGet]
         public async Task<IActionResult> RejectApplication(int id, string comment)
         {
             if (id == 0)
-            {
                 return NotFound();
-            }
 
             var application = await _db.LoanApplications.FindAsync(id);
-
             if (application == null)
-            {
                 return NotFound();
-            }
 
-            // Example: update status to "Approved"
             application.Status = "Rejected";
             application.LastUpdated = DateTime.UtcNow;
+
             _db.LoanApplications.Update(application);
 
             var rejected = new RejectionLog
@@ -184,94 +163,68 @@ namespace BadLoan.Controllers
 
             await _db.RejectionLogs.AddAsync(rejected);
 
-            var CustomerId = application.CustomerId;
-            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == CustomerId);
+            var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == application.CustomerId);
             var UserID = user.UserId;
 
             await _notificationService.CreateNotification(
-                            UserID,
-                           $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id.ToString()} has been {application.Status} due to the following reason: {rejected.Comment}");
-        
-
+                UserID,
+                $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status} due to the following reason: {rejected.Comment}");
 
             await _db.SaveChangesAsync();
 
-            // Redirect or return confirmation view
-            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
+            TempData["Message"] = "Application rejected.";
+            return RedirectToAction("GetAllLoans", "Admin");
         }
-
-
-
 
         [HttpGet]
         public async Task<IActionResult> GetApprovedLoans()
         {
+            var approvedLoan = await _db.LoanApplications
+                .Include(l => l.LoanType)
+                .Include(l => l.Customer)
+                .Include(l => l.UploadedDocuments)
+                .Where(l => l.Status == "approved")
+                .ToListAsync();
 
-            var approvedLoan = await _db.LoanApplications.
-                Include(l => l.LoanType).
-                Include(l => l.Customer).
-                Include(l => l.UploadedDocuments).
-                Where(l => l.Status == "approved").
-                ToListAsync();
-
-            int countApproved = approvedLoan.Count;
-            ViewBag.countApproved = countApproved;
-
+            ViewBag.countApproved = approvedLoan.Count;
             return View(approvedLoan);
         }
 
         public async Task<IActionResult> GetRejectedLoans()
         {
+            var rejectedLoan = await _db.LoanApplications
+                .Include(l => l.LoanType)
+                .Include(l => l.Customer)
+                .Include(l => l.UploadedDocuments)
+                .Where(l => l.Status.ToLower() == "rejected")
+                .ToListAsync();
 
-            var rejectedLoan = await _db.LoanApplications.
-                Include(l => l.LoanType).
-                Include(l => l.Customer).
-                Include(l => l.UploadedDocuments).
-                Where(l => l.Status.ToLower() == "rejected").
-                ToListAsync();
-
-            int countRejected = rejectedLoan.Count;
-
-            ViewBag.countRejected = countRejected;
-
-
-
+            ViewBag.countRejected = rejectedLoan.Count;
             return View(rejectedLoan);
-
-
         }
 
         public async Task<IActionResult> GetPendingLoans()
         {
+            var pendingLoan = await _db.LoanApplications
+                .Include(l => l.LoanType)
+                .Include(l => l.Customer)
+                .Include(l => l.UploadedDocuments)
+                .Where(l => l.Status == "pending")
+                .ToListAsync();
 
-            var pendingLoan = await _db.LoanApplications.
-                Include(l => l.LoanType).
-                Include(l => l.Customer).
-                Include(l => l.UploadedDocuments).
-                Where(l => l.Status == "pending").
-                ToListAsync();
-
-            int countPending = pendingLoan.Count;
-            ViewBag.countPending = countPending;
-
+            ViewBag.countPending = pendingLoan.Count;
             return View(pendingLoan);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> ApprovalMessage(ApprovalLog obj, int id)
         {
             if (id == 0)
-            {
                 return NotFound();
-            }
 
             var application = await _db.LoanApplications.FindAsync(id);
-
             if (application == null)
-            {
                 return NotFound();
-            }
 
             var approved = new ApprovalLog
             {
@@ -282,9 +235,6 @@ namespace BadLoan.Controllers
             await _db.SaveChangesAsync();
 
             return View(approved);
-
-
-
         }
     }
 }

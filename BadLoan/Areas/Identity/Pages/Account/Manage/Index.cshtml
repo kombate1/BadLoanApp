@@ -1,12 +1,21 @@
 ﻿@page
 @model IndexModel
+@using System.Globalization
+
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
 <div class="container py-5">
-    <h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">@ViewData["Title"]</h2>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
     <partial name="_StatusMessage" for="StatusMessage" />
 
     <div class="row">
@@ -57,10 +66,11 @@
                             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <button id="edit-button" type="button" class="btn btn-outline-primary" onclick="enableEditing()">Edit</button>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button id="edit-button" type="button" class="btn btn-outline-primary me-2" onclick="enableEditing()">Edit</button>
                             <button id="save-button" type="submit" class="btn btn-success d-none">Save Changes</button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -91,7 +101,7 @@
                                     {
                                         <tr>
                                             <td>@loan.LoanType?.LoanTypeName</td>
-                                            <td>@loan.LoanAmount.ToString("C")</td>
+                                            <td>@loan.LoanAmount.ToString("C", new CultureInfo("en-GH"))</td>
                                             <td>
                                                 <span class="badge @GetStatusBadge(loan.Status)">
                                                     @loan.Status

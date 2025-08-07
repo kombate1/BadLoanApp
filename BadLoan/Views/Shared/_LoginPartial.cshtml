@@ -54,7 +54,7 @@
         var initials = $"{(firstName.Length > 0 ? firstName[0] : ' ')}{(lastName.Length > 0 ? lastName[0] : ' ')}".ToUpper();
         var fullName = $"{firstName} {lastName}".Trim();
 
-        var notifications = db.Notifications.Where(n => n.UserId == userId).ToList();
+        var notifications = db.Notifications.Where(n => n.UserId == userId &&! n.IsRead).ToList();
         var notificationsCount = notifications.Count();
 
         <li id="notificationArea" class="nav-item d-flex align-items-center me-3">

@@ -140,12 +140,12 @@
             <input asp-for="Input.ConfirmPassword" class="form-control login-input" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        @* <div class="form-group">
             <select asp-for="Input.Role" asp-items="@Model.Input.RoleList"class="form-select login-input">
                 <option disabled selected>-Select Role-</option>
                 <a href="c:\users\hp\desktop\c#\badloan\badloan\areas\identity\pages\account\register.cshtml.cs">c:\users\hp\desktop\c#\badloan\badloan\areas\identity\pages\account\register.cshtml.cs</a>
             </select>
-        </div>
+        </div> *@
         <div class="login-links">
             <p><a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already have an Account? Login</a></p>          
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>

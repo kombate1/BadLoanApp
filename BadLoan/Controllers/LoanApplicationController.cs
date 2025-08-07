@@ -2,6 +2,7 @@
 using BadLoan.Data;
 using BadLoan.Models;
 using BadLoan.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BadLoan.Controllers
 {
+    [Authorize]
     public class LoanApplicationController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -364,7 +366,7 @@ namespace BadLoan.Controllers
             return (true, string.Join("", fileUrls), string.Empty);
         }
         [HttpGet]
-        [HttpGet]
+       
         public IActionResult ViewLoanDetails(int id)
         {
             var loan = _db.LoanApplications

@@ -181,21 +181,8 @@
                 <span class="badge @statusClass">@Model.Status</span>
                 <span class="submitted-date">Status as of today</span>
 
-                @if (Model.Status?.ToLower() == "pending")
-                {
-                    <div style="margin-top: 10px;">
-                        <a href="javascript:void(0)"
-                           onclick="confirmAction('@Url.Action("ApproveApplication", "Admin", new { id = Model.Id })', 'approve this loan application')"
-                           title="Approve">
-                            <i class="fas fa-check-circle text-success" style="font-size: 24px; margin-right: 10px;"></i>
-                        </a>
-                        <a href="javascript:void(0)"
-                           onclick="confirmAction('@Url.Action("RejectApplication", "Admin", new { id = Model.Id })', 'reject this loan application')"
-                           title="Reject">
-                            <i class="fas fa-times-circle text-danger" style="font-size: 24px;"></i>
-                        </a>
-                    </div>
-                }
+              
+
 
             </div>
         </div>
@@ -235,6 +222,16 @@
                     <label>Credit Rate</label>
                     <span>@Model.creditRate</span>
                 </div>
+                <div class="info-item">
+                    <label>Debt Service Ratio (DSR)</label>
+                    <span>@Model.debtServiceRatio</span>
+                </div>
+                <div class="info-item">
+                    <label>Monthly Repayment</label>
+                    <span>@Model.monthlyRepayment</span>
+                </div>
+
+
             </div>
         </div>
 
@@ -258,6 +255,23 @@
         </div>
 
         <a href="/Admin/GetAllLoans" class="back-button"><i class="fa-solid fa-arrow-left"></i> Back to All Loans</a>
+        @if (Model.Status?.ToLower() == "pending")
+        {
+            <div style="margin-top: 50px; text-align: right;">
+                <a href="javascript:void(0)"
+                   onclick="confirmAction('@Url.Action("ApproveApplication", "Admin", new { id = Model.Id })', 'approve this loan application')"
+                   style="background-color: #28a745; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; margin-right: 10px; font-weight: 500;">
+                    Approve
+                </a>
+                <a href="javascript:void(0)"
+                   onclick="confirmAction('@Url.Action("RejectApplication", "Admin", new { id = Model.Id })', 'reject this loan application')"
+                   style="background-color: #dc3545; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+                    Reject
+                </a>
+            </div>
+        }
+
+
     </div>
 
     <!-- Confirmation Modal -->

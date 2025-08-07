@@ -69,6 +69,7 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li>
                     <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/MyLoans">Recent loans</a>
                 </li>
                 <li>
                     <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item p-0">

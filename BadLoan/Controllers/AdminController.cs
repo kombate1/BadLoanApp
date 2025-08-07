@@ -1,5 +1,6 @@
 ﻿using BadLoan.Data;
 using BadLoan.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,19 +48,20 @@ namespace BadLoan.Controllers
             return View(getLoans);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
-            var getLoans = await _db.LoanApplications
-                .Include(l => l.LoanType)
+            var loan = _db.LoanApplications
                 .Include(l => l.Customer)
-                .Include(l => l.UploadedDocuments)
-                .Where(l => l.Id == id)
-                .ToListAsync();
+                .Include(l => l.LoanType).
+                    Include(l => l.UploadedDocuments)
+                .FirstOrDefault(l => l.Id == id);
 
-            if (getLoans == null || getLoans.Count == 0)
+            if (loan == null)
+            {
                 return NotFound();
+            }
 
-            return View(getLoans);
+            return View(loan); // Not a list!
         }
 
         [HttpGet]

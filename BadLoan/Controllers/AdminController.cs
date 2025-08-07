@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace BadLoan.Controllers
 {
+    [Authorize(Roles = "Approval Manager")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -20,6 +21,12 @@ namespace BadLoan.Controllers
             _db = db;
             _userManager = userManager;
             _notificationService = notificationService;
+        }
+
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         public async Task<IActionResult> Index()

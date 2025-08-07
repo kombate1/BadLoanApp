@@ -47,7 +47,7 @@ namespace BadLoan.Controllers
             var userID = user.Id.ToString();
 
 
-            var notifications = await  _db.Notifications.Where(n => n.UserId == userID).ToListAsync();
+            var notifications = await  _db.Notifications.Where(n => n.UserId == userID && !n.IsRead).ToListAsync();
 
             
 
@@ -137,7 +137,8 @@ namespace BadLoan.Controllers
             await _db.SaveChangesAsync();
 
             TempData["Message"] = "Application approved successfully.";
-            return RedirectToAction("GetAllLoans", "Admin");
+            // Redirect or return confirmation view
+            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
         }
 
         [HttpGet]
@@ -174,8 +175,8 @@ namespace BadLoan.Controllers
 
             await _db.SaveChangesAsync();
 
-            TempData["Message"] = "Application rejected.";
-            return RedirectToAction("GetAllLoans", "Admin");
+            // Redirect or return confirmation view
+            return RedirectToAction("Index", "Admin"); // Or wherever makes sense
         }
 
         [HttpGet]

@@ -152,6 +152,11 @@
 				
 
 				<div class="form-col">
+					<label asp-for="AnnualIncome">Annual Income (GH₵)</label>
+					<input type="number" asp-for="AnnualIncome" class="form-control" />
+					@* @Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" }) *@
+				</div>
+				<div class="form-col">
 					<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
 					<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" />
 					@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })

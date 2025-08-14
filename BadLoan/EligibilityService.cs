@@ -68,7 +68,7 @@
 
         decimal debtServiceRatio = (amountToPayYearly / annualIncome) * 100;
 
-        decimal amountToPayMonthly = (amountToPayYearly) / 12;
+        decimal amountToPayMonthly = ((amountToPayYearly) / 12);
 
 
 
@@ -80,12 +80,11 @@
 
         if (debtServiceRatio > 40)
         {
-            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary a month which is <strong>{amountToPayMonthly}</strong>. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio,maxLoanAmount, amountToPayMonthly);
+            return (false, $"You are <strong>not eligible</strong> for this loan because your debt ratio is <strong>{debtServiceRatio:F2}% </strong>, meaning you will be paying <strong> {debtServiceRatio:F2}%</strong> of your salary a month which is <strong>{amountToPayMonthly:F2}</strong>. Your maximum loan request amount is <strong> GH₵{maxLoanAmount:F2}</strong> ", debtServiceRatio,maxLoanAmount, amountToPayMonthly);
         }
         else
         {
-
-            return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per month", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
+            //return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per month", amountToPayMonthly,debtServiceRatio,maxLoanAmount);
 
             return (true, $"Congratulations! You are <strong> eligible </strong>for this loan.Your Debt Service Ratio is <strong>{debtServiceRatio:F2}% . You will be paying <strong>{amountToPayMonthly:F2}</strong> per year", debtServiceRatio, maxLoanAmount, amountToPayMonthly);
 

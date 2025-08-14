@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BadLoan.Controllers
 {
-    [Authorize(Roles = "Approval Manager")]
+   
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _db;

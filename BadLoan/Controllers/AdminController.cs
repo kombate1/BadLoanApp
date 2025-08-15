@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
 
 namespace BadLoan.Controllers
 {
-   
+    [Authorize(Roles = "Approval Manager")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -23,11 +24,15 @@ namespace BadLoan.Controllers
             _notificationService = notificationService;
         }
 
-
-        public IActionResult AccessDenied()
+        public class AccountController : Controller
         {
-            return View();
+            public IActionResult AccessDenied()
+            {
+                return View(); 
+            }
         }
+
+
 
         public async Task<IActionResult> Index()
         {
@@ -136,10 +141,19 @@ namespace BadLoan.Controllers
 
             var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == application.CustomerId);
             var UserID = user.UserId;
+            var appUser = await _userManager.FindByIdAsync(UserID);
+            var email = appUser.Email;
+
 
             await _notificationService.CreateNotification(
                 UserID,
                 $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status}");
+
+            await _notificationService.SendEmailNotification(
+               email, "Loan Status Update",
+                $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status}");
+           
+                  
 
             await _db.SaveChangesAsync();
 
@@ -175,10 +189,16 @@ namespace BadLoan.Controllers
 
             var user = await _db.Customers.FirstOrDefaultAsync(c => c.CustomerId == application.CustomerId);
             var UserID = user.UserId;
+            var appUser = await _userManager.FindByIdAsync(UserID);
+            var email = appUser.Email;
 
             await _notificationService.CreateNotification(
                 UserID,
                 $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status} due to the following reason: {rejected.Comment}");
+
+            await _notificationService.SendEmailNotification(
+              email, "Loan Status Update",
+               $"Dear {user.FirstName} {user.LastName}, your loan application with ID #{application.Id} has been {application.Status}");
 
             await _db.SaveChangesAsync();
 

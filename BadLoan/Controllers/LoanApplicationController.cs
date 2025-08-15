@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BadLoan.Controllers
 {
-    [Authorize]
+   
     public class LoanApplicationController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -216,11 +216,19 @@ namespace BadLoan.Controllers
 
                 foreach (var person in usersInRole)
                 {
+
+                    var email = person.Email;
                     // Send notification to each approval manager
                     await _notificationService.CreateNotification(
                         person.Id,
                         $"New loan application submitted by {customer.FirstName} {customer.LastName}"
                     );
+
+                    await _notificationService.SendEmailNotification(
+                    email,
+                    "New Loan Application",
+                    $"A new loan application has been submitted by {customer.FirstName} {customer.LastName}."
+                );
                 }
             }
             else

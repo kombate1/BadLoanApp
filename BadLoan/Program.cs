@@ -26,6 +26,10 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<EligibilityService>();
 builder.Services.AddScoped<NotificationService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
 
 var app = builder.Build();
 
@@ -40,6 +44,9 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

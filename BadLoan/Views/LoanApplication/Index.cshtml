@@ -1,6 +1,4 @@
-﻿@* @model LoanApplication *@
-@model BadLoan.Models.ViewModels.LoanAttachmentViewModel
-
+﻿@model BadLoan.Models.ViewModels.LoanAttachmentViewModel
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -26,9 +24,9 @@
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	}
 
-	.form-container {
+	.form-container, .modal-content {
 		background-color: white;
-		padding: 40px;
+		padding: 30px 40px;
 		max-width: 1000px;
 		margin: 50px auto;
 		border-radius: 12px;
@@ -66,7 +64,8 @@
 	input[type="email"],
 	input[type="number"],
 	input[type="date"],
-	input[type="file"] {
+	input[type="file"],
+	select {
 		width: 100%;
 		padding: 10px;
 		background-color: #fff;
@@ -99,7 +98,6 @@
 		gap: 15px;
 	}
 
-
 	.btn-submit {
 		background-color: #F4C085;
 		color: black;
@@ -123,9 +121,12 @@
 	}
 
 	@@media (max-width: 768px) {
-		.form-row {
-			flex-direction: column;
-		}
+		.form-row
+
+	{
+		flex-direction: column;
+	}
+
 	}
 
 	.loan-select {
@@ -140,15 +141,35 @@
 		padding-right: 2rem;
 	}
 
+	/* Review modal styling to match form */
+	#reviewModal .modal-content {
+		border-radius: 12px;
+		padding: 30px 40px;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	}
+
+	#reviewModal .modal-header {
+		background-color: #fff5cc;
+		border-bottom: 1px solid #e6dca8;
+	}
+
+	#reviewModal .modal-body p {
+		font-size: 1rem;
+		margin-bottom: 10px;
+	}
 </style>
 
 <div>
-	
-	
-	<form enctype="multipart/form-data" method="post">
+	<form enctype="multipart/form-data" method="post" id="loanForm">
 		<h3>Loan Application Details</h3>
 		<div class="form-row">
 			<div class="form-col">
+
+				<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
+				<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" id="LoanAmount" />
+				@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })
+			</div>
+
 				
 
 				<div class="form-col">
@@ -170,26 +191,26 @@
 				</div>
 
 
-				<div class="form-col">
-					<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in months)</label>
-					<input type="number" asp-for="LoanApplicationDetails.Duration" class="form-control" />
-				</div>
-
-			
-			
-			<div class="form-col">
-				<label>Supporting Document *</label>
-					<input type="file" name="employmentAttachments" accept=".pdf,.jpg,.jpeg,.png" multiple required/>
+			<div class="form-col position-relative">
+				<label asp-for="LoanType">Type of Loan</label>
+				<select asp-for="LoanType" asp-items="Model.Loans" class="form-control loan-select" id="LoanType" required>
+					<option value="">Select Loan Type</option>
+				</select>
 			</div>
 
-		</div>
+			<div class="form-col">
+				<label asp-for="LoanApplicationDetails.Duration">Duration for Loan Repayment (in months)</label>
+				<input type="number" asp-for="LoanApplicationDetails.Duration" class="form-control" id="Duration" />
+			</div>
 
-		
-		
-		
+			<div class="form-col">
+				<label>Supporting Document *</label>
+				<input type="file" name="employmentAttachments" accept=".pdf,.jpg,.jpeg,.png" multiple required />
+			</div>
+
 			<div class="form-col">
 				<label>Proof of Income( Statement)</label>
-				<input type="file" name="proofOfIncome" accept=".pdf,.jpg,.jpeg,.png" multiple required/>
+				<input type="file" name="proofOfIncome" accept=".pdf,.jpg,.jpeg,.png" multiple required />
 			</div>
 		</div>
 
@@ -199,12 +220,34 @@
 
 		<div class="btn-section">
 			<a href="/Home/Index" class="btn-cancel">Cancel</a>
-
-			<button type="submit" class="btn-submit">Submit</button>
+			<button type="button" class="btn-submit" id="submitBtn">Submit</button>
 		</div>
 	</form>
 </div>
 
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="reviewModalLabel">Review Your Loan Application</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p><strong>Loan Amount:</strong> <span id="reviewLoanAmount"></span></p>
+				<p><strong>Loan Type:</strong> <span id="reviewLoanType"></span></p>
+				<p><strong>Duration:</strong> <span id="reviewDuration"></span> months</p>
+				<p><strong>Supporting Documents:</strong> <span id="reviewEmploymentDocs"></span></p>
+				<p><strong>Proof of Income:</strong> <span id="reviewIncomeDocs"></span></p>
+				<p style="margin-top:15px;">Are you sure you want to submit this loan application?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Edit</button>
+				<button type="button" class="btn btn-primary" id="confirmSubmit">Yes, Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -235,10 +278,28 @@
 			});
 		});
 	</script>
-
-
 }
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+	document.getElementById("submitBtn").addEventListener("click", function () {
+		document.getElementById("reviewLoanAmount").innerText = document.getElementById("LoanAmount").value;
+		var loanTypeSelect = document.getElementById("LoanType");
+		document.getElementById("reviewLoanType").innerText = loanTypeSelect.options[loanTypeSelect.selectedIndex].text;
+		document.getElementById("reviewDuration").innerText = document.getElementById("Duration").value;
 
+		var employmentFiles = document.querySelector("input[name='employmentAttachments']").files;
+		document.getElementById("reviewEmploymentDocs").innerText = employmentFiles.length > 0 ? Array.from(employmentFiles).map(f => f.name).join(", ") : "None";
 
+		var incomeFiles = document.querySelector("input[name='proofOfIncome']").files;
+		document.getElementById("reviewIncomeDocs").innerText = incomeFiles.length > 0 ? Array.from(incomeFiles).map(f => f.name).join(", ") : "None";
+
+		var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+		reviewModal.show();
+	});
+
+	document.getElementById("confirmSubmit").addEventListener("click", function () {
+		document.getElementById("loanForm").submit();
+	});
+</script>

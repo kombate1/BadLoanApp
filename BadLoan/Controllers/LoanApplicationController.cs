@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BadLoan.Controllers
 {
-   
+
     public class LoanApplicationController : Controller
     {
         private readonly ApplicationDbContext _db;

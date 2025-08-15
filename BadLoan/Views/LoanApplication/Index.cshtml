@@ -164,10 +164,32 @@
 		<h3>Loan Application Details</h3>
 		<div class="form-row">
 			<div class="form-col">
+
 				<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
 				<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" id="LoanAmount" />
 				@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })
 			</div>
+
+				
+
+				<div class="form-col">
+					<label asp-for="AnnualIncome">Annual Income (GH₵)</label>
+					<input type="number" asp-for="AnnualIncome" class="form-control" />
+					@* @Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" }) *@
+				</div>
+				<div class="form-col">
+					<label asp-for="LoanApplicationDetails.LoanAmount">Loan Amount (GH₵)</label>
+					<input type="number" asp-for="LoanApplicationDetails.LoanAmount" class="form-control" />
+					@Html.ValidationMessageFor(m => m.LoanApplicationDetails.LoanAmount, "", new { @class = "text-danger" })
+				</div>
+
+				<div class="form-col position-relative">
+					<label asp-for="LoanType">Type of Loan</label>
+					<select asp-for="LoanType" asp-items="Model.Loans" class="form-control loan-select" required>
+						<option value="">Select Loan Type</option>
+					</select>
+				</div>
+
 
 			<div class="form-col position-relative">
 				<label asp-for="LoanType">Type of Loan</label>

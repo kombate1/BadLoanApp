@@ -95,11 +95,11 @@ namespace BadLoan.Controllers
 
             var customer = await _db.Customers.Where(c => c.UserId == user!.Id).FirstOrDefaultAsync();
 
-            var loans = await _db.LoanApplications.Where(l => l.CustomerId == customer.CustomerId && l.Status == "Approved").ToListAsync();
+            var loans = await _db.LoanApplications.Where(l => l.CustomerId == customer.CustomerId && l.Status != "Rejected").ToListAsync();
             var totalLoanAmount = loans.Sum(l => l.LoanAmount);
             
 
-            //obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
+            obj.LoanApplicationDetails.AnnualIncome = customer.AnnualIncome;
 
 
             //var validLoanType = await _db.LoanTypes.FirstOrDefaultAsync();
@@ -183,6 +183,7 @@ namespace BadLoan.Controllers
             obj.LoanApplicationDetails.creditRate = creditRate;
             obj.LoanApplicationDetails.debtServiceRatio = results.DebtServiceRatio;
             obj.LoanApplicationDetails.monthlyRepayment = results.amountToPayMonthly;
+            
 
 
             if (totalLoanAmount > maxLoanAmount)
@@ -274,7 +275,7 @@ namespace BadLoan.Controllers
 
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Loan application with Reference #{obj.LoanApplicationDetails.Id} submitted successfully! You monthly repayment is {results.amountToPayMonthly} ";
+            TempData["SuccessMessage"] = $"Loan application with Reference #{obj.LoanApplicationDetails.Id} submitted successfully! You monthly repayment is {results.amountToPayMonthly:F2} ";
             return RedirectToAction("Index"); // or redirect to a success page
 
 
